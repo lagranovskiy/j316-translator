@@ -1,0 +1,17 @@
+{
+  "name": "j316-translator",
+  "version": "1.0.0",
+  "description": "Translator application to provide simultanous language translation on multiple client",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Leonid Agranovskiy",
+  "license": "ISC",
+  "dependencies": {
+    "bower": "^1.6.9",
+    "express": "^4.13.3",
+    "socket.io": "^1.3.7",
+    "yandex-translate": "^2.1.0"
+  }
+}

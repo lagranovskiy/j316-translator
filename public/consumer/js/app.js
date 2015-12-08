@@ -8,6 +8,7 @@ angular.module('consumerApp', [
     'angular-underscore',
 
     'ngMaterial',
+    'btford.socket-io',
     'infinite-scroll',
     'j316.translate.service.translation',
 
@@ -25,6 +26,10 @@ angular.module('consumerApp', [
 
         }
     ])
+    .factory('translatorSocket', function (socketFactory) {
+        var mySocket = socketFactory();
+        return mySocket;
+    })
 
     .config(function ($mdThemingProvider) {
         $mdThemingProvider.theme('default');

@@ -1,5 +1,5 @@
 angular.module('j316.translate.service.translation', [])
-    .service('TranslationService', function ($q, $rootScope, $interval, $cookies) {
+    .service('TranslationService', function ($q, $rootScope, $interval, $cookies, translatorSocket) {
 
         var registrationInfo = {name: null, lang: 'en'};
 
@@ -79,6 +79,11 @@ angular.module('j316.translate.service.translation', [])
          * @param msg
          */
         this.sendQuestion = function (msg) {
+            translatorSocket.emit('question', {
+                sender: registrationInfo.name,
+                time: new Date(),
+                msg: msg
+            });
             console.info('sending complete ' + msg);
         };
         /**
@@ -98,8 +103,11 @@ angular.module('j316.translate.service.translation', [])
             defer.resolve(true);
 
 
-           timeout = $interval(function () {
-                $rootScope.$broadcast('newMsg', {time: new Date(), msg: 'Wow hier kommt was. Das ist ein weiterer Satz.'});
+            timeout = $interval(function () {
+                $rootScope.$broadcast('newMsg', {
+                    time: new Date(),
+                    msg: 'Wow hier kommt was. Das ist ein weiterer Satz.'
+                });
             }, settings.readingTime * 500);
 
 
@@ -111,7 +119,7 @@ angular.module('j316.translate.service.translation', [])
          */
         this.disconnect = function () {
             connection = false;
-            $interval.cancel( timer );
+            $interval.cancel(timeout);
             return connection;
         }
 

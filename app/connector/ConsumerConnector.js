@@ -6,9 +6,10 @@ var consumerConnector = function (httpServer) {
 
     io.on('connection', function (socket) {
         var addedUser = false;
-
+        console.info('New Connection!!');
         // when the client emits 'new message', this listens and executes
         socket.on('new message', function (data) {
+            console.info('New Message!!' + data);
             // we tell the client to execute 'new message'
             socket.broadcast.emit('new message', {
                 username: socket.username,
@@ -17,21 +18,8 @@ var consumerConnector = function (httpServer) {
         });
 
         // when the client emits 'add user', this listens and executes
-        socket.on('add user', function (username) {
-            if (addedUser) return;
-
-            // we store the username in the socket session for this client
-            socket.username = username;
-            ++numUsers;
-            addedUser = true;
-            socket.emit('login', {
-                numUsers: numUsers
-            });
-            // echo globally (all clients) that a person has connected
-            socket.broadcast.emit('user joined', {
-                username: socket.username,
-                numUsers: numUsers
-            });
+        socket.on('question', function (msg) {
+            console.info('New Message!!' + msg);
         });
 
         // when the client emits 'typing', we broadcast it to others
@@ -50,6 +38,7 @@ var consumerConnector = function (httpServer) {
 
         // when the user disconnects.. perform this
         socket.on('disconnect', function () {
+            console.info('Bye!!');
             if (addedUser) {
                 --numUsers;
 

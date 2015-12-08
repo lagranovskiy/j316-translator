@@ -1,20 +1,32 @@
-<nav class="light-blue lighten-1" role="navigation" ng-controller="NavCtrl">
-    <div class="nav-wrapper container"><a id="logo-container" ng-href="" class="brand-logo">J316 Translator</a>
-        <ul class="right hide-on-med-and-down">
-            <li><a ng-class="isOnline()?'green':'orange'"
-                    tooltipped data-position="bottom" data-delay="50" data-tooltip="Indicates your current online status"
-                   href=""><i class="material-icons">call</i></a></li>
-            <li ng-if="isOnline()"><a tooltipped data-position="bottom" data-delay="50" data-tooltip="Ask a question or help" href=""><i
-                    class="material-icons">question_answer</i></a></li>
-            <li ng-if="isOnline()"><a class="red" ng-click="disconnect()" tooltipped data-position="bottom" data-delay="50" data-tooltip="Logout" href=""><i
-                    class="material-icons prefix"> settings_power</i></a></li>
+<div ng-controller="NavCtrl" ng-cloak>
 
-        </ul>
+    <md-fab-toolbar md-open="isOpen" md-direction="left">
+        <md-fab-trigger class="align-with-text">
+            <md-button aria-label="menu" class="md-fab" ng-class="isOnline()?'md-warn':'md-primary md-hue-1'">
+                <md-icon md-font-set="material-icons">settings_remote</md-icon>
+            </md-button>
+        </md-fab-trigger>
+        <md-toolbar>
+            <md-fab-actions class="md-toolbar-tools">
 
-        <ul id="nav-mobile" class="side-nav">
-            <li>You are currently offline</li>
-            <li><a tooltipped href="#">Ask Question</a></li>
-        </ul>
-        <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
-    </div>
-</nav>
+                <md-button ng-if="isOnline()" ng-click="disconnect()">
+                    <md-icon md-font-set="material-icons">power_settings_new</md-icon>
+                    Leave
+                </md-button>
+
+                <md-button ng-click="showAsk()">
+                    <md-icon md-font-set="material-icons ">sms</md-icon>
+                    Question
+                </md-button>
+
+                <md-button ng-click="showSettings()">
+                    <md-icon md-font-set="material-icons ">build</md-icon>
+                    Settings
+                </md-button>
+
+
+            </md-fab-actions>
+        </md-toolbar>
+    </md-fab-toolbar>
+</div>
+

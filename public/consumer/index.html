@@ -6,34 +6,40 @@
     <title>J316 Translator</title>
 
     <!-- CSS  -->
+    <!--    <link href="bower_components/materialize/dist/css/materialize.css" type="text/css" rel="stylesheet"
+              media="screen,projection"/>-->
+    <link href="bower_components/angular-material/angular-material.css" type="text/css" rel="stylesheet"/>
+    <link href="bower_components/angular-material/angular-material.layouts.min.css" type="text/css" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link href="bower_components/Materialize/dist/css/materialize.css" type="text/css" rel="stylesheet"
-          media="screen,projection"/>
+
     <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
 </head>
 <body ng-app="consumerApp">
 
-<div ng-include="'views/nav.html'"></div>
+<div layout="column" class="md-body-1">
 
-<div ng-view=""></div>
+    <div ng-include="'views/nav.html'"></div>
+    <md-content>
+        <div ng-view=""></div>
+    </md-content>
 
+    <div ng-include="'views/footer.html'"></div>
 
-<div ng-include="'views/footer.html'"></div>
-
+</div>
 <!--  Scripts-->
 <script src="bower_components/jquery/dist/jquery.min.js"></script>
-<script src="bower_components/Materialize/dist/js/materialize.min.js"></script>
+<!--<script src="bower_components/materialize/dist/js/materialize.min.js"></script>-->
 <script src="bower_components/underscore/underscore-min.js"></script>
 
 <script src="bower_components/angular/angular.js"></script>
 <script src="bower_components/angular-animate/angular-animate.min.js"></script>
 <script src="bower_components/angular-cookies/angular-cookies.js"></script>
+<script src="bower_components/angular-aria/angular-aria.min.js"></script>
+<script src="bower_components/angular-material/angular-material.min.js"></script>
 <script src="bower_components/angular-route/angular-route.js"></script>
 <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
-
 <script src="bower_components/angular-underscore/angular-underscore.js"></script>
-
-<script src="bower_components/angular-materialize/src/angular-materialize.js"></script>
+<script src="bower_components/ngInfiniteScroll/build/ng-infinite-scroll.min.js"></script>
 
 <script src="js/app.js"></script>
 <script src="js/controllers/ClientController.js"></script>

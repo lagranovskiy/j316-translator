@@ -7,8 +7,8 @@ angular.module('consumerApp', [
     'ngSanitize',
     'angular-underscore',
 
-    'ui.materialize',
-
+    'ngMaterial',
+    'infinite-scroll',
     'j316.translate.service.translation',
 
     'j316.translate.controller.nav',
@@ -25,6 +25,10 @@ angular.module('consumerApp', [
 
         }
     ])
+
+    .config(function ($mdThemingProvider) {
+        $mdThemingProvider.theme('default');
+    })
 
     .config(function ($routeProvider) {
         $routeProvider

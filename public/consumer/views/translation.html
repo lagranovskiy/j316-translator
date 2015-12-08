@@ -1,25 +1,22 @@
 <div ng-controller="TranslationCtrl">
     <!-- angemeldet view form -->
-    <div class="container">
-        <div class="row">
-            <div class="col s12">
-                <br/>
-                Hello <b>{{clientInfo.name}}</b> You are subscribed to a <b> {{localizeLang(clientInfo.lang).lang}}</b> translation...
+    <div layout="column" layout-align="left center">
+        <p class="md-body-2 md-padding"> Hello <b>{{clientInfo.name}}</b> You are subscribed to a <b>
+            {{localizeLang(clientInfo.lang).lang}}</b>
+            translation...</p> <md-progress-circular md-mode="indeterminate"  md-diameter="20"></md-progress-circular>
+
+        <div infinite-scroll="incShowedMsgs()"  >
+
+            <div  layout="row" ng-repeat="item in messages | limitTo:showLastMsgCount  ">
+                <div  class="md-list-item-text md-title md-padding">
+                    {{item.msg}}<br/>
+                    <small class="md-caption">{{item.time.getHours()}}:{{item.time.getMinutes()}}</small>
+                </div>
+
             </div>
+
         </div>
 
-        <!--   Icon Section   -->
-        <div class="row">
-            <div class="col s12">
-                <p class="flow-text">Hello. Here is the new interesting message</p>
-
-                <p class="flow-text">Hello. Here is the one more interesting message</p>
-
-                <p class="flow-text">Here is the new interesting message</p>
-
-                <p class="flow-text">Blabla</p>
-            </div>
-        </div>
 
     </div>
 </div>

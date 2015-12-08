@@ -1,0 +1,22 @@
+<md-dialog aria-label="Mango (Fruit)" flex="85" ng-cloak>
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>Application Settings</h2>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="cancel()">
+                <md-icon md-font-set="material-icons" aria-label="Close dialog">clear</md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+
+    <md-content class="md-padding">
+        <form name="userForm">
+            <md-input-container><label>What is your question</label>
+                <textarea ng-model="msg" columns="1" md-maxlength="250" rows="5" width:'300px'></textarea>
+            </md-input-container>
+        </form>
+    </md-content>
+    <div class="md-actions" layout="row"><span flex></span>
+        <md-button ng-click="send()"> Ask Question</md-button>
+    </div>
+</md-dialog>

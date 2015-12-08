@@ -1,10 +1,13 @@
 angular.module('j316.translate.service.translation', [])
-    .service('TranslationService', function ($q, $cookies) {
+    .service('TranslationService', function ($q, $rootScope, $interval, $cookies) {
 
         var registrationInfo = {name: null, lang: 'en'};
 
         var connection = null;
 
+        var timeout = null;
+
+        var settings = {readingTime: 1};
         this.langList = [
             {key: 'ru', lang: 'Русский'},
             {key: 'en', lang: 'English'},
@@ -29,6 +32,11 @@ angular.module('j316.translate.service.translation', [])
             return registrationInfo;
         };
 
+        /**
+         * Registers current user
+         * @param regInfo
+         * @returns {{name: null, lang: string}}
+         */
         this.register = function (regInfo) {
             if (!regInfo.name) {
                 regInfo.name = 'Anonym'
@@ -40,6 +48,39 @@ angular.module('j316.translate.service.translation', [])
             return registrationInfo;
         };
 
+        /**
+         * Returns current settings
+         * @returns {{scrollToBottom: boolean, readingTime: number}}
+         */
+        this.getSettings = function () {
+            var savedInfo = $cookies.getObject('j316-translation-settings');
+
+            if (savedInfo) {
+                settings = savedInfo;
+                return settings;
+            }
+
+            return settings;
+        };
+
+
+        /**
+         * Save changed settings
+         * @param settingsData
+         */
+        this.setSettings = function (settingsData) {
+            $cookies.putObject('j316-translation-settings', settingsData);
+            settings = settingsData;
+            $rootScope.$broadcast('settingsUpdated', settingsData);
+        };
+
+        /**
+         * Send question to the server
+         * @param msg
+         */
+        this.sendQuestion = function (msg) {
+            console.info('sending complete ' + msg);
+        };
         /**
          * Indicates if client is online
          * @returns {boolean}
@@ -55,6 +96,13 @@ angular.module('j316.translate.service.translation', [])
             var defer = $q.defer();
             connection = true;
             defer.resolve(true);
+
+
+           timeout = $interval(function () {
+                $rootScope.$broadcast('newMsg', {time: new Date(), msg: 'Wow hier kommt was. Das ist ein weiterer Satz.'});
+            }, settings.readingTime * 500);
+
+
             return defer.promise;
         };
 
@@ -63,6 +111,7 @@ angular.module('j316.translate.service.translation', [])
          */
         this.disconnect = function () {
             connection = false;
+            $interval.cancel( timer );
             return connection;
         }
 

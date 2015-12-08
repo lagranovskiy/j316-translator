@@ -5,8 +5,16 @@ angular.module('consumerApp', [
     'ngCookies',
     'ngRoute',
     'ngSanitize',
+    'angular-underscore',
 
-    'j316.translate.controller.consumer'
+    'ui.materialize',
+
+    'j316.translate.service.translation',
+
+    'j316.translate.controller.nav',
+    'j316.translate.controller.translation',
+    'j316.translate.controller.client'
+
 ])
 
     .run(['$rootScope', '$location',
@@ -15,15 +23,17 @@ angular.module('consumerApp', [
             $rootScope.$location = $location;
 
 
-
         }
     ])
 
     .config(function ($routeProvider) {
         $routeProvider
             .when('/', {
-                templateUrl: 'views/consuming.html',
-                controller: 'ConsumerCtrl',
-                requireLogin: true
+                templateUrl: 'views/client.html'
             })
+            .when('/translation', {
+                templateUrl: 'views/translation.html'
+            })
+            .otherwise('/');
+
     });

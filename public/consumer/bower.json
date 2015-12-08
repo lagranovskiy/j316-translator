@@ -27,6 +27,8 @@
     "angular-route": "~1.4.8",
     "angular-touch": "~1.4.8",
     "angular-animate": "~1.4.8",
-    "angular-sanitize": "~1.4.8"
+    "angular-sanitize": "~1.4.8",
+    "angular-underscore": "~0.5.0",
+    "underscore": "~1.8.3"
   }
 }

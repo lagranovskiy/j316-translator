@@ -1,17 +1,34 @@
 angular.module('j316.translate.controller.nav', [])
-    .controller('NavCtrl', function ($scope, TranslationService, $mdDialog, $mdMedia) {
+    .controller('NavCtrl', function ($scope, TranslationService, $mdDialog, $mdMedia, QuestionService) {
 
+        $scope.question = null;
+
+        /**
+         * Indicates if user is online
+         * @returns {boolean}
+         */
         $scope.isOnline = function () {
             return TranslationService.isOnline();
         };
 
+        /**
+         * Process disconnect
+         */
         $scope.disconnect = function () {
             TranslationService.disconnect();
         };
 
-        $scope.question = null;
+        $scope.$on('questionAnswer', function (event, msg) {
+            alert('Hey here is answer!' + msg);
 
+            // TODO: implement modal
+        });
 
+        /**
+         * Displays dialog with settings
+         *
+         * @param ev
+         */
         $scope.showSettings = function (ev) {
             $mdDialog.show({
                 controller: function ($scope, $mdDialog) {
@@ -42,10 +59,13 @@ angular.module('j316.translate.controller.nav', [])
             });
         };
 
+        /**
+         * Displayes dialog with question handling
+         * @param ev
+         */
         $scope.showAsk = function (ev) {
             $mdDialog.show({
                 controller: function ($scope, $mdDialog) {
-                    $scope.settings = TranslationService.getSettings();
                     $scope.hide = function () {
                         $mdDialog.hide();
                     };
@@ -60,9 +80,8 @@ angular.module('j316.translate.controller.nav', [])
                 targetEvent: ev,
                 clickOutsideToClose: true
             })
-                .then(function (answer) {
-                    console.info('Sending your question "' + answer + '".');
-                    TranslationService.sendQuestion(answer);
+                .then(function (question) {
+                    QuestionService.sendQuestion(question);
                 }, function () {
                     console.info('You cancelled the dialog.');
                 });
@@ -70,4 +89,6 @@ angular.module('j316.translate.controller.nav', [])
                 return $mdMedia('sm');
             });
         };
+
+
     });

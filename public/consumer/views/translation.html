@@ -3,14 +3,15 @@
     <div layout="column" layout-align="left center">
         <p class="md-body-2 md-padding"> Hello <b>{{clientInfo.name}}</b> You are subscribed to a <b>
             {{localizeLang(clientInfo.lang).lang}}</b>
-            translation...</p> <md-progress-circular md-mode="indeterminate"  md-diameter="20"></md-progress-circular>
+            translation...</p>
+        <md-progress-circular md-mode="indeterminate" md-diameter="20"></md-progress-circular>
 
-        <div infinite-scroll="incShowedMsgs()"  >
+        <div infinite-scroll="incShowedMsgs()">
 
-            <div  layout="row" ng-repeat="item in messages | limitTo:showLastMsgCount  ">
-                <div  class="md-list-item-text md-title md-padding">
-                    {{item.msg}}<br/>
-                    <small class="md-caption">{{item.time.getHours()}}:{{item.time.getMinutes()}}</small>
+            <div layout="row" ng-repeat="item in messages | orderBy:'-timestamp' | limitTo:showLastMsgCount  ">
+                <div class="md-list-item-text md-title md-padding">
+                    {{item.translation}}<br/>
+                    <small class="md-caption">{{formatDate(item.timestamp)}}</small>
                 </div>
 
             </div>

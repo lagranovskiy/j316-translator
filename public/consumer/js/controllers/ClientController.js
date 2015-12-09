@@ -1,5 +1,5 @@
 angular.module('j316.translate.controller.client', [])
-    .controller('ClientCtrl', function ($scope, $location, $window, $http, $log, TranslationService) {
+    .controller('ClientCtrl', function ($scope, $location, $window, $http, $log, TranslationService, languages) {
 
         $scope.registrationInfo = TranslationService.getRegistrationInfo();
         $scope.isConnecting = false;
@@ -15,5 +15,5 @@ angular.module('j316.translate.controller.client', [])
             );
         };
 
-        $scope.langList = TranslationService.langList;
+        $scope.langList = languages;
     });

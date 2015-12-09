@@ -3,19 +3,63 @@ angular.module('j316.translate.service.translation', [])
 
         var registrationInfo = {name: null, lang: 'en'};
 
-        var connection = null;
-
-        var timeout = null;
+        var isOnline = false;
 
         var settings = {readingTime: 1};
-        this.langList = [
-            {key: 'ru', lang: 'Русский'},
-            {key: 'en', lang: 'English'},
-            {key: 'ar', lang: 'Arabic'},
-            {key: 'ph', lang: 'Pharsi'},
-            {key: 'hi', lang: 'Hindu'},
-            {key: 'tu', lang: 'Türkisch'},
-            {key: 'al', lang: 'Albanisch'}];
+
+        /**
+         * Socket communication
+         */
+
+        translatorSocket.forward('newTranslation', $rootScope);
+        $rootScope.$on('socket:newTranslation', function (ev, data) {
+            console.debug('Translation msg revieved: ' + JSON.stringify(data));
+            $rootScope.$broadcast('newTranslation', data);
+        });
+
+        /**
+         * Indicates if client is online
+         * @returns {boolean}
+         */
+        this.isOnline = function () {
+            return isOnline;
+        };
+
+
+        /**
+         * Process registration of user
+         */
+        this.connect = function () {
+            var defer = $q.defer();
+
+            translatorSocket.on('singinCompleted', function () {
+                console.info('Registration completed');
+                isOnline = true;
+                defer.resolve();
+                translatorSocket.removeAllListeners('singinCompleted');
+            });
+
+            translatorSocket.emit('singin', {
+                sender: registrationInfo.name,
+                language: registrationInfo.lang,
+                time: new Date()
+            });
+
+
+            return defer.promise;
+        };
+
+
+        /**
+         * Process disconnection of user
+         */
+        this.disconnect = function () {
+            isOnline = false;
+            translatorSocket.emit('singout', {});
+            translatorSocket.removeAllListeners('newTranslation');
+
+            console.info('Leaved translation roam');
+        };
 
 
         /**
@@ -68,60 +112,11 @@ angular.module('j316.translate.service.translation', [])
          * Save changed settings
          * @param settingsData
          */
-        this.setSettings = function (settingsData) {
+        this.saveSettings = function (settingsData) {
             $cookies.putObject('j316-translation-settings', settingsData);
             settings = settingsData;
             $rootScope.$broadcast('settingsUpdated', settingsData);
         };
-
-        /**
-         * Send question to the server
-         * @param msg
-         */
-        this.sendQuestion = function (msg) {
-            translatorSocket.emit('question', {
-                sender: registrationInfo.name,
-                time: new Date(),
-                msg: msg
-            });
-            console.info('sending complete ' + msg);
-        };
-        /**
-         * Indicates if client is online
-         * @returns {boolean}
-         */
-        this.isOnline = function () {
-            return connection;
-        };
-
-        /**
-         * Process registration of user
-         */
-        this.connect = function () {
-            var defer = $q.defer();
-            connection = true;
-            defer.resolve(true);
-
-
-            timeout = $interval(function () {
-                $rootScope.$broadcast('newMsg', {
-                    time: new Date(),
-                    msg: 'Wow hier kommt was. Das ist ein weiterer Satz.'
-                });
-            }, settings.readingTime * 500);
-
-
-            return defer.promise;
-        };
-
-        /**
-         * Process registration of user
-         */
-        this.disconnect = function () {
-            connection = false;
-            $interval.cancel(timeout);
-            return connection;
-        }
 
 
     });

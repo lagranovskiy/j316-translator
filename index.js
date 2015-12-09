@@ -1,11 +1,13 @@
 // Setup basic express server
 var express = require('express');
 var config = require('./config/config');
+var morgan = require('morgan');
 
 
 //////////////////// Consumer INIT //////////////////////
 
 var consumerApp = express();
+consumerApp.use(morgan(':method :url :response-time'));
 var consumerServer = require('http').createServer(consumerApp);
 
 var consumerConnectorSetup = require('./app/connector/ConsumerConnector');
@@ -24,6 +26,7 @@ consumerApp.use(express.static(__dirname + '/public/consumer/'));
 //////////////////// Sender (Admin) INIT //////////////////////
 
 var senderApp = express();
+senderApp.use(morgan(':method :url :response-time'));
 var senderServer = require('http').createServer(senderApp);
 
 var senderConnectorSetup = require('./app/connector/SenderConnector');

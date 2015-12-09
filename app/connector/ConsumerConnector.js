@@ -1,5 +1,6 @@
 var socketIO = require('socket.io');
 var serviceDistributor = require('../business/ServiceDistributor');
+var questionDistributor = require('../business/QuestionDistributor');
 
 var consumerConnector = function (httpServer) {
 
@@ -35,15 +36,22 @@ var consumerConnector = function (httpServer) {
                 console.info('translations :: Client ' + data.sender + ' change his language settings from ' + userReg.language + ' to ' + data.language);
                 serviceDistributor.removeTranslationLanguage(userReg.language);
                 socket.leave('lang_' + data.language);
-                console.info('translations :: Client ' + data.sender + ' excluded from roam ' + 'lang_' + userReg.language);
+                console.info('translations :: Client ' + data.sender + ' excluded from room ' + 'lang_' + userReg.language);
             }
 
             userReg = data;
             socket.join('lang_' + data.language);
             serviceDistributor.addTranslationLanguage(userReg.language);
 
-            console.info('translations :: Client ' + data.sender + ' added to roam  lang_' + data.language);
+            // Recipe connection
+            console.info('translations :: Client ' + data.sender + ' added to room  lang_' + data.language);
             socket.emit('singinCompleted', {success: true});
+
+            // Send cached messages if any
+            var cachedMsgs = serviceDistributor.getCachedMessages(userReg.language);
+            if (cachedMsgs && cachedMsgs.length > 0) {
+                socket.emit('cachedTranslations', cachedMsgs);
+            }
         });
 
         // If the client closed up his registration, then add him to the active msg. recievers for his lang
@@ -70,12 +78,29 @@ var consumerConnector = function (httpServer) {
      * Socket server for handling of client questions
      */
     var msgSocketServer = io.of('/questions');
+
+    questionDistributor.on('newQuestionAnswerTranslated', function (translationObject) {
+        /**
+         * {
+                questionSource: question.questionSource,
+                translation: translation,
+                sourceLanguage: senderLanguage,
+                targetLanguage: question.sourceLanguage
+            };
+         */
+        console.info('Emitting question answer to the client ' + translationObject.questionSource );
+
+        msgSocketServer.sockets.to(translationObject.questionSource).emit('newQuestionAnswer', translationObject);
+    });
+
     msgSocketServer.on('connection', function (socket) {
         console.info('questions :: New Client is online. ' + socket.id);
 
         // when the client emits 'add user', this listens and executes
         socket.on('question', function (msg) {
             console.info('questions :: New Message!!' + JSON.stringify(msg));
+            questionDistributor.submitQuestion(socket.id, msg.sender, msg.msg, msg.language);
+            console.info('questions :: Message pending...' + JSON.stringify(msg));
         });
 
 

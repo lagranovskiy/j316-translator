@@ -18,9 +18,8 @@ angular.module('j316.translate.controller.nav', [])
             TranslationService.disconnect();
         };
 
-        $scope.$on('questionAnswer', function (event, msg) {
-            alert('Hey here is answer!' + msg);
-
+        $scope.$on('newQuestionAnswer', function (event, msg) {
+            alert('Hey here is answer!' + JSON.stringify(msg) );
             // TODO: implement modal
         });
 

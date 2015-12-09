@@ -13,8 +13,14 @@ angular.module('j316.translate.service.translation', [])
 
         translatorSocket.forward('newTranslation', $rootScope);
         $rootScope.$on('socket:newTranslation', function (ev, data) {
-            console.debug('Translation msg revieved: ' + JSON.stringify(data));
+            console.debug('Translation msg retrieved: ' + JSON.stringify(data));
             $rootScope.$broadcast('newTranslation', data);
+        });
+
+        translatorSocket.forward('cachedTranslations', $rootScope);
+        $rootScope.$on('socket:cachedTranslations', function (ev, data) {
+            console.debug('Cached Translation msg retrieved: ' + JSON.stringify(data));
+            $rootScope.$broadcast('cachedTranslations', data);
         });
 
         /**

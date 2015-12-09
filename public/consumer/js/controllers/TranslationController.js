@@ -20,8 +20,18 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
             if ($scope.messages.length > 300) {
                 $scope.messages.pop();
             }
-
         });
+
+        $scope.$on('cachedTranslations', function (event, msg) {
+            _.each(msg, function(singleMsg){
+                $scope.messages.unshift(singleMsg);
+                if ($scope.messages.length > 300) {
+                    $scope.messages.pop();
+                }
+            });
+        });
+
+
 
         $scope.formatDate = function (timestamp) {
             return new Date(timestamp).getHours() + ':' + new Date(timestamp).getMinutes();

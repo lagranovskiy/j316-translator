@@ -26,12 +26,14 @@ var serviceDistributor = _.extend(new EventEmitter(), {
      */
     submitQuestion: function (questionSource, questionSourceName, questionText, originalLang) {
         var questionUUID = uuid.v4();
+        var timestamp = new Date().getTime();
         this.msgCache.set(questionUUID, {
             questionUUID: questionUUID,
             questionSource: questionSource,
             questionSourceName: questionSourceName,
             text: questionText,
-            sourceLanguage: originalLang
+            sourceLanguage: originalLang,
+            timestamp: timestamp
         });
 
         serviceDistributor.emit('newQuestionPending', questionUUID);

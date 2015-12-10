@@ -15,6 +15,8 @@ angular.module('j316.translate.service.question', [])
         });
 
 
+
+
         /**
          * Sends a question
          * @param question question to be sent

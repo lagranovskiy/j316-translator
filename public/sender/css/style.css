@@ -39,3 +39,12 @@
 .animate-repeat.ng-enter.ng-enter-active {
     opacity:1;
 }
+
+.clientQuestion{
+    color: red;
+}
+
+.rtl_text{
+    direction: rtl;
+}
+

@@ -108,6 +108,7 @@ var consumerConnector = function (httpServer) {
         // when the user disconnects.. perform this
         socket.on('disconnect', function () {
             console.info('questions :: Client ' + socket.id + ' disconnected');
+            questionDistributor.removeListener('newQuestionAnswerTranslated', emitQuestionAnswer);
         });
     });
 

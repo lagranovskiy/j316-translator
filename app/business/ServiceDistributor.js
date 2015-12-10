@@ -34,8 +34,9 @@ var serviceDistributor = _.extend(new EventEmitter(), {
      * Requests translation of a given text. As far the translation is ready, it will be emitted for the listeners
      * @param text
      * @param sourceLanguage
+     * @param translationSource person submitted the message
      */
-    requestTranslation: function (text, sourceLanguage) {
+    requestTranslation: function (text, sourceLanguage, translationSource) {
         console.info('Translating: ' + text);
         var timestamp = new Date().getTime();
 
@@ -48,7 +49,8 @@ var serviceDistributor = _.extend(new EventEmitter(), {
             translationWorker.translationQueue.push({
                 text: text,
                 sourceLanguage: sourceLanguage,
-                targetLanguage: language
+                targetLanguage: language,
+
             }, function (err, translation) {
                 if (err) {
                     return console.error('Problem by the translation of ' + language + ':' + err);
@@ -60,6 +62,7 @@ var serviceDistributor = _.extend(new EventEmitter(), {
                     translation: translation,
                     sourceLanguage: sourceLanguage,
                     targetLanguage: language,
+                    sourceName: translationSource,
                     timestamp: timestamp
                 };
 

@@ -4,11 +4,11 @@
 
 
         <md-tabs layout-fill md-selected="selectedIndex" md-dynamic-height md-autoselect>
-            <md-tab ng-repeat="language in languages"
+            <md-tab ng-repeat="language in languages | filter:{known:true}"
                     md-on-select="updateCurrentLanguage(language)"
                     label="{{language.lang}}">
 
-                <div layout="row" >
+                <div layout="row">
                     <md-input-container layout-fill="" class="md-block">
                         <label>Type your next translation sentence</label>
                     <textarea required ng-model="message.text" columns="1" rows="5"
@@ -43,9 +43,20 @@
 
             <div layout="row" ng-repeat="item in messages | orderBy:'-timestamp' | limitTo:showLastMsgCount  "
                  class="animate-repeat">
-                <div class="md-list-item-text md-title md-padding">
-                    {{item.translation}}<br/>
-                    <small class="md-caption">{{formatDate(item.timestamp)}}</small>
+                <div class="md-list-item-text md-title md-padding" ng-if="item.type=='message'">
+                    <span ng-class="localizeLang(originLanguage.lang).rtl ? 'rtl_text' : ''"> {{item.translation}}</span><br/>
+                    <small class="md-caption">{{formatDate(item.timestamp)}} by {{item.sourceName}}</small>
+                </div>
+
+                <div class="md-list-item-text md-title md-padding" ng-if="item.type=='question'">
+                    <span class="md-caption">New question:</span>
+                    <br/>
+                    <span class="clientQuestion"><b>{{item.translation}}</b></span><br/>
+                    <small ng-class="localizeLang(item.sourceLanguage).rtl ? 'rtl_text' : ''"> {{item.text}}</small>
+                    <br/>
+                    <small class="md-caption">{{formatDate(item.timestamp)}} by {{item.sourceName}}
+                        ({{localizeLang(item.sourceLanguage).lang}})
+                    </small>
                 </div>
 
             </div>

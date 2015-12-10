@@ -43,10 +43,55 @@ angular.module('senderApp', [
         return questionSocket;
     })
     .value('languages', [
-        {key: 'ru', lang: 'Русский'},
-        {key: 'en', lang: 'English'},
-        {key: 'de', lang: 'Deutsch'}
+        {key: 'sq', lang: 'Albanian'},
+        {key: 'en', lang: 'English', known:true},
+        {key: 'ar', lang: 'Arabic', rtl: true},
+        {key: 'hy', lang: 'Armenian'},
+        {key: 'az', lang: 'Azerbaijan'},
+        {key: 'af', lang: 'Afrikaans'},
+        {key: 'bg', lang: 'Bolgarian'},
+        {key: 'vi', lang: 'Vietnamese'},
+        {key: 'hu', lang: 'Hungarian'},
+        {key: 'nl', lang: 'Dutch'},
+        {key: 'el', lang: 'Greek'},
+        {key: 'ka', lang: 'Georgian'},
+        {key: 'da', lang: 'Danish'},
+        {key: 'he', lang: 'Hebrew', rtl: true},
+        {key: 'it', lang: 'Italian'},
+        {key: 'es', lang: 'Spanish'},
+        {key: 'ky', lang: 'Kyrgyz'},
+        {key: 'zh', lang: 'Chinese'},
+        {key: 'ko', lang: 'Korean'},
+        {key: 'lv', lang: 'Latvian'},
+        {key: 'lt', lang: 'Lithuanian'},
+        {key: 'mk', lang: 'Macedonian'},
+        {key: 'mn', lang: 'Mongolian'},
+        {key: 'no', lang: 'Norwegian'},
+        {key: 'fa', lang: 'Persian', rtl: true},
+        {key: 'kk', lang: 'Kazakh', rtl: true},
+        {key: 'ru', lang: 'Russian', known:true},
+        {key: 'de', lang: 'German', known:true},
+        {key: 'pl', lang: 'Polish'},
+        {key: 'pt', lang: 'Portuguese'},
+        {key: 'ro', lang: 'Romanian'},
+        {key: 'sr', lang: 'Serbian'},
+        {key: 'sk', lang: 'Slovakian'},
+        {key: 'sl', lang: 'Slovenian'},
+        {key: 'sw', lang: 'Swahili'},
+        {key: 'th', lang: 'Thai'},
+        {key: 'tl', lang: 'Tagalog'},
+        {key: 'tt', lang: 'Tatar'},
+        {key: 'tr', lang: 'Turkish'},
+        {key: 'uz', lang: 'Uzbek'},
+        {key: 'fi', lang: 'Finish'},
+        {key: 'fr', lang: 'French'},
+        {key: 'hr', lang: 'Croatian'},
+        {key: 'cs', lang: 'Czech'},
+        {key: 'sv', lang: 'Swedish'},
+        {key: 'et', lang: 'Estonian'},
+        {key: 'ja', lang: 'Japanese'}
     ])
+
 
     .config(function ($mdThemingProvider) {
         $mdThemingProvider.theme('black')

@@ -14,6 +14,8 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
             language: null
         };
 
+        $scope.senderInfo = TranslationService.getRegistrationInfo();
+
 
         /**
          * Sends message for translation
@@ -33,8 +35,8 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
          */
         $scope.undo = function () {
             var last = TranslationService.getLast();
-            if(last){
-                $scope.message.text =  last;
+            if (last) {
+                $scope.message.text = last;
             }
         };
 
@@ -45,11 +47,11 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
         $scope.evaluateKeyPress = function (event) {
             if (event.keyCode == 13 && (event.ctrlKey == true || event.shiftKey == true)) {
                 $scope.sendMessage();
-                event.preventDefault();
+                event.defaultPrevented = true;
             }
             if (event.keyCode == 8 && (event.ctrlKey == true || event.shiftKey == true)) {
                 $scope.undo();
-                event.preventDefault();
+                event.defaultPrevented = true;
             }
         };
 
@@ -76,15 +78,43 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
             $scope.showLastMsgCount = $scope.showLastMsgCount + 5;
         };
 
+        $scope.formatDate = function (timestamp) {
+            return new Date(timestamp).getHours() + ':' + new Date(timestamp).getMinutes();
+        };
 
-        $scope.senderInfo = TranslationService.getRegistrationInfo();
 
         $scope.localizeLang = function (key) {
             return _.findWhere(languages, {key: key});
         };
 
         $scope.$on('newTranslation', function (event, msg) {
-            $scope.messages.unshift(msg);
+            var displayableMessage = {
+                translation: msg.translation,
+                sourceName: msg.sourceName,
+                sourceLanguage: msg.sourceLanguage,
+                timestamp: msg.timestamp,
+                type: 'message'
+            };
+
+            $scope.messages.unshift(displayableMessage);
+            if ($scope.messages.length > 300) {
+                $scope.messages.pop();
+            }
+        });
+
+
+        $scope.$on('newQuestion', function (event, msg) {
+            var displayableMessage = {
+                questionUUID: msg.questionUUID,
+                translation: msg.translation,
+                text: msg.text,
+                sourceName: msg.questionSourceName,
+                sourceLanguage: msg.sourceLanguage,
+                timestamp: msg.timestamp,
+                type: 'question'
+            };
+
+            $scope.messages.unshift(displayableMessage);
             if ($scope.messages.length > 300) {
                 $scope.messages.pop();
             }

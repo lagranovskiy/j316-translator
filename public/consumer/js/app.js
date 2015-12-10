@@ -44,7 +44,7 @@ angular.module('consumerApp', [
     })
     .value('languages', [
         {key: 'sq', lang: 'Albanian'},
-        {key: 'en', lang: 'English'},
+        {key: 'en', lang: 'English', known:true},
         {key: 'ar', lang: 'Arabic', rtl: true},
         {key: 'hy', lang: 'Armenian'},
         {key: 'az', lang: 'Azerbaijan'},
@@ -69,8 +69,8 @@ angular.module('consumerApp', [
         {key: 'no', lang: 'Norwegian'},
         {key: 'fa', lang: 'Persian', rtl: true},
         {key: 'kk', lang: 'Kazakh', rtl: true},
-        {key: 'ru', lang: 'Russian'},
-        {key: 'de', lang: 'German'},
+        {key: 'ru', lang: 'Russian', known:true},
+        {key: 'de', lang: 'German', known:true},
         {key: 'pl', lang: 'Polish'},
         {key: 'pt', lang: 'Portuguese'},
         {key: 'ro', lang: 'Romanian'},

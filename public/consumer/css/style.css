@@ -1,3 +1,8 @@
+.rtl_text{
+    direction: rtl;
+}
+
+
 .animate-repeat {
     list-style:none;
     box-sizing:border-box;

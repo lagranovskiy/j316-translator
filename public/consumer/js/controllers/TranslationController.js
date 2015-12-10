@@ -15,8 +15,17 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
         });
 
 
+
         $scope.$on('newTranslation', function (event, msg) {
-            $scope.messages.unshift(msg);
+            var displayableMessage = {
+                translation: msg.translation,
+                sourceName: msg.sourceName,
+                sourceLanguage: msg.sourceLanguage,
+                timestamp: msg.timestamp,
+                type: 'message'
+            };
+
+            $scope.messages.unshift(displayableMessage);
             if ($scope.messages.length > 300) {
                 $scope.messages.pop();
             }

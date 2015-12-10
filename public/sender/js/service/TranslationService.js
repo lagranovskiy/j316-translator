@@ -1,5 +1,5 @@
 angular.module('j316.translate.service.translation', [])
-    .service('TranslationService', function ($q, $rootScope, $cookies, translatorSocket) {
+    .service('TranslationService', function ($q, $rootScope, $cookies, questionSocket, translatorSocket) {
 
         var registrationInfo = {name: null, language: 'de'};
 
@@ -13,6 +13,11 @@ angular.module('j316.translate.service.translation', [])
         /**
          * Socket communication
          */
+        translatorSocket.forward('newQuestion', $rootScope);
+        $rootScope.$on('socket:newQuestion', function (ev, data) {
+            console.debug('Question msg retrieved: ' + JSON.stringify(data));
+            $rootScope.$broadcast('newQuestion', data);
+        });
 
         translatorSocket.forward('newTranslation', $rootScope);
         $rootScope.$on('socket:newTranslation', function (ev, data) {
@@ -72,6 +77,15 @@ angular.module('j316.translate.service.translation', [])
             });
 
             translatorSocket.emit('authentication', {
+                sender: registrationInfo,
+                accessKey: accessKey,
+                time: new Date().getTime()
+            });
+
+            /**
+             * Not nice.. separation of concurns broken.. think about it
+             */
+            questionSocket.emit('authentication', {
                 sender: registrationInfo,
                 accessKey: accessKey,
                 time: new Date().getTime()

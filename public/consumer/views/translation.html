@@ -8,10 +8,11 @@
 
         <div infinite-scroll="incShowedMsgs()">
 
-            <div layout="row" ng-repeat="item in messages | orderBy:'-timestamp' | limitTo:showLastMsgCount" class="animate-repeat">
-                <div class="md-list-item-text md-title md-padding" >
-                    {{item.translation}}<br/>
-                    <small class="md-caption">{{formatDate(item.timestamp)}}</small>
+            <div layout="row" ng-repeat="item in messages | orderBy:'-timestamp' | limitTo:showLastMsgCount"
+                 class="animate-repeat">
+                <div class="md-list-item-text md-title md-padding">
+                    <span ng-class="localizeLang(clientInfo.lang).rtl ? 'rtl_text' : ''"> {{item.translation}}</span><br/>
+                    <small class="md-caption">{{formatDate(item.timestamp)}} by {{item.sourceName}}</small>
                 </div>
 
             </div>

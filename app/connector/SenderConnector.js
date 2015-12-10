@@ -4,7 +4,7 @@ var serviceDistributor = require('../business/ServiceDistributor');
 var questionDistributor = require('../business/QuestionDistributor');
 var socketAuth = require('socketio-auth');
 
-var senderConnector = function (io, socketChannel) {
+var senderConnector = function (socketChannel) {
 
 
     socketChannel.on('connection', function (socket) {
@@ -33,6 +33,7 @@ var senderConnector = function (io, socketChannel) {
             }
             console.info('sender :: Sender (' + socket.id + ') disconnected');
             questionDistributor.removeListener('newQuestionPending', listenPendingQuestion);
+            socket.disconnect();
         }
 
 
@@ -146,6 +147,21 @@ var senderConnector = function (io, socketChannel) {
      */
     questionDistributor.on('newQuestionTranslated', emitTranslatedQuestion);
 
+
+    serviceDistributor.on('listenersChanged', emitListenersChanged);
+
+
+    /**
+     * Sends listeners information to the senders
+     * @param languageList
+     */
+    function emitListenersChanged(languageList) {
+        console.info('Sending lang list to senders');
+
+        socketChannel.emit('listenersChanged', languageList);
+    }
+
+
     /**
      * Sends translation of submited text to all senders
      * @param translationObject
@@ -170,7 +186,7 @@ var senderConnector = function (io, socketChannel) {
     }
 
 
-    return io;
+    return socketChannel;
 };
 
 module.exports = senderConnector;

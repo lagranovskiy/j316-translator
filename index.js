@@ -14,10 +14,10 @@ var httpServer = require('http').createServer(j316app);
 var ioServer = socketIO(httpServer);
 
 var consumerConnectorSetup = require('./app/connector/ConsumerConnector');
-consumerConnectorSetup(ioServer, ioServer.of('/consumer'));
+consumerConnectorSetup(ioServer.of('/consumer'));
 
 var senderConnectorSetup = require('./app/connector/SenderConnector');
-senderConnectorSetup(ioServer, ioServer.of('/sender'));
+senderConnectorSetup(ioServer.of('/sender'));
 
 
 ////////////////// HTTP Init ////////////////////

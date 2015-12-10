@@ -30,6 +30,7 @@ angular.module('consumerApp', [
     ])
     .factory('translatorSocket', function (socketFactory) {
         var mySocket = socketFactory({
+            reconnection: true,
             ioSocket: io.connect(window.location.origin + '/consumer')
         });
         return mySocket;

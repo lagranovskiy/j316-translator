@@ -2,7 +2,7 @@ var socketIO = require('socket.io');
 var serviceDistributor = require('../business/ServiceDistributor');
 var questionDistributor = require('../business/QuestionDistributor');
 
-var consumerConnector = function (io, socketChannel) {
+var consumerConnector = function (socketChannel) {
 
 
     /**
@@ -34,6 +34,8 @@ var consumerConnector = function (io, socketChannel) {
                 socket.leave('lang_' + socket.client.userReg.language);
                 console.info('translations :: Client ' + socket.client.userReg.sender + '(' + socket.id + ')' + ' leaved roam lang_' + socket.client.userReg.language);
             }
+
+            socket.disconnect();
         }
 
 

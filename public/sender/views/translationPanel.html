@@ -22,6 +22,7 @@
                         <md-button ng-click="undo()">
                             <md-icon md-font-set="material-icons">undo</md-icon>
                         </md-button>
+
                     </div>
 
                 </div>
@@ -30,6 +31,16 @@
                        ng-show="statusMessage">{{statusMessage}}</i>
                 </div>
 
+            </md-tab>
+
+
+            <md-tab label="Clients">
+                <div layout="row">
+                    <div ng-repeat="(key, value) in listenerList">
+                        <p class="md-body-2 md-padding"> {{localizeLang(key).lang}}: {{value}} </p>
+
+                    </div>
+                </div>
             </md-tab>
         </md-tabs>
 

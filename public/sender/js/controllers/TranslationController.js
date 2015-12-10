@@ -7,6 +7,8 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
         $scope.originLanguage = TranslationService.getRegistrationInfo().language;
         $scope.selectedIndex = languages.indexOf(_.findWhere(languages, {key: $scope.originLanguage}));
 
+        $scope.listenerList = [];
+
         $scope.statusMessage = null;
 
         $scope.message = {
@@ -15,6 +17,11 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
         };
 
         $scope.senderInfo = TranslationService.getRegistrationInfo();
+
+
+        $scope.$on('listenersChanged', function (event, msg) {
+            $scope.listenerList = msg;
+        });
 
 
         $scope.$on('newTranslation', function (event, msg) {
@@ -120,10 +127,12 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
             if (event.keyCode == 13 && (event.ctrlKey == true || event.shiftKey == true)) {
                 $scope.sendMessage();
                 event.defaultPrevented = true;
+                event.preventDefault();
             }
             if (event.keyCode == 8 && (event.ctrlKey == true || event.shiftKey == true)) {
                 $scope.undo();
                 event.defaultPrevented = true;
+                event.preventDefault();
             }
         };
 

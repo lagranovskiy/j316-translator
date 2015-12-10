@@ -13,6 +13,14 @@ angular.module('j316.translate.service.translation', [])
         /**
          * Socket communication
          */
+
+
+        translatorSocket.forward('listenersChanged', $rootScope);
+        $rootScope.$on('socket:listenersChanged', function (ev, data) {
+            console.debug('Listeners change detected: ' + JSON.stringify(data));
+            $rootScope.$broadcast('listenersChanged', data);
+        });
+
         translatorSocket.forward('newQuestion', $rootScope);
         $rootScope.$on('socket:newQuestion', function (ev, data) {
             console.debug('Question msg retrieved: ' + JSON.stringify(data));
@@ -66,7 +74,7 @@ angular.module('j316.translate.service.translation', [])
          */
         this.connect = function (accessKey) {
             var defer = $q.defer();
-
+            translatorSocket.connect();
             translatorSocket.on('unauthorized', function (err) {
                 console.log("There was an error with the authentication:", err.message);
                 defer.reject("There was an error with the authentication:" + err.message);

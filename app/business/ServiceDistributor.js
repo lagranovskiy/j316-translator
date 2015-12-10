@@ -42,7 +42,7 @@ var serviceDistributor = _.extend(new EventEmitter(), {
 
 
         _.each(this.languageList, function (numConsumers, language) {
-            if (numConsumers <= 0 ) {
+            if (numConsumers <= 0) {
                 return false;
             }
 
@@ -104,6 +104,7 @@ var serviceDistributor = _.extend(new EventEmitter(), {
         }
         this.languageList[language] = this.languageList[language] + 1;
 
+        serviceDistributor.emit('listenersChanged', this.languageList);
         console.info('Service :: Consumer registered. There are currently ' + this.languageList[language] + ' consumers for ' + language + ' language.');
     },
 
@@ -126,6 +127,7 @@ var serviceDistributor = _.extend(new EventEmitter(), {
             this.languageList = _.omit(this.languageList, language);
         }
 
+        serviceDistributor.emit('listenersChanged', this.languageList);
 
     }
 });

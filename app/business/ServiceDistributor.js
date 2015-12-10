@@ -41,7 +41,7 @@ var serviceDistributor = _.extend(new EventEmitter(), {
 
 
         _.each(this.languageList, function (numConsumers, language) {
-            if (numConsumers <= 0 || language === sourceLanguage) {
+            if (numConsumers <= 0 ) {
                 return false;
             }
 
@@ -102,9 +102,6 @@ var serviceDistributor = _.extend(new EventEmitter(), {
         this.languageList[language] = this.languageList[language] + 1;
 
         console.info('Service :: Consumer registered. There are currently ' + this.languageList[language] + ' consumers for ' + language + ' language.');
-
-        // remove it
-        this.requestTranslation('Wow im a text that need to be translated.', 'ru');
     },
 
 

@@ -17,7 +17,6 @@ var consumerConnector = function (httpServer) {
      */
     io.on('connection', function (socket) {
 
-
         var userReg = null;
 
         console.info('translations :: New Client is online. ' + socket.id);
@@ -32,23 +31,23 @@ var consumerConnector = function (httpServer) {
                 data.language = 'en';
             }
 
-            if (userReg != null) {
-                console.info('translations :: Client ' + data.sender + ' change his language settings from ' + userReg.language + ' to ' + data.language);
-                serviceDistributor.removeTranslationLanguage(userReg.language);
+            if (socket.client.userReg != null) {
+                console.info('translations :: Client ' + data.sender + ' change his language settings from ' + socket.client.userReg.language + ' to ' + data.language);
+                serviceDistributor.removeTranslationLanguage(socket.client.userReg.language);
                 socket.leave('lang_' + data.language);
-                console.info('translations :: Client ' + data.sender + ' excluded from room ' + 'lang_' + userReg.language);
+                console.info('translations :: Client ' + data.sender + ' excluded from room ' + 'lang_' + socket.client.userReg.language);
             }
 
-            userReg = data;
+            socket.client.userReg = data;
             socket.join('lang_' + data.language);
-            serviceDistributor.addTranslationLanguage(userReg.language);
+            serviceDistributor.addTranslationLanguage(socket.client.userReg.language);
 
             // Recipe connection
             console.info('translations :: Client ' + data.sender + ' added to room  lang_' + data.language);
             socket.emit('singinCompleted', {success: true});
 
             // Send cached messages if any
-            var cachedMsgs = serviceDistributor.getCachedMessages(userReg.language);
+            var cachedMsgs = serviceDistributor.getCachedMessages(socket.client.userReg.language);
             if (cachedMsgs && cachedMsgs.length > 0) {
                 socket.emit('cachedTranslations', cachedMsgs);
             }
@@ -56,18 +55,18 @@ var consumerConnector = function (httpServer) {
 
         // If the client closed up his registration, then add him to the active msg. recievers for his lang
         socket.on('singout', function () {
-            if (userReg && userReg.language) {
-                serviceDistributor.removeTranslationLanguage(userReg.language);
-                socket.leave('lang_' + userReg.language);
-                console.info('translations :: Client ' + userReg.sender + '(' + socket.id + ')' + ' leaved roam lang_' + userReg.language);
+            if (socket.client.userReg && socket.client.userReg.language) {
+                serviceDistributor.removeTranslationLanguage(socket.client.userReg.language);
+                socket.leave('lang_' + socket.client.userReg.language);
+                console.info('translations :: Client ' + socket.client.userReg.sender + '(' + socket.id + ')' + ' leaved roam lang_' + socket.client.userReg.language);
             }
         });
 
         // when the user disconnects.. perform this
         socket.on('disconnect', function () {
-            if (userReg && userReg.language) {
-                serviceDistributor.removeTranslationLanguage(userReg.language);
-                socket.leave('lang_' + userReg.language);
+            if (socket.client.userReg && socket.client.userReg.language) {
+                serviceDistributor.removeTranslationLanguage(socket.client.userReg.language);
+                socket.leave('lang_' + socket.client.userReg.language);
             }
             console.info('translations :: Client (' + socket.id + ') disconnected');
 

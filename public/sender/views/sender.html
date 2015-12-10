@@ -1,0 +1,36 @@
+<!-- Registration form -->
+<div ng-controller="SenderCtrl">
+    <div layout="column" layout-align="center center">
+        <div flex>
+            <p>Please fill the form</p>
+        </div>
+        <div layout="row" layout-sm="column" layout-align="center center" layout-fill>
+            <div flex="20"></div>
+            <md-input-container layout-fill>
+                <label>Your name</label>
+                <input required class="" ng-model="registrationInfo.name">
+            </md-input-container>
+            <md-input-container layout-fill>
+                <label>Language</label>
+                <md-select required ng-model="registrationInfo.language">
+                    <md-option ng-repeat="value in langList" value="{{value.key}}" value="{{value.key}}">
+                        {{value.lang}}
+                    </md-option>
+                </md-select>
+            </md-input-container>
+            <md-input-container layout-fill>
+                <label>Access Key</label>
+                <input required  ng-model="accessKey">
+            </md-input-container>
+            <div flex="20"></div>
+        </div>
+        <div layout="row">
+            <md-button ng-click="connect()" class="md-raised md-primary"> <md-icon md-font-set="material-icons">done</md-icon> Start</md-button>
+        </div>
+        <div layout="row" ng-if="isConnecting">
+            <md-progress-linear  md-mode="indeterminate"></md-progress-linear>
+        </div>
+        <br><br>
+
+    </div>
+</div>

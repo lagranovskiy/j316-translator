@@ -4,7 +4,8 @@ var config = {
         port: process.env.CONSUMER_PORT || 1080
     },
     sender: {
-        port: process.env.SENDER_PORT || 1081
+        port: process.env.SENDER_PORT || 1081,
+        accessKey: process.env.ACCESS_KEY || 'j316'
     },
     keys: {
         yandexTranslate: {

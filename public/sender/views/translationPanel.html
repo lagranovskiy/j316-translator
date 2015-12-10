@@ -1,0 +1,43 @@
+<div ng-controller="TranslationPanelCtrl">
+    <!-- angemeldet view form -->
+    <div layout="column" layout-align="left center" layout-no-wrap>
+
+
+        <md-tabs layout-fill md-selected="selectedIndex" md-dynamic-height md-autoselect>
+            <md-tab ng-repeat="language in languages"
+                    md-on-select="updateCurrentLanguage(language)"
+                    label="{{language.lang}}">
+
+                <md-input-container class="md-block">
+                    <label>Type your next translation sentence</label>
+                    <textarea required ng-model="message.text" columns="1" rows="5"
+                              ng-keydown="evaluateKeyPress($event)"></textarea>
+
+                </md-input-container>
+                    <div style="height:20px;">
+                        <i class="md-body-2 md-padding check-element animate-show"  ng-show="statusMessage">{{statusMessage}}</i>
+                    </div>
+            </md-tab>
+        </md-tabs>
+
+        <div>
+            <p class="md-body-2 md-padding"> Hello <b>{{senderInfo.name}}</b> You are currently translating <b>
+                {{localizeLang(message.language).lang}}</b></p>
+        </div>
+
+        <div infinite-scroll="incShowedMsgs()">
+
+            <div layout="row" ng-repeat="item in messages | orderBy:'-timestamp' | limitTo:showLastMsgCount  ">
+                <div class="md-list-item-text md-title md-padding">
+                    {{item.translation}}<br/>
+                    <small class="md-caption">{{formatDate(item.timestamp)}}</small>
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+    </div>
+</div>

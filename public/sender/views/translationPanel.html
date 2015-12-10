@@ -8,29 +8,41 @@
                     md-on-select="updateCurrentLanguage(language)"
                     label="{{language.lang}}">
 
-                <md-input-container class="md-block">
-                    <label>Type your next translation sentence</label>
+                <div layout="row" >
+                    <md-input-container layout-fill="" class="md-block">
+                        <label>Type your next translation sentence</label>
                     <textarea required ng-model="message.text" columns="1" rows="5"
                               ng-keydown="evaluateKeyPress($event)"></textarea>
 
-                </md-input-container>
-
-                <md-button ng-click="sendMessage()"><md-icon md-font-set="material-icons">send</md-icon></md-button>
-                <md-button ng-click="undo()"><md-icon md-font-set="material-icons">undo</md-icon></md-button>
-                    <div style="height:20px;">
-                        <i class="md-body-2 md-padding check-element animate-show"  ng-show="statusMessage">{{statusMessage}}</i>
+                    </md-input-container>
+                    <div layout="column">
+                        <md-button ng-click="sendMessage()">
+                            <md-icon md-font-set="material-icons">send</md-icon>
+                        </md-button>
+                        <md-button ng-click="undo()">
+                            <md-icon md-font-set="material-icons">undo</md-icon>
+                        </md-button>
                     </div>
+
+                </div>
+                <div style="height:20px;">
+                    <i class="md-body-2 md-padding check-element animate-show"
+                       ng-show="statusMessage">{{statusMessage}}</i>
+                </div>
+
             </md-tab>
         </md-tabs>
 
         <div>
             <p class="md-body-2 md-padding"> Hello <b>{{senderInfo.name}}</b> You are currently translating <b>
-                {{localizeLang(message.language).lang}}</b> and see <b>{{localizeLang(originLanguage).lang}}</b> output</p>
+                {{localizeLang(message.language).lang}}</b> and see <b>{{localizeLang(originLanguage).lang}}</b> output
+            </p>
         </div>
 
         <div infinite-scroll="incShowedMsgs()">
 
-            <div layout="row" ng-repeat="item in messages | orderBy:'-timestamp' | limitTo:showLastMsgCount  " class="animate-repeat">
+            <div layout="row" ng-repeat="item in messages | orderBy:'-timestamp' | limitTo:showLastMsgCount  "
+                 class="animate-repeat">
                 <div class="md-list-item-text md-title md-padding">
                     {{item.translation}}<br/>
                     <small class="md-caption">{{formatDate(item.timestamp)}}</small>
@@ -39,7 +51,6 @@
             </div>
 
         </div>
-
 
 
     </div>

@@ -3,7 +3,6 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
 
         $scope.showLastMsgCount = 20;
         $scope.messages = [];
-        $scope.sentMessages = [];
         $scope.languages = languages;
         $scope.originLanguage = TranslationService.getRegistrationInfo().language;
         $scope.selectedIndex = languages.indexOf(_.findWhere(languages, {key: $scope.originLanguage}));
@@ -26,12 +25,6 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
                 $scope.statusMessage = null
             }, 500);
             TranslationService.sendMessage($scope.message);
-
-            $scope.sentMessages.shift($scope.message.text);
-            if ($scope.sentMessages.length > 30) {
-                $scope.sentMessages.pop();
-            }
-
             $scope.message.text = null;
         };
 
@@ -39,8 +32,9 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
          * Get lang sent message again
          */
         $scope.undo = function () {
-            if($scope.sentMessages.length>0){
-                $scope.message.text =  $scope.sentMessages[0];
+            var last = TranslationService.getLast();
+            if(last){
+                $scope.message.text =  last;
             }
         };
 
@@ -51,6 +45,11 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
         $scope.evaluateKeyPress = function (event) {
             if (event.keyCode == 13 && (event.ctrlKey == true || event.shiftKey == true)) {
                 $scope.sendMessage();
+                event.preventDefault();
+            }
+            if (event.keyCode == 8 && (event.ctrlKey == true || event.shiftKey == true)) {
+                $scope.undo();
+                event.preventDefault();
             }
         };
 

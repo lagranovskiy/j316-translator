@@ -79,7 +79,7 @@ var senderConnector = function (httpServer) {
             socket.on('newMessage', function (newMessage) {
 
                 if (!socket.auth) {
-                    console.error('Unauthenticated user tries to send translation text.');
+                    return console.error('Unauthenticated user tries to send translation text.');
                 }
                 if (!newMessage) {
                     return;
@@ -140,7 +140,7 @@ var senderConnector = function (httpServer) {
             // when the user disconnects.. perform this
             socket.on('disconnect', function () {
                 console.info('questions :: Writer ' + socket.id + ' disconnected');
-                rr.removeListener('newQuestionPending', listenPendingQuestion);
+                questionDistributor.removeListener('newQuestionPending', listenPendingQuestion);
             });
         });
 

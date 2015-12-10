@@ -3,6 +3,9 @@ angular.module('j316.translate.service.translation', [])
 
         var registrationInfo = {name: null, language: 'de'};
 
+        var sentMessages = [];
+        var lastIndex = 0;
+
         var isOnline = false;
 
         var settings = {};
@@ -31,8 +34,22 @@ angular.module('j316.translate.service.translation', [])
             return isOnline;
         };
 
-        this.sendMessage = function(msg){
+        this.sendMessage = function (msg) {
             translatorSocket.emit('newMessage', msg);
+            sentMessages.unshift(msg.text);
+            lastIndex = 0;
+            if (sentMessages.length > 30) {
+                sentMessages.pop();
+            }
+        };
+
+        this.getLast = function () {
+            if (sentMessages.length > 0) {
+                var retVal = sentMessages[lastIndex % sentMessages.length];
+                lastIndex++;
+                return retVal;
+            }
+            return null;
         };
 
         /**

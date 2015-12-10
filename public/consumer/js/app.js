@@ -29,22 +29,16 @@ angular.module('consumerApp', [
         }
     ])
     .factory('translatorSocket', function (socketFactory) {
-        var mySocket = socketFactory();
+        var mySocket = socketFactory({
+            ioSocket: io.connect(window.location.origin + '/consumer')
+        });
         return mySocket;
     })
 
-    .factory('questionSocket', function (socketFactory) {
-        var questionSocket = socketFactory(
-            {
-                prefix: 'questions~',
-                ioSocket: io.connect(window.location.origin + '/questions')
-            }
-        );
-        return questionSocket;
-    })
+
     .value('languages', [
         {key: 'sq', lang: 'Albanian'},
-        {key: 'en', lang: 'English', known:true},
+        {key: 'en', lang: 'English', known: true},
         {key: 'ar', lang: 'Arabic', rtl: true},
         {key: 'hy', lang: 'Armenian'},
         {key: 'az', lang: 'Azerbaijan'},
@@ -69,8 +63,8 @@ angular.module('consumerApp', [
         {key: 'no', lang: 'Norwegian'},
         {key: 'fa', lang: 'Persian', rtl: true},
         {key: 'kk', lang: 'Kazakh', rtl: true},
-        {key: 'ru', lang: 'Russian', known:true},
-        {key: 'de', lang: 'German', known:true},
+        {key: 'ru', lang: 'Russian', known: true},
+        {key: 'de', lang: 'German', known: true},
         {key: 'pl', lang: 'Polish'},
         {key: 'pt', lang: 'Portuguese'},
         {key: 'ro', lang: 'Romanian'},

@@ -1,13 +1,13 @@
 angular.module('j316.translate.service.question', [])
-    .service('QuestionService', function ($q, $rootScope, questionSocket, TranslationService) {
+    .service('QuestionService', function ($q, $rootScope, translatorSocket, TranslationService) {
 
 
         /**
          * Socket communication
          */
 
-        questionSocket.forward('newQuestionAnswer', $rootScope);
-        $rootScope.$on('questions~newQuestionAnswer', function (ev, data) {
+        translatorSocket.forward('newQuestionAnswer', $rootScope);
+        $rootScope.$on('socket:newQuestionAnswer', function (ev, data) {
             $rootScope.$broadcast('newQuestionAnswer', {
                 time: new Date(),
                 msg: data
@@ -25,7 +25,7 @@ angular.module('j316.translate.service.question', [])
 
             var regInf = TranslationService.getRegistrationInfo();
 
-            questionSocket.emit('question', {
+            translatorSocket.emit('question', {
                 sender: regInf.name,
                 language: regInf.lang,
                 time: new Date(),

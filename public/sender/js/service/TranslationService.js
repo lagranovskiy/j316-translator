@@ -1,5 +1,5 @@
 angular.module('j316.translate.service.translation', [])
-    .service('TranslationService', function ($q, $rootScope, $cookies, questionSocket, translatorSocket) {
+    .service('TranslationService', function ($q, $rootScope, $cookies, translatorSocket) {
 
         var registrationInfo = {name: null, language: 'de'};
 
@@ -81,15 +81,6 @@ angular.module('j316.translate.service.translation', [])
             });
 
             translatorSocket.emit('authentication', {
-                sender: registrationInfo,
-                accessKey: accessKey,
-                time: new Date().getTime()
-            });
-
-            /**
-             * Not nice.. separation of concurns broken.. think about it
-             */
-            questionSocket.emit('authentication', {
                 sender: registrationInfo,
                 accessKey: accessKey,
                 time: new Date().getTime()

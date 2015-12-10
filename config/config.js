@@ -1,8 +1,7 @@
 var config = {
     host: process.env.HOST || 'localhost',
-    consumer: {
-        port: process.env.CONSUMER_PORT || 1080
-    },
+    port: process.env.PORT || 1080,
+    consumer: {},
     sender: {
         port: process.env.SENDER_PORT || 1081,
         accessKey: process.env.ACCESS_KEY || 'j316'

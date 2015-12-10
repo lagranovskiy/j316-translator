@@ -29,19 +29,13 @@ angular.module('senderApp', [
         }
     ])
     .factory('translatorSocket', function (socketFactory) {
-        var mySocket = socketFactory();
+        var mySocket = socketFactory( {
+            ioSocket: io.connect(window.location.origin + '/sender')
+        });
         return mySocket;
     })
 
-    .factory('questionSocket', function (socketFactory) {
-        var questionSocket = socketFactory(
-            {
-                prefix: 'questions~',
-                ioSocket: io.connect(window.location.origin + '/questions')
-            }
-        );
-        return questionSocket;
-    })
+
     .value('languages', [
         {key: 'sq', lang: 'Albanian'},
         {key: 'en', lang: 'English', known:true},

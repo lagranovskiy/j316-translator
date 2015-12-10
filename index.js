@@ -2,47 +2,33 @@
 var express = require('express');
 var config = require('./config/config');
 var morgan = require('morgan');
+var socketIO = require('socket.io');
 
 
-//////////////////// Consumer INIT //////////////////////
+//////////////////// Socket INIT //////////////////////
 
-var consumerApp = express();
-consumerApp.use(morgan(':method :url :response-time'));
-var consumerServer = require('http').createServer(consumerApp);
+var j316app = express();
+j316app.use(morgan(':method :url :response-time'));
+var httpServer = require('http').createServer(j316app);
+
+var ioServer = socketIO(httpServer);
 
 var consumerConnectorSetup = require('./app/connector/ConsumerConnector');
-consumerConnectorSetup(consumerServer);
-
-consumerServer.listen(config.consumer.port, function () {
-    console.log('Consumer Server listening at port %d', config.consumer.port);
-});
-
-// Routing
-consumerApp.use(express.static(__dirname + '/public/consumer/'));
-
-
-//////////////////// End of Consumer INIT //////////////////////
-
-//////////////////// Sender (Admin) INIT //////////////////////
-
-var senderApp = express();
-senderApp.use(morgan(':method :url :response-time'));
-var senderServer = require('http').createServer(senderApp);
+consumerConnectorSetup(ioServer, ioServer.of('/consumer'));
 
 var senderConnectorSetup = require('./app/connector/SenderConnector');
-senderConnectorSetup(senderServer);
+senderConnectorSetup(ioServer, ioServer.of('/sender'));
 
-senderServer.listen(config.sender.port, function () {
-    console.log('Sender Server listening at port %d', config.sender.port);
+
+////////////////// HTTP Init ////////////////////
+j316app.use('/', express.static(__dirname + '/public/consumer/'));
+j316app.use('/sender', express.static(__dirname + '/public/sender/'));
+
+
+
+httpServer.listen(config.port, function () {
+    console.log('J316 Server listening at port %d', config.port);
 });
-
-// Routing
-senderApp.use(express.static(__dirname + '/public/sender/'));
-
-//////////////////// End Sender (Admin) INIT //////////////////////
-
-
-
 
 
 

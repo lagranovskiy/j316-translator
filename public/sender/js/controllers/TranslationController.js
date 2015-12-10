@@ -17,6 +17,49 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
         $scope.senderInfo = TranslationService.getRegistrationInfo();
 
 
+        $scope.$on('newTranslation', function (event, msg) {
+            var displayableMessage = {
+                translation: msg.translation,
+                sourceName: msg.sourceName,
+                sourceLanguage: msg.sourceLanguage,
+                timestamp: msg.timestamp,
+                type: 'message'
+            };
+
+            $scope.messages.unshift(displayableMessage);
+            if ($scope.messages.length > 300) {
+                $scope.messages.pop();
+            }
+        });
+
+
+        $scope.$on('newQuestion', function (event, msg) {
+            var displayableMessage = {
+                questionUUID: msg.questionUUID,
+                translation: msg.translation,
+                text: msg.text,
+                sourceName: msg.questionSourceName,
+                sourceLanguage: msg.sourceLanguage,
+                timestamp: msg.timestamp,
+                type: 'question'
+            };
+
+            $scope.messages.unshift(displayableMessage);
+            if ($scope.messages.length > 300) {
+                $scope.messages.pop();
+            }
+        });
+
+        $scope.$on('cachedTranslations', function (event, msg) {
+            _.each(msg, function (singleMsg) {
+                $scope.messages.unshift(singleMsg);
+                if ($scope.messages.length > 300) {
+                    $scope.messages.pop();
+                }
+            });
+        });
+
+
         /**
          * Sends message for translation
          */
@@ -116,46 +159,5 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
             return _.findWhere(languages, {key: key});
         };
 
-        $scope.$on('newTranslation', function (event, msg) {
-            var displayableMessage = {
-                translation: msg.translation,
-                sourceName: msg.sourceName,
-                sourceLanguage: msg.sourceLanguage,
-                timestamp: msg.timestamp,
-                type: 'message'
-            };
-
-            $scope.messages.unshift(displayableMessage);
-            if ($scope.messages.length > 300) {
-                $scope.messages.pop();
-            }
-        });
-
-
-        $scope.$on('newQuestion', function (event, msg) {
-            var displayableMessage = {
-                questionUUID: msg.questionUUID,
-                translation: msg.translation,
-                text: msg.text,
-                sourceName: msg.questionSourceName,
-                sourceLanguage: msg.sourceLanguage,
-                timestamp: msg.timestamp,
-                type: 'question'
-            };
-
-            $scope.messages.unshift(displayableMessage);
-            if ($scope.messages.length > 300) {
-                $scope.messages.pop();
-            }
-        });
-
-        $scope.$on('cachedTranslations', function (event, msg) {
-            _.each(msg, function (singleMsg) {
-                $scope.messages.unshift(singleMsg);
-                if ($scope.messages.length > 300) {
-                    $scope.messages.pop();
-                }
-            });
-        });
 
     });

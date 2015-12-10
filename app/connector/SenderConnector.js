@@ -77,6 +77,10 @@ var senderConnector = function (httpServer) {
             console.info('sender :: New Writer is online. ' + socket.id);
 
             socket.on('newMessage', function (newMessage) {
+
+                if (!socket.auth) {
+                    console.error('Unauthenticated user tries to send translation text.');
+                }
                 if (!newMessage) {
                     return;
                 }
@@ -89,6 +93,7 @@ var senderConnector = function (httpServer) {
 
             // when the user disconnects.. perform this
             socket.on('disconnect', function () {
+
                 if (socket.client.sender && socket.client.sender.language) {
                     serviceDistributor.removeTranslationLanguage(socket.client.sender.language);
                     socket.leave('lang_' + socket.client.sender.language);
@@ -115,27 +120,32 @@ var senderConnector = function (httpServer) {
         questionSocketServer.on('connection', function (socket) {
             console.info('questions :: New Question Writer is online. ' + socket.id);
 
-
             /**
-             * Every writer need to trigger question translation to his own language
+             *
+             * @param questionUUID
              */
-            questionDistributor.on('newQuestionPending', function (questionUUID) {
-                console.info('Sender connector recieved question request (' + questionUUID + ')');
+            function listenPendingQuestion(questionUUID) {
+                console.info('Sender connector received question request (' + questionUUID + ')');
                 if (!senderInfo) {
                     return;
                 }
                 questionDistributor.requestQuestionTranslation(questionUUID, socket.id, senderInfo.language);
-            });
+            }
+
+            /**
+             * Every writer need to trigger question translation to his own language
+             */
+            questionDistributor.on('newQuestionPending', listenPendingQuestion);
 
             // when the user disconnects.. perform this
             socket.on('disconnect', function () {
                 console.info('questions :: Writer ' + socket.id + ' disconnected');
+                rr.removeListener('newQuestionPending', listenPendingQuestion);
             });
         });
 
         return io;
-    }
-    ;
+    };
 
 module.exports = senderConnector;
 

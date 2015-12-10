@@ -1,4 +1,5 @@
 var async = require('neo-async');
+var ya = require('./connectors/YandexConnector');
 
 /**
  * Adapter implementation to process language translations
@@ -21,7 +22,12 @@ var translationWorker = function () {
                 return callback(null, translationJob.text);
             }
 
-            callback(null, translationJob.text + ' translated to ' + translationJob.targetLanguage);
+            ya.translate(translationJob.text, translationJob.sourceLanguage, translationJob.targetLanguage, function (error, translatedText) {
+                if (error) {
+                    return callback('Cannot process translation to ' + translationJob.targetLanguage + error);
+                }
+                return callback(null, translatedText);
+            });
         }, 5)
 
 

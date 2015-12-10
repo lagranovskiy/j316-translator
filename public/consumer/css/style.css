@@ -1,8 +1,24 @@
-.dark-primary-color    { background: #689F38; }
-.default-primary-color { background: #8BC34A; }
-.light-primary-color   { background: #DCEDC8; }
-.text-primary-color    { color: #212121; }
-.accent-color          { background: #7C4DFF; }
-.primary-text-color    { color: #212121; }
-.secondary-text-color  { color: #727272; }
-.divider-color         { border-color: #B6B6B6; }
+.animate-repeat {
+    list-style:none;
+    box-sizing:border-box;
+}
+
+.animate-repeat.ng-move,
+.animate-repeat.ng-enter,
+.animate-repeat.ng-leave {
+    -webkit-transition:all linear 0.25s;
+    transition:all linear 0.25s;
+}
+
+.animate-repeat.ng-leave.ng-leave-active,
+.animate-repeat.ng-move,
+.animate-repeat.ng-enter {
+    opacity:0;
+    max-height:0;
+}
+
+.animate-repeat.ng-leave,
+.animate-repeat.ng-move.ng-move-active,
+.animate-repeat.ng-enter.ng-enter-active {
+    opacity:1;
+}

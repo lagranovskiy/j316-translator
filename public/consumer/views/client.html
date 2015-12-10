@@ -13,7 +13,7 @@
             <md-input-container layout-fill>
                 <label>Language</label>
                 <md-select ng-model="registrationInfo.lang" ng-model="registrationInfo.lang">
-                    <md-option ng-repeat="value in langList" value="{{value.key}}" value="{{value.key}}">
+                    <md-option ng-repeat="value in langList | orderBy:'lang'" value="{{value.key}}" value="{{value.key}}">
                         {{value.lang}}
                     </md-option>
                 </md-select>

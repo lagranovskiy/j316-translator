@@ -3,8 +3,10 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
 
         $scope.showLastMsgCount = 20;
         $scope.messages = [];
+        $scope.sentMessages = [];
         $scope.languages = languages;
-        $scope.selectedIndex = languages.indexOf(_.findWhere(languages, {key: TranslationService.getRegistrationInfo().lang}));
+        $scope.originLanguage = TranslationService.getRegistrationInfo().language;
+        $scope.selectedIndex = languages.indexOf(_.findWhere(languages, {key: $scope.originLanguage}));
 
         $scope.statusMessage = null;
 
@@ -14,6 +16,9 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
         };
 
 
+        /**
+         * Sends message for translation
+         */
         $scope.sendMessage = function () {
             console.info('Sending of message: ' + $scope.message.text);
             $scope.statusMessage = 'Sending completed';
@@ -21,7 +26,22 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
                 $scope.statusMessage = null
             }, 500);
             TranslationService.sendMessage($scope.message);
+
+            $scope.sentMessages.shift($scope.message.text);
+            if ($scope.sentMessages.length > 30) {
+                $scope.sentMessages.pop();
+            }
+
             $scope.message.text = null;
+        };
+
+        /**
+         * Get lang sent message again
+         */
+        $scope.undo = function () {
+            if($scope.sentMessages.length>0){
+                $scope.message.text =  $scope.sentMessages[0];
+            }
         };
 
         /**
@@ -72,7 +92,7 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
         });
 
         $scope.$on('cachedTranslations', function (event, msg) {
-            _.each(msg, function(singleMsg){
+            _.each(msg, function (singleMsg) {
                 $scope.messages.unshift(singleMsg);
                 if ($scope.messages.length > 300) {
                     $scope.messages.pop();

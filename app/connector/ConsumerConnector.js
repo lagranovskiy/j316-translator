@@ -76,21 +76,23 @@ var consumerConnector = function (httpServer) {
     /**
      * Socket server for handling of client questions
      */
+
+
+
     var msgSocketServer = io.of('/questions');
 
-    questionDistributor.on('newQuestionAnswerTranslated', function (translationObject) {
-        /**
-         * {
-                questionSource: question.questionSource,
-                translation: translation,
-                sourceLanguage: senderLanguage,
-                targetLanguage: question.sourceLanguage
-            };
-         */
-        console.info('Emitting question answer to the client ' + translationObject.questionSource );
+
+    /**
+     * Emits answered question to the source
+     * @param translationObject
+     */
+    function emitQuestionAnswer(translationObject) {
+        console.info('Emitting question answer to the client ' + translationObject.questionSource);
 
         msgSocketServer.sockets.to(translationObject.questionSource).emit('newQuestionAnswer', translationObject);
-    });
+    }
+
+    questionDistributor.on('newQuestionAnswerTranslated', emitQuestionAnswer);
 
     msgSocketServer.on('connection', function (socket) {
         console.info('questions :: New Client is online. ' + socket.id);

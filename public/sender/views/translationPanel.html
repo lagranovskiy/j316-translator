@@ -14,6 +14,9 @@
                               ng-keydown="evaluateKeyPress($event)"></textarea>
 
                 </md-input-container>
+
+                <md-button ng-click="sendMessage()"><md-icon md-font-set="material-icons">send</md-icon></md-button>
+                <md-button ng-click="undo()"><md-icon md-font-set="material-icons">undo</md-icon></md-button>
                     <div style="height:20px;">
                         <i class="md-body-2 md-padding check-element animate-show"  ng-show="statusMessage">{{statusMessage}}</i>
                     </div>
@@ -22,12 +25,12 @@
 
         <div>
             <p class="md-body-2 md-padding"> Hello <b>{{senderInfo.name}}</b> You are currently translating <b>
-                {{localizeLang(message.language).lang}}</b></p>
+                {{localizeLang(message.language).lang}}</b> and see <b>{{localizeLang(originLanguage).lang}}</b> output</p>
         </div>
 
         <div infinite-scroll="incShowedMsgs()">
 
-            <div layout="row" ng-repeat="item in messages | orderBy:'-timestamp' | limitTo:showLastMsgCount  ">
+            <div layout="row" ng-repeat="item in messages | orderBy:'-timestamp' | limitTo:showLastMsgCount  " class="animate-repeat">
                 <div class="md-list-item-text md-title md-padding">
                     {{item.translation}}<br/>
                     <small class="md-caption">{{formatDate(item.timestamp)}}</small>

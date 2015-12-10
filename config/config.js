@@ -9,8 +9,7 @@ var config = {
     },
     keys: {
         yandexTranslate: {
-            yandex_api_url: process.env.YANDEX_TRANSLATE_URL || 'http://translate.yandex.ru',
-            yandex_api_key: process.env.YANDEX_TRANSLATE_KEY || 'Test'
+            yandex_api_key: process.env.YANDEX_TRANSLATE_KEY || 'trnsl.1.1.20151210T130449Z.f70996eac99dae79.7472735483bf1151faa69f6db559acc1eefd23e4'
         }
     },
     init: function () {

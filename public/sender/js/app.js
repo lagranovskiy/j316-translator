@@ -51,8 +51,7 @@ angular.module('senderApp', [
     .config(function ($mdThemingProvider) {
         $mdThemingProvider.theme('black')
             .primaryPalette('grey', {
-                'default': '900', // by default use shade 900 from the grey palette for primary intentions
-
+                'default': '900' // by default use shade 900 from the grey palette for primary intentions
             });
 
         $mdThemingProvider.setDefaultTheme('black');

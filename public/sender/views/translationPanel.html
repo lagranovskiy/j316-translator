@@ -49,14 +49,23 @@
                 </div>
 
                 <div class="md-list-item-text md-title md-padding" ng-if="item.type=='question'">
-                    <span class="md-caption">New question:</span>
-                    <br/>
-                    <span class="clientQuestion"><b>{{item.translation}}</b></span><br/>
-                    <small ng-class="localizeLang(item.sourceLanguage).rtl ? 'rtl_text' : ''"> {{item.text}}</small>
-                    <br/>
-                    <small class="md-caption">{{formatDate(item.timestamp)}} by {{item.sourceName}}
-                        ({{localizeLang(item.sourceLanguage).lang}})
-                    </small>
+
+                    <div layout="row">
+                        <md-button ng-click="answerQuestion(item)">
+                            <md-icon md-font-set="material-icons">chat bubble</md-icon>
+                        </md-button>
+                        <div layout="column">
+                            <span class="md-caption">New question:</span>
+                            <br/>
+                            <span class="clientQuestion"><b>{{item.translation}}</b></span><br/>
+                            <small ng-class="localizeLang(item.sourceLanguage).rtl ? 'rtl_text' : ''"> {{item.text}}
+                            </small>
+                            <br/>
+                            <small class="md-caption">{{formatDate(item.timestamp)}} by {{item.sourceName}}
+                                ({{localizeLang(item.sourceLanguage).lang}})
+                            </small>
+                        </div>
+                    </div>
                 </div>
 
             </div>

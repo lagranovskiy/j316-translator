@@ -1,5 +1,5 @@
 angular.module('j316.translate.controller.translation', ['angular-underscore'])
-    .controller('TranslationPanelCtrl', function ($scope, $anchorScroll, $location, $timeout, $window, $http, $log, TranslationService, languages) {
+    .controller('TranslationPanelCtrl', function ($scope, $location, $timeout, $log, TranslationService, QuestionService, languages, $mdDialog, $mdMedia) {
 
         $scope.showLastMsgCount = 20;
         $scope.messages = [];
@@ -28,6 +28,35 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
             }, 500);
             TranslationService.sendMessage($scope.message);
             $scope.message.text = null;
+        };
+
+        $scope.answerQuestion = function (question) {
+            $mdDialog.show(
+                {
+                    controller: function ($scope, $mdDialog) {
+                        $scope.hide = function () {
+                            $mdDialog.hide();
+                        };
+                        $scope.cancel = function () {
+                            $mdDialog.cancel();
+                        };
+                        $scope.send = function () {
+                            $mdDialog.hide($scope.msg);
+                        };
+                    },
+                    templateUrl: 'views/dialog/answer.tmpl.html',
+                    clickOutsideToClose: true
+                })
+                .then(function (answer) {
+                    QuestionService.sendAnswer(question, answer);
+                }, function () {
+                    console.info('You cancelled the dialog.');
+                });
+
+            $scope.$watch(function () {
+                return $mdMedia('sm');
+            });
+
         };
 
         /**

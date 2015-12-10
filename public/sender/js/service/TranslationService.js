@@ -40,6 +40,10 @@ angular.module('j316.translate.service.translation', [])
         };
 
         this.sendMessage = function (msg) {
+            if (!msg || !msg.text || msg.text.length === 0) {
+                console.error('ignoring empty message sending');
+                return;
+            }
             translatorSocket.emit('newMessage', msg);
             sentMessages.unshift(msg.text);
             lastIndex = 0;

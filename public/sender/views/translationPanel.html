@@ -34,13 +34,13 @@
             </md-tab>
 
 
-            <md-tab label="Clients">
-                <div layout="row">
-                    <div ng-repeat="(key, value) in listenerList">
-                        <p class="md-body-2 md-padding"> {{localizeLang(key).lang}}: {{value}} </p>
-
+            <md-tab label="Clients ({{listenerCount}})" class="">
+                <div class=" md-padding">
+                    <div layout="column" ng-repeat="(key, value) in listenerList " ng-if="value > 0">
+                        <p class="md-body-2"> {{localizeLang(key).lang}}: {{value}} </p>
                     </div>
                 </div>
+
             </md-tab>
         </md-tabs>
 

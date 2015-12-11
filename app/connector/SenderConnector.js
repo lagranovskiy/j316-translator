@@ -132,6 +132,8 @@ var senderConnector = function (socketChannel) {
         if (cachedMsgs && cachedMsgs.length > 0) {
             socket.emit('cachedTranslations', cachedMsgs);
         }
+
+        socket.emit('listenersChanged', serviceDistributor.languageList);
     }
 
 

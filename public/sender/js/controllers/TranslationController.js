@@ -5,7 +5,7 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
         $scope.messages = [];
         $scope.languages = languages;
         $scope.originLanguage = TranslationService.getRegistrationInfo().language;
-        $scope.selectedIndex = languages.indexOf(_.findWhere(languages, {key: $scope.originLanguage}));
+        $scope.selectedIndex = 0;
 
         $scope.listenerList = [];
 
@@ -21,6 +21,12 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
 
         $scope.$on('listenersChanged', function (event, msg) {
             $scope.listenerList = msg;
+            var listenerCount = 0;
+            _.each(msg, function (val) {
+                listenerCount = listenerCount + val;
+            });
+
+            $scope.listenerCount = listenerCount;
         });
 
 
@@ -136,11 +142,16 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
             }
         };
 
+
         /**
          * Updates currently configured language
          * @param lang
          */
         $scope.updateCurrentLanguage = function (lang) {
+            if (!lang) {
+                return;
+            }
+
             $scope.message.language = lang.key;
         };
 

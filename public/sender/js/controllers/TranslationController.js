@@ -7,9 +7,10 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
         $scope.originLanguage = TranslationService.getRegistrationInfo().language;
         $scope.selectedIndex = 0;
 
-        $scope.listenerList = [];
+        $scope.listenerList = TranslationService.listeners;
 
         $scope.statusMessage = null;
+
 
         $scope.message = {
             text: null,
@@ -18,53 +19,9 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
 
         $scope.senderInfo = TranslationService.getRegistrationInfo();
 
-
-        $scope.startButton = function (event) {
-
-            //WebSpeech API
-            var final_transcript = '';
-            var recognizing = false;
-            var last10messages = []; //to be populated later
-
-            if (!('webkitSpeechRecognition' in window)) {
-                console.log("webkitSpeechRecognition is not available");
-            } else {
-                var recognition = new webkitSpeechRecognition();
-                recognition.continuous = true;
-                recognition.interimResults = true;
-
-                recognition.onstart = function () {
-                    recognizing = true;
-                };
-
-                recognition.onresult = function (event) {
-                    var interim_transcript = '';
-                    for (var i = event.resultIndex; i < event.results.length; ++i) {
-                        if (event.results[i].isFinal) {
-                            final_transcript += event.results[i][0].transcript;
-                        } else {
-                            interim_transcript += event.results[i][0].transcript;
-                        }
-                    }
-                };
-            }
-
-
-
-
-            if (recognizing) {
-                recognition.stop();
-                recognizing = false;
-                $("#start_button").prop("value", "Record");
-                return;
-            }
-            final_transcript = '';
-            recognition.lang = "en-GB"
-            recognition.start();
-            $("#start_button").prop("value", "Recording ... Click to stop.");
-            $("#msg").val();
-        };
-
+        $scope.recognizing = false;
+        $scope.recognition = null;
+        $scope.interim_transcript = '';
 
 
         $scope.$on('listenersChanged', function (event, msg) {
@@ -113,19 +70,128 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
 
         $scope.$on('cachedTranslations', function (event, msg) {
             _.each(msg, function (singleMsg) {
-                $scope.messages.unshift(singleMsg);
+                var displayableMessage = {
+                    translation: singleMsg.translation,
+                    sourceName: singleMsg.sourceName,
+                    sourceLanguage: singleMsg.sourceLanguage,
+                    timestamp: singleMsg.timestamp,
+                    type: 'message'
+                };
+
+
+                $scope.messages.unshift(displayableMessage);
                 if ($scope.messages.length > 300) {
                     $scope.messages.pop();
                 }
             });
         });
 
+        $scope.$on('socket:error', function (ev, data) {
+            $log.error(ev);
+
+            var alert = $mdDialog.alert()
+                .parent(angular.element(document.body))
+                .clickOutsideToClose(true)
+                .title('Disconnected')
+                .content(data)
+                .ok('Ok');
+
+            $mdDialog.show(alert).then(TranslationService.disconnect);
+
+        });
+
+
+        $scope.startVoiceRecognition = function () {
+
+
+            if (!('webkitSpeechRecognition' in window)) {
+                $log.log("webkitSpeechRecognition is not available");
+            } else {
+                if (!$scope.recognition) {
+                    $scope.recognition = new webkitSpeechRecognition();
+                    $scope.recognition.continuous = true;
+                    $scope.recognition.interimResults = true;
+
+                    $scope.recognition.onstart = function () {
+                        $log.info('Started voice recording');
+                    };
+
+                    $scope.recognition.onend = function () {
+                        $log.info('Stopped voice recording');
+                        if ($scope.recognizing) {
+                            $scope.sendMessage();
+                            $scope.recognition.start();
+                        }
+                    };
+
+                    $scope.recognition.onerror = function (err) {
+                        $log.error(err);
+                    };
+
+                    $scope.recognition.onaudiostart = function () {
+                        $log.info('audio start fired');
+                    };
+
+                    $scope.recognition.onaudioend = function () {
+                        $log.info('audio end fired');
+                    };
+
+                    $scope.recognition.onsoundstart = function () {
+                        $log.info('sound start fired');
+                    };
+
+                    $scope.recognition.onsoundend = function () {
+                        $log.info('sound end fired');
+                    };
+
+                    $scope.recognition.onspeechstart = function () {
+                        $log.info('speech start fired');
+                    };
+                    $scope.recognition.onspeechend = function () {
+                        $log.info('speech end fired');
+                        $scope.sendMessage();
+                    };
+
+
+                    $scope.recognition.onresult = function (event) {
+                        for (var i = event.resultIndex; i < event.results.length; ++i) {
+                            var capitalize = _.capitalize(event.results[i][0].transcript.trim());
+
+                            if (event.results[i].isFinal) {
+                                if (!$scope.message.text) {
+                                    $scope.message.text = '';
+                                }
+                                $scope.message.text += capitalize + '.\n';
+                            } else {
+                                $scope.interim_transcript = capitalize;
+                            }
+                        }
+                        $scope.$apply();
+                    };
+
+
+                    //WebSpeech API
+                    if ($scope.recognizing === true) {
+                        $scope.recognizing = false;
+                        $scope.recognition.stop();
+                    }
+
+
+                    $scope.recognition.lang = _.findWhere(languages, {key: $scope.message.language}).voicelang;
+                    $scope.recognition.start();
+                    $scope.recognizing = true;
+                }
+
+
+            }
+        };
+
 
         /**
          * Sends message for translation
          */
         $scope.sendMessage = function () {
-            console.info('Sending of message: ' + $scope.message.text);
+            $log.info('Sending of message: ' + $scope.message.text);
             $scope.statusMessage = 'Sending completed';
             $timeout(function () {
                 $scope.statusMessage = null
@@ -154,7 +220,7 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
                 .then(function (answer) {
                     QuestionService.sendAnswer(question, answer);
                 }, function () {
-                    console.info('You cancelled the dialog.');
+                    $log.info('You cancelled the dialog.');
                 });
 
             $scope.$watch(function () {

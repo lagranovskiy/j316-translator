@@ -7,7 +7,7 @@ var socketAuth = require('socketio-auth');
 var senderConnector = function (socketChannel) {
 
 
-    socketChannel.on('connection', function (socket) {
+    socketChannel.on('connection', function (socket, calling) {
 
         console.info('sender :: New Sender is online. ' + socket.id);
 
@@ -15,6 +15,9 @@ var senderConnector = function (socketChannel) {
 
         // when the user disconnects.. perform this
         socket.on('disconnect', handleDisconnect);
+
+        // If the client closed up his registration, then add him to the active msg. recievers for his lang
+        socket.on('singout', handleDisconnect);
 
         /**
          * Every writer need to trigger question translation to his own language
@@ -33,7 +36,9 @@ var senderConnector = function (socketChannel) {
             }
             console.info('sender :: Sender (' + socket.id + ') disconnected');
             questionDistributor.removeListener('newQuestionPending', listenPendingQuestion);
-            socket.disconnect();
+            if (socket.connected) {
+                socket.disconnect()
+            }
         }
 
 
@@ -42,8 +47,8 @@ var senderConnector = function (socketChannel) {
          * @param newMessage
          */
         function handleNewMessage(newMessage) {
-
             if (!socket.auth) {
+                socket.error('Authentication broken. Please login again.');
                 return console.error('Unauthenticated user tries to send translation text.');
             }
             if (!newMessage) {
@@ -62,6 +67,7 @@ var senderConnector = function (socketChannel) {
          */
         function listenPendingQuestion(questionUUID) {
             if (!socket.auth) {
+                socket.error('Authentication broken. Please login again.');
                 return;
             }
             console.info('Sender connector received question request (' + questionUUID + ')');
@@ -96,7 +102,9 @@ var senderConnector = function (socketChannel) {
         var accessKey = data.accessKey;
 
         if (!accessKey) return callback(new Error("Access key not found"));
-        return callback(null, accessKey === config.sender.accessKey);
+        var retVal = callback(null, accessKey === config.sender.accessKey);
+
+        return retVal;
     }
 
 

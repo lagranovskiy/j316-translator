@@ -9,18 +9,30 @@
                     label="{{language.lang}}">
 
                 <div layout="row">
-                    <md-input-container layout-fill="" class="md-block">
-                        <label>Type your next translation sentence</label>
-                    <textarea required ng-model="message.text" columns="1" rows="5"
-                              ng-keydown="evaluateKeyPress($event)"></textarea>
+                    <div layout="column" layout-fill="" ng-if="recognizing==false">
+                        <md-input-container class="md-block">
+                            <label>Type your next translation sentence</label>
+                            <textarea required ng-model="message.text" columns="1" rows="5"
+                                      ng-keydown="evaluateKeyPress($event)"></textarea>
 
-                    </md-input-container>
+                        </md-input-container>
+                    </div>
+                    <div layout="column" layout-fill="" ng-if="recognizing==true">
+                        <small>Ready to send:</small>
+                        <div><b>{{message.text}}</b></div>
+                        <small>Interimming text:</small>
+                        <div style="font-color:'grey';"><b>{{interim_transcript}}</b></div>
+                    </div>
                     <div layout="column">
                         <md-button ng-click="sendMessage()">
                             <md-icon md-font-set="material-icons">send</md-icon>
                         </md-button>
                         <md-button ng-click="undo()">
                             <md-icon md-font-set="material-icons">undo</md-icon>
+                        </md-button>
+                        <md-button class="" ng-click="startVoiceRecognition()"
+                                   ng-class="recognizing==true ? 'md-warn':'md-primary'">
+                            <md-icon md-font-set="material-icons">mic</md-icon>
                         </md-button>
 
                     </div>
@@ -43,14 +55,7 @@
 
             </md-tab>
 
-            <md-tab label="Voice" class="">
-                <div class=" md-padding">
-                    <md-button ng-click="startButton()">
-                        Start
-                    </md-button>
-                </div>
 
-            </md-tab>
         </md-tabs>
 
         <div>

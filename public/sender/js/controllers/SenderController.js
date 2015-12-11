@@ -5,6 +5,21 @@ angular.module('j316.translate.controller.sender', [])
         $scope.isConnecting = false;
         $scope.accessKey='j316';
 
+        $scope.$on('socket:error', function (ev, data) {
+            $log.error(ev);
+            TranslationService.disconnect();
+
+            var alert = $mdDialog.alert()
+                .parent(angular.element(document.body))
+                .clickOutsideToClose(true)
+                .title('Disconnected')
+                .content(data)
+                .ok('Ok');
+
+            $mdDialog.show(alert)
+
+        });
+
         $scope.connect = function () {
             $scope.registrationInfo = TranslationService.register($scope.registrationInfo);
             $scope.isConnecting = true;

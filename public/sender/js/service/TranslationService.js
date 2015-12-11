@@ -1,5 +1,5 @@
 angular.module('j316.translate.service.translation', [])
-    .service('TranslationService', function ($q, $rootScope, $cookies, translatorSocket) {
+    .service('TranslationService', function ($q, $rootScope, $log, $cookies, translatorSocket) {
 
         var registrationInfo = {name: null, language: 'de'};
 
@@ -10,6 +10,8 @@ angular.module('j316.translate.service.translation', [])
 
         var settings = {};
 
+        var listeners = {};
+
         /**
          * Socket communication
          */
@@ -19,25 +21,26 @@ angular.module('j316.translate.service.translation', [])
 
         translatorSocket.forward('listenersChanged', $rootScope);
         $rootScope.$on('socket:listenersChanged', function (ev, data) {
-            console.debug('Listeners change detected: ' + JSON.stringify(data));
+            $log.debug('Listeners change detected: ' + JSON.stringify(data));
+            listeners = data;
             $rootScope.$broadcast('listenersChanged', data);
         });
 
         translatorSocket.forward('newQuestion', $rootScope);
         $rootScope.$on('socket:newQuestion', function (ev, data) {
-            console.debug('Question msg retrieved: ' + JSON.stringify(data));
+            $log.debug('Question msg retrieved: ' + JSON.stringify(data));
             $rootScope.$broadcast('newQuestion', data);
         });
 
         translatorSocket.forward('newTranslation', $rootScope);
         $rootScope.$on('socket:newTranslation', function (ev, data) {
-            console.debug('Translation msg retrieved: ' + JSON.stringify(data));
+            $log.debug('Translation msg retrieved: ' + JSON.stringify(data));
             $rootScope.$broadcast('newTranslation', data);
         });
 
         translatorSocket.forward('cachedTranslations', $rootScope);
         $rootScope.$on('socket:cachedTranslations', function (ev, data) {
-            console.debug('Cached Translation msg retrieved: ' + JSON.stringify(data));
+            $log.debug('Cached Translation msg retrieved: ' + JSON.stringify(data));
             $rootScope.$broadcast('cachedTranslations', data);
         });
 
@@ -51,7 +54,7 @@ angular.module('j316.translate.service.translation', [])
 
         this.sendMessage = function (msg) {
             if (!msg || !msg.text || msg.text.length === 0) {
-                console.error('ignoring empty message sending');
+                $log.info('ignoring empty message sending');
                 return;
             }
             translatorSocket.emit('newMessage', msg);
@@ -78,13 +81,13 @@ angular.module('j316.translate.service.translation', [])
             var defer = $q.defer();
             translatorSocket.connect();
             translatorSocket.on('unauthorized', function (err) {
-                console.log("There was an error with the authentication:", err.message);
+                $log.log("There was an error with the authentication:", err.message);
                 defer.reject("There was an error with the authentication:" + err.message);
                 translatorSocket.removeAllListeners('unauthorized');
             });
 
             translatorSocket.on('singinCompleted', function () {
-                console.info('Registration completed');
+                $log.info('Registration completed');
                 isOnline = true;
                 defer.resolve();
                 translatorSocket.removeAllListeners('singinCompleted');
@@ -109,7 +112,7 @@ angular.module('j316.translate.service.translation', [])
             translatorSocket.emit('singout', {});
             translatorSocket.removeAllListeners('newTranslation');
 
-            console.info('Leaved translation roam');
+            $log.info('Leaved translation roam');
         };
 
 

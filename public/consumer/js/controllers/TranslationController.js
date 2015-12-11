@@ -33,7 +33,16 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
 
         $scope.$on('cachedTranslations', function (event, msg) {
             _.each(msg, function(singleMsg){
-                $scope.messages.unshift(singleMsg);
+                var displayableMessage = {
+                    translation: singleMsg.translation,
+                    sourceName: singleMsg.sourceName,
+                    sourceLanguage: singleMsg.sourceLanguage,
+                    timestamp: singleMsg.timestamp,
+                    type: 'message'
+                };
+
+
+                $scope.messages.unshift(displayableMessage);
                 if ($scope.messages.length > 300) {
                     $scope.messages.pop();
                 }

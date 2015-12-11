@@ -42,6 +42,7 @@
 
 .md-title{
     font-size: 3em;
+    line-height: initial;
 }
 .clientQuestion {
     color: red;

@@ -2,6 +2,10 @@
     direction: rtl;
 }
 
+.md-title{
+    font-size: 3em;
+    line-height: initial;
+}
 
 .animate-repeat {
     list-style:none;

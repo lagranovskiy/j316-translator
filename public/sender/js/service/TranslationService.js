@@ -15,6 +15,8 @@ angular.module('j316.translate.service.translation', [])
          */
 
 
+
+
         translatorSocket.forward('listenersChanged', $rootScope);
         $rootScope.$on('socket:listenersChanged', function (ev, data) {
             console.debug('Listeners change detected: ' + JSON.stringify(data));

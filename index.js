@@ -21,6 +21,8 @@ senderConnectorSetup(ioServer.of('/sender'));
 
 
 ////////////////// HTTP Init ////////////////////
+j316app.use('/bower_components', express.static(__dirname + '/public/bower_components/'));
+j316app.use('/control/bower_components', express.static(__dirname + '/public/bower_components/'));
 j316app.use('/', express.static(__dirname + '/public/consumer/'));
 j316app.use('/control', express.static(__dirname + '/public/sender/'));
 

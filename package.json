@@ -4,7 +4,8 @@
   "description": "Translator application to provide simultanous language translation on multiple client",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "postinstall": "bower install"
   },
   "author": "Leonid Agranovskiy",
   "license": "ISC",
@@ -20,5 +21,8 @@
     "socketio-auth": "0.0.5",
     "underscore": "^1.8.3",
     "yandex-translate": "^2.1.0"
+  },
+  "devDependencies": {
+    "grunt-bower-task": "^0.4.0"
   }
 }

@@ -169,19 +169,17 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
                         $scope.$apply();
                     };
 
-
-                    //WebSpeech API
-                    if ($scope.recognizing === true) {
-                        $scope.recognizing = false;
-                        $scope.recognition.stop();
-                    }
-
-
-                    $scope.recognition.lang = _.findWhere(languages, {key: $scope.message.language}).voicelang;
-                    $scope.recognition.start();
-                    $scope.recognizing = true;
+                }
+                //WebSpeech API
+                if ($scope.recognizing === true) {
+                    $scope.recognizing = false;
+                    $scope.recognition.stop();
                 }
 
+
+                $scope.recognition.lang = _.findWhere(languages, {key: $scope.message.language}).voicelang;
+                $scope.recognition.start();
+                $scope.recognizing = true;
 
             }
         };

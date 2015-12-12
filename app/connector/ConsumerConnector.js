@@ -10,7 +10,12 @@ var consumerConnector = function (socketChannel) {
      */
     socketChannel.on('connection', function (socket) {
 
-        console.info('translations :: New Client is online. ' + socket.id);
+        console.info('client :: New Client is online. ' + socket.id);
+
+        if (!socket.handshake.session.sender) {
+            console.info('client :: Send auth request to sender ' + socket.id);
+            socket.emit('authenticate');
+        }
 
         // If the client closed up his registration, then add him to the active msg. recievers for his lang
         socket.on('singin', handleSingIn);

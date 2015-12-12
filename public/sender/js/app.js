@@ -39,6 +39,13 @@ angular.module('senderApp', [
 
         translatorSocket.forward('error');
 
+
+        translatorSocket.forward('authenticate', $rootScope);
+        $rootScope.$on('socket:authenticate', function (ev, data) {
+            $log.debug('Auth request received.');
+            $rootScope.$broadcast('authenticate', data);
+        });
+
         translatorSocket.forward('listenersChanged', $rootScope);
         $rootScope.$on('socket:listenersChanged', function (ev, data) {
             $log.debug('Listeners change detected: ' + JSON.stringify(data));

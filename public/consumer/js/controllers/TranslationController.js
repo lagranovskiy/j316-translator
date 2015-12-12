@@ -14,6 +14,9 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
             }
         });
 
+        $scope.$on('authenticate', function (event, msg) {
+            TranslationService.disconnect();
+        });
 
 
         $scope.$on('newTranslation', function (event, msg) {

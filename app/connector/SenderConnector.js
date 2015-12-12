@@ -11,6 +11,11 @@ var senderConnector = function (socketChannel) {
 
         console.info('sender :: New Sender is online. ' + socket.id);
 
+        if (!socket.handshake.session.sender) {
+            console.info('sender :: Send auth request to sender ' + socket.id);
+            socket.emit('authenticate');
+        }
+
         socket.on('newMessage', handleNewMessage);
 
         socket.on('requestListenersInfo', handleRequestListenersInfo);

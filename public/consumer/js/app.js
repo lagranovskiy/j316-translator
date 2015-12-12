@@ -34,6 +34,11 @@ angular.module('consumerApp', [
             ioSocket: io.connect(window.location.origin + '/consumer')
         });
 
+        translatorSocket.forward('authenticate', $rootScope);
+        $rootScope.$on('socket:authenticate', function (ev, data) {
+            $log.debug('Auth request received.');
+            $rootScope.$broadcast('authenticate', data);
+        });
 
         translatorSocket.forward('newQuestionAnswer', $rootScope);
         $rootScope.$on('socket:newQuestionAnswer', function (ev, data) {

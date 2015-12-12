@@ -24,6 +24,17 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
         $scope.interim_transcript = '';
 
 
+        $scope.$watch('isOnline()', function (newVal) {
+            if (newVal === false) {
+                $location.path('/');
+            }
+        });
+
+
+        $scope.$on('authenticate', function (event, msg) {
+            TranslationService.disconnect();
+        });
+
         $scope.$on('listenersChanged', function (event, msg) {
             $scope.listenerList = msg;
             var listenerCount = 0;
@@ -87,17 +98,8 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
         });
 
         $scope.$on('socket:error', function (ev, data) {
-            $log.error(ev);
-
-            var alert = $mdDialog.alert()
-                .parent(angular.element(document.body))
-                .clickOutsideToClose(true)
-                .title('Disconnected')
-                .content(data)
-                .ok('Ok');
-
-            $mdDialog.show(alert).then(TranslationService.disconnect);
-
+            $log.warn(data);
+            TranslationService.disconnect();
         });
 
 

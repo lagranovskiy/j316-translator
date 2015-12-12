@@ -10,12 +10,8 @@ angular.module('j316.translate.service.translation', [])
 
         var settings = {};
 
-        var listeners = {};
 
 
-        $rootScope.$on('listenersChanged', function (event, msg) {
-            listeners = msg;
-        });
 
         /**
          * Indicates if client is online

@@ -17,33 +17,6 @@ angular.module('j316.translate.service.translation', [])
          */
 
 
-
-
-        translatorSocket.forward('listenersChanged', $rootScope);
-        $rootScope.$on('socket:listenersChanged', function (ev, data) {
-            $log.debug('Listeners change detected: ' + JSON.stringify(data));
-            listeners = data;
-            $rootScope.$broadcast('listenersChanged', data);
-        });
-
-        translatorSocket.forward('newQuestion', $rootScope);
-        $rootScope.$on('socket:newQuestion', function (ev, data) {
-            $log.debug('Question msg retrieved: ' + JSON.stringify(data));
-            $rootScope.$broadcast('newQuestion', data);
-        });
-
-        translatorSocket.forward('newTranslation', $rootScope);
-        $rootScope.$on('socket:newTranslation', function (ev, data) {
-            $log.debug('Translation msg retrieved: ' + JSON.stringify(data));
-            $rootScope.$broadcast('newTranslation', data);
-        });
-
-        translatorSocket.forward('cachedTranslations', $rootScope);
-        $rootScope.$on('socket:cachedTranslations', function (ev, data) {
-            $log.debug('Cached Translation msg retrieved: ' + JSON.stringify(data));
-            $rootScope.$broadcast('cachedTranslations', data);
-        });
-
         /**
          * Indicates if client is online
          * @returns {boolean}
@@ -79,6 +52,7 @@ angular.module('j316.translate.service.translation', [])
          */
         this.connect = function (accessKey) {
             var defer = $q.defer();
+
             translatorSocket.on('unauthorized', function (err) {
                 $log.log("There was an error with the authentication:", err.message);
                 defer.reject("There was an error with the authentication:" + err.message);
@@ -91,6 +65,8 @@ angular.module('j316.translate.service.translation', [])
                 defer.resolve();
                 translatorSocket.removeAllListeners('singinCompleted');
             });
+
+
 
             translatorSocket.emit('authentication', {
                 sender: registrationInfo,

@@ -32,13 +32,37 @@ angular.module('senderApp', [
             });
         }
     ])
-    .factory('translatorSocket', function (socketFactory) {
-        var mySocket = socketFactory( {
+    .factory('translatorSocket', function (socketFactory, $rootScope, $log) {
+        var translatorSocket = socketFactory( {
             ioSocket: io.connect(window.location.origin + '/sender')
         });
 
-        mySocket.forward('error');
-        return mySocket;
+        translatorSocket.forward('error');
+
+        translatorSocket.forward('listenersChanged', $rootScope);
+        $rootScope.$on('socket:listenersChanged', function (ev, data) {
+            $log.debug('Listeners change detected: ' + JSON.stringify(data));
+            $rootScope.$broadcast('listenersChanged', data);
+        });
+
+        translatorSocket.forward('newQuestion', $rootScope);
+        $rootScope.$on('socket:newQuestion', function (ev, data) {
+            $log.debug('Question msg retrieved: ' + JSON.stringify(data));
+            $rootScope.$broadcast('newQuestion', data);
+        });
+
+        translatorSocket.forward('newTranslation', $rootScope);
+        $rootScope.$on('socket:newTranslation', function (ev, data) {
+            $log.debug('Translation msg retrieved: ' + JSON.stringify(data));
+            $rootScope.$broadcast('newTranslation', data);
+        });
+
+        translatorSocket.forward('cachedTranslations', $rootScope);
+        $rootScope.$on('socket:cachedTranslations', function (ev, data) {
+            $log.debug('Cached Translation msg retrieved: ' + JSON.stringify(data));
+            $rootScope.$broadcast('cachedTranslations', data);
+        });
+        return translatorSocket;
     })
 
 
@@ -101,6 +125,7 @@ angular.module('senderApp', [
 
         $mdThemingProvider.setDefaultTheme('black');
     })
+
 
     .config(function ($routeProvider) {
         $routeProvider

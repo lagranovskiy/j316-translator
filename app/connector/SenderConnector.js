@@ -59,7 +59,7 @@ var senderConnector = function (socketChannel) {
          * @param newMessage
          */
         function handleNewMessage(newMessage) {
-            if (!socket.auth) {
+            if (!socket.handshake.session.sender) {
                 socket.error('Authentication broken. Please login again.');
                 return console.error('Unauthenticated user tries to send translation text.');
             }
@@ -78,7 +78,7 @@ var senderConnector = function (socketChannel) {
          * @param questionUUID uuid of new question
          */
         function listenPendingQuestion(questionUUID) {
-            if (!socket.auth) {
+            if (!socket.handshake.session.sender) {
                 socket.error('Authentication broken. Please login again.');
                 return;
             }

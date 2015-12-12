@@ -7,21 +7,6 @@ angular.module('j316.translate.service.translation', [])
 
         var settings = {readingTime: 1};
 
-        /**
-         * Socket communication
-         */
-
-        translatorSocket.forward('newTranslation', $rootScope);
-        $rootScope.$on('socket:newTranslation', function (ev, data) {
-            console.debug('Translation msg retrieved: ' + JSON.stringify(data));
-            $rootScope.$broadcast('newTranslation', data);
-        });
-
-        translatorSocket.forward('cachedTranslations', $rootScope);
-        $rootScope.$on('socket:cachedTranslations', function (ev, data) {
-            console.debug('Cached Translation msg retrieved: ' + JSON.stringify(data));
-            $rootScope.$broadcast('cachedTranslations', data);
-        });
 
         /**
          * Indicates if client is online
@@ -44,6 +29,8 @@ angular.module('j316.translate.service.translation', [])
                 defer.resolve();
                 translatorSocket.removeAllListeners('singinCompleted');
             });
+
+
 
             translatorSocket.emit('singin', {
                 sender: registrationInfo.name,

@@ -28,11 +28,33 @@ angular.module('consumerApp', [
 
         }
     ])
-    .factory('translatorSocket', function (socketFactory) {
-        var mySocket = socketFactory({
+    .factory('translatorSocket', function (socketFactory, $rootScope, $log) {
+        var translatorSocket = socketFactory({
             reconnection: true,
             ioSocket: io.connect(window.location.origin + '/consumer')
         });
+
+
+        translatorSocket.forward('newQuestionAnswer', $rootScope);
+        $rootScope.$on('socket:newQuestionAnswer', function (ev, data) {
+            $rootScope.$broadcast('newQuestionAnswer', {
+                time: new Date(),
+                msg: data
+            });
+        });
+
+        translatorSocket.forward('newTranslation', $rootScope);
+        $rootScope.$on('socket:newTranslation', function (ev, data) {
+            $log.debug('Translation msg retrieved: ' + JSON.stringify(data));
+            $rootScope.$broadcast('newTranslation', data);
+        });
+
+        translatorSocket.forward('cachedTranslations', $rootScope);
+        $rootScope.$on('socket:cachedTranslations', function (ev, data) {
+            $log.debug('Cached Translation msg retrieved: ' + JSON.stringify(data));
+            $rootScope.$broadcast('cachedTranslations', data);
+        });
+
         return mySocket;
     })
 

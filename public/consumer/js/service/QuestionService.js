@@ -2,17 +2,6 @@ angular.module('j316.translate.service.question', [])
     .service('QuestionService', function ($q, $rootScope, translatorSocket, TranslationService) {
 
 
-        /**
-         * Socket communication
-         */
-
-        translatorSocket.forward('newQuestionAnswer', $rootScope);
-        $rootScope.$on('socket:newQuestionAnswer', function (ev, data) {
-            $rootScope.$broadcast('newQuestionAnswer', {
-                time: new Date(),
-                msg: data
-            });
-        });
 
 
         /**

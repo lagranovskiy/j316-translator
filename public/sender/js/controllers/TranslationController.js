@@ -7,8 +7,8 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
         $scope.originLanguage = TranslationService.getRegistrationInfo().language;
         $scope.selectedIndex = 0;
 
-        $scope.listenerList = TranslationService.listeners;
-
+        $scope.listenerList = [];
+        $scope.listenerCount = 0;
         $scope.statusMessage = null;
 
 
@@ -271,11 +271,9 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
             return TranslationService.isOnline()
         };
 
-        $scope.$watch('isOnline()', function (newVal) {
-            if (!newVal) {
-                $location.path('/');
-            }
-        });
+        $scope.requestListenersInfo = function () {
+            TranslationService.requestListenersInfo();
+        };
 
 
         $scope.incShowedMsgs = function () {

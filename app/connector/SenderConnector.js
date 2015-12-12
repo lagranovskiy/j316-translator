@@ -13,6 +13,9 @@ var senderConnector = function (socketChannel) {
 
         socket.on('newMessage', handleNewMessage);
 
+        socket.on('requestListenersInfo', handleRequestListenersInfo);
+
+
         // when the user disconnects.. perform this
         socket.on('disconnect', handleDisconnect);
 
@@ -71,6 +74,13 @@ var senderConnector = function (socketChannel) {
                 newMessage.language = socket.handshake.session.sender.language;
             }
             serviceDistributor.requestTranslation(newMessage.text, newMessage.language, socket.handshake.session.sender.name);
+        }
+
+        /**
+         * Answers listeners request on demand
+         */
+        function handleRequestListenersInfo() {
+            socket.emit('listenersChanged', serviceDistributor.languageList);
         }
 
         /**
@@ -154,7 +164,6 @@ var senderConnector = function (socketChannel) {
             socket.emit('cachedTranslations', cachedMsgs);
         }
 
-        socket.emit('listenersChanged', serviceDistributor.languageList);
     }
 
 

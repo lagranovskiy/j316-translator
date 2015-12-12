@@ -12,10 +12,10 @@ angular.module('j316.translate.service.translation', [])
 
         var listeners = {};
 
-        /**
-         * Socket communication
-         */
 
+        $rootScope.$on('listenersChanged', function (event, msg) {
+            listeners = msg;
+        });
 
         /**
          * Indicates if client is online
@@ -67,7 +67,6 @@ angular.module('j316.translate.service.translation', [])
             });
 
 
-
             translatorSocket.emit('authentication', {
                 sender: registrationInfo,
                 accessKey: accessKey,
@@ -78,6 +77,12 @@ angular.module('j316.translate.service.translation', [])
             return defer.promise;
         };
 
+        /**
+         * Requests info about listeners
+         */
+        this.requestListenersInfo = function () {
+            translatorSocket.emit('requestListenersInfo');
+        };
 
         /**
          * Process disconnection of user

@@ -32,7 +32,7 @@ var consumerConnector = function (socketChannel) {
             if (socket.handshake.session.client && socket.handshake.session.client.language) {
                 serviceDistributor.removeTranslationLanguage(socket.handshake.session.client.language);
                 socket.leave('lang_' + socket.handshake.session.client.language);
-                console.info('translations :: Client ' + socket.handshake.session.client.sender + '(' + socket.id + ')' + ' leaved roam lang_' + socket.handshake.session.client.language);
+                console.info('client :: Client ' + socket.handshake.session.client.sender + '(' + socket.id + ')' + ' leaved roam lang_' + socket.handshake.session.client.language);
             }
 
         }
@@ -42,12 +42,11 @@ var consumerConnector = function (socketChannel) {
          */
         function handleLogout() {
             if (socket.handshake.session.client) {
-                serviceDistributor.removeTranslationLanguage(socket.handshake.session.sender.language);
-                socket.leave('lang_' + socket.handshake.session.sender.language);
+                serviceDistributor.removeTranslationLanguage(socket.handshake.session.client.language);
+                socket.leave('lang_' + socket.handshake.session.client.language);
                 delete socket.handshake.session.client;
             }
-            console.info('sender :: Sender (' + socket.id + ') disconnected');
-            questionDistributor.removeListener('newQuestionPending', listenPendingQuestion);
+            console.info('client :: Client (' + socket.id + ') disconnected');
         }
 
 
@@ -57,18 +56,18 @@ var consumerConnector = function (socketChannel) {
          */
         function handleSingIn(data) {
 
-            console.info('translations :: Sing in the client: ' + JSON.stringify(data));
+            console.info('client :: Sing in the client: ' + JSON.stringify(data));
 
             if (!data.language) {
-                console.error('translations :: Client ' + data.sender + ' has no lang preference defined. Default: en');
+                console.error('client :: Client ' + data.sender + ' has no lang preference defined. Default: en');
                 data.language = 'en';
             }
 
             if (socket.handshake.session.client != null) {
-                console.info('translations :: Client ' + data.sender + ' change his language settings from ' + socket.handshake.session.client.language + ' to ' + data.language);
+                console.info('client :: Client ' + data.sender + ' change his language settings from ' + socket.handshake.session.client.language + ' to ' + data.language);
                 serviceDistributor.removeTranslationLanguage(socket.handshake.session.client.language);
                 socket.leave('lang_' + data.language);
-                console.info('translations :: Client ' + data.sender + ' excluded from room ' + 'lang_' + socket.handshake.session.client.language);
+                console.info('client :: Client ' + data.sender + ' excluded from room ' + 'lang_' + socket.handshake.session.client.language);
             }
 
             socket.handshake.session.client = data;
@@ -76,7 +75,7 @@ var consumerConnector = function (socketChannel) {
             serviceDistributor.addTranslationLanguage(socket.handshake.session.client.language);
 
             // Recipe connection
-            console.info('translations :: Client ' + data.sender + ' added to room  lang_' + data.language);
+            console.info('client :: Client ' + data.sender + ' added to room  lang_' + data.language);
             socket.emit('singinCompleted', {success: true});
 
             // Send cached messages if any
@@ -89,9 +88,9 @@ var consumerConnector = function (socketChannel) {
 
 
         function handleNewQuestion(msg) {
-            console.info('questions :: New Question!!' + JSON.stringify(msg));
+            console.info('client :: New Question!!' + JSON.stringify(msg));
             questionDistributor.submitQuestion(socket.id, msg.sender, msg.msg, msg.language);
-            console.info('questions :: Message pending...' + JSON.stringify(msg));
+            console.info('client :: Message pending...' + JSON.stringify(msg));
         }
 
 
@@ -108,7 +107,7 @@ var consumerConnector = function (socketChannel) {
     serviceDistributor.on('translationReady', emitTranslation);
 
     function emitTranslation(translationObject) {
-        console.info('Emitting translation ' + translationObject.timestamp + 'to socket roam for ' + translationObject.targetLanguage);
+        console.info('client :: Emitting translation ' + translationObject.timestamp + 'to socket roam for ' + translationObject.targetLanguage);
         socketChannel.to('lang_' + translationObject.targetLanguage).emit('newTranslation', translationObject);
         //io.sockets.to('lang_' + translationObject.targetLanguage).emit('newTranslation', translationObject);
     }
@@ -120,7 +119,7 @@ var consumerConnector = function (socketChannel) {
     questionDistributor.on('newQuestionAnswerTranslated', emitQuestionTranslated);
 
     function emitQuestionTranslated(translationObject) {
-        console.info('Emitting question answer to the client ' + translationObject.questionSource);
+        console.info('client :: Emitting question answer to the client ' + translationObject.questionSource);
 
         socketChannel.to(translationObject.questionSource).emit('newQuestionAnswer', translationObject);
     }

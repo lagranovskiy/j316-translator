@@ -61,7 +61,7 @@ var senderConnector = function (socketChannel) {
         function handleNewMessage(newMessage) {
             if (!socket.handshake.session.sender) {
                 socket.error('Authentication broken. Please login again.');
-                return console.error('Unauthenticated user tries to send translation text.');
+                return console.error('sender :: Unauthenticated user tries to send translation text.');
             }
             if (!newMessage) {
                 return;
@@ -82,7 +82,7 @@ var senderConnector = function (socketChannel) {
                 socket.error('Authentication broken. Please login again.');
                 return;
             }
-            console.info('Sender connector received question request (' + questionUUID + ')');
+            console.info('sender :: Sender connector received question request (' + questionUUID + ')');
             questionDistributor.requestQuestionTranslation(questionUUID, socket.id, socket.handshake.session.sender.language);
         }
 
@@ -190,7 +190,7 @@ var senderConnector = function (socketChannel) {
      * @param translationObject
      */
     function emitTranslationToSender(translationObject) {
-        console.info('Emitting translation ' + translationObject.timestamp + 'to socket roam for ' + translationObject.targetLanguage);
+        console.info('sender :: Emitting translation ' + translationObject.timestamp + 'to socket roam for ' + translationObject.targetLanguage);
 
         socketChannel.to('lang_' + translationObject.targetLanguage).emit('newTranslation', translationObject);
     }
@@ -201,7 +201,7 @@ var senderConnector = function (socketChannel) {
      * @param questionMsg
      */
     function emitTranslatedQuestion(questionMsg) {
-        console.info('Sender connector received translated question request (' + questionMsg.questionUUID + ')');
+        console.info('sender :: Sender connector received translated question request (' + questionMsg.questionUUID + ')');
         if (!questionMsg) {
             return;
         }

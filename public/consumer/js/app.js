@@ -55,7 +55,7 @@ angular.module('consumerApp', [
             $rootScope.$broadcast('cachedTranslations', data);
         });
 
-        return mySocket;
+        return translatorSocket;
     })
 
 

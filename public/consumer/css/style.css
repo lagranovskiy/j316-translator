@@ -2,6 +2,10 @@
     direction: rtl;
 }
 
+.layout-fill {
+    height: auto;
+}
+
 .md-title{
     font-size: 3em;
     line-height: initial;

@@ -37,7 +37,6 @@ angular.module('j316.translate.service.translation', [])
          */
         this.connect = function () {
             var defer = $q.defer();
-            translatorSocket.connect();
 
             translatorSocket.on('singinCompleted', function () {
                 console.info('Registration completed');
@@ -63,9 +62,8 @@ angular.module('j316.translate.service.translation', [])
         this.disconnect = function () {
             isOnline = false;
             translatorSocket.emit('singout', {});
-            translatorSocket.removeAllListeners('newTranslation');
 
-            console.info('Leaved translation roam');
+            console.info('Leaved translation room');
         };
 
 

@@ -1,3 +1,7 @@
+.layout-fill {
+    height: auto;
+}
+
 .animate-show {
     opacity: 1;
     background: white;

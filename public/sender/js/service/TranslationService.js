@@ -79,7 +79,6 @@ angular.module('j316.translate.service.translation', [])
          */
         this.connect = function (accessKey) {
             var defer = $q.defer();
-            translatorSocket.connect();
             translatorSocket.on('unauthorized', function (err) {
                 $log.log("There was an error with the authentication:", err.message);
                 defer.reject("There was an error with the authentication:" + err.message);
@@ -110,9 +109,8 @@ angular.module('j316.translate.service.translation', [])
         this.disconnect = function () {
             isOnline = false;
             translatorSocket.emit('singout', {});
-            translatorSocket.removeAllListeners('newTranslation');
 
-            $log.info('Leaved translation roam');
+            $log.info('Leaved translation room');
         };
 
 

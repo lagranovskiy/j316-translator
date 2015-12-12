@@ -7,7 +7,7 @@ var socketAuth = require('socketio-auth');
 var senderConnector = function (socketChannel) {
 
 
-    socketChannel.on('connection', function (socket, calling) {
+    socketChannel.on('connection', function (socket) {
 
         console.info('sender :: New Sender is online. ' + socket.id);
 
@@ -17,7 +17,7 @@ var senderConnector = function (socketChannel) {
         socket.on('disconnect', handleDisconnect);
 
         // If the client closed up his registration, then add him to the active msg. recievers for his lang
-        socket.on('singout', handleDisconnect);
+        socket.on('singout', handleLogout);
 
         /**
          * Every writer need to trigger question translation to his own language
@@ -30,17 +30,29 @@ var senderConnector = function (socketChannel) {
          */
         function handleDisconnect() {
 
-            if (socket.client.sender && socket.client.sender.language) {
-                serviceDistributor.removeTranslationLanguage(socket.client.sender.language);
-                socket.leave('lang_' + socket.client.sender.language);
+            if (socket.handshake.session.sender && socket.handshake.session.sender.language) {
+                serviceDistributor.removeTranslationLanguage(socket.handshake.session.sender.language);
+                socket.leave('lang_' + socket.handshake.session.sender.language);
             }
             console.info('sender :: Sender (' + socket.id + ') disconnected');
             questionDistributor.removeListener('newQuestionPending', listenPendingQuestion);
-            if (socket.connected) {
-                socket.disconnect()
-            }
+
         }
 
+        /**
+         * Process user disconnect
+         */
+        function handleLogout() {
+            if (socket.handshake.session.sender) {
+                serviceDistributor.removeTranslationLanguage(socket.handshake.session.sender.language);
+                socket.leave('lang_' + socket.handshake.session.sender.language);
+                delete socket.handshake.session.sender;
+            }
+
+            console.info('sender :: Sender (' + socket.id + ') disconnected');
+            questionDistributor.removeListener('newQuestionPending', listenPendingQuestion);
+
+        }
 
         /**
          * Handles new text to be translated and distributed
@@ -54,11 +66,11 @@ var senderConnector = function (socketChannel) {
             if (!newMessage) {
                 return;
             }
-            console.info('sender ::  Sender ' + socket.client.sender.name + ' send a new message for translation and distribution');
+            console.info('sender ::  Sender ' + socket.handshake.session.sender.name + ' send a new message for translation and distribution');
             if (!newMessage.language) {
-                newMessage.language = socket.client.sender.language;
+                newMessage.language = socket.handshake.session.sender.language;
             }
-            serviceDistributor.requestTranslation(newMessage.text, newMessage.language, socket.client.sender.name);
+            serviceDistributor.requestTranslation(newMessage.text, newMessage.language, socket.handshake.session.sender.name);
         }
 
         /**
@@ -71,7 +83,7 @@ var senderConnector = function (socketChannel) {
                 return;
             }
             console.info('Sender connector received question request (' + questionUUID + ')');
-            questionDistributor.requestQuestionTranslation(questionUUID, socket.id, socket.client.sender.language);
+            questionDistributor.requestQuestionTranslation(questionUUID, socket.id, socket.handshake.session.sender.language);
         }
 
 
@@ -104,6 +116,7 @@ var senderConnector = function (socketChannel) {
         if (!accessKey) return callback(new Error("Access key not found"));
         var retVal = callback(null, accessKey === config.sender.accessKey);
 
+        socket.handshake.session.sender = data.sender;
         return retVal;
     }
 
@@ -121,13 +134,13 @@ var senderConnector = function (socketChannel) {
             data.sender.language = 'de';
         }
 
-        if (socket.client.sender != null) {
+        if (socket.handshake.session.sender != null) {
             console.info('sender :: Sender ' + data.sender.name + ' change his language settings from ' + data.sender.language + ' to ' + data.sender.language);
             socket.leave('lang_' + data.sender.language);
             serviceDistributor.removeTranslationLanguage(data.sender.language);
         }
 
-        socket.client.sender = data.sender;
+        socket.handshake.session.sender = data.sender;
         socket.join('lang_' + data.sender.language);
         serviceDistributor.addTranslationLanguage(data.sender.language);
 
@@ -136,7 +149,7 @@ var senderConnector = function (socketChannel) {
         socket.emit('singinCompleted', {success: true});
 
         // Send cached messages if any
-        var cachedMsgs = serviceDistributor.getCachedMessages(socket.client.sender.language);
+        var cachedMsgs = serviceDistributor.getCachedMessages(socket.handshake.session.sender.language);
         if (cachedMsgs && cachedMsgs.length > 0) {
             socket.emit('cachedTranslations', cachedMsgs);
         }

@@ -16,7 +16,7 @@ var consumerConnector = function (socketChannel) {
         socket.on('singin', handleSingIn);
 
         // If the client closed up his registration, then add him to the active msg. recievers for his lang
-        socket.on('singout', disconnectClient);
+        socket.on('singout', handleLogout);
 
         // when the user disconnects.. perform this
         socket.on('disconnect', disconnectClient);
@@ -29,13 +29,25 @@ var consumerConnector = function (socketChannel) {
          * Process client disconnect
          */
         function disconnectClient() {
-            if (socket.client.userReg && socket.client.userReg.language) {
-                serviceDistributor.removeTranslationLanguage(socket.client.userReg.language);
-                socket.leave('lang_' + socket.client.userReg.language);
-                console.info('translations :: Client ' + socket.client.userReg.sender + '(' + socket.id + ')' + ' leaved roam lang_' + socket.client.userReg.language);
+            if (socket.handshake.session.client && socket.handshake.session.client.language) {
+                serviceDistributor.removeTranslationLanguage(socket.handshake.session.client.language);
+                socket.leave('lang_' + socket.handshake.session.client.language);
+                console.info('translations :: Client ' + socket.handshake.session.client.sender + '(' + socket.id + ')' + ' leaved roam lang_' + socket.handshake.session.client.language);
             }
 
-            socket.disconnect();
+        }
+
+        /**
+         * Process user disconnect
+         */
+        function handleLogout() {
+            if (socket.handshake.session.client) {
+                serviceDistributor.removeTranslationLanguage(socket.handshake.session.sender.language);
+                socket.leave('lang_' + socket.handshake.session.sender.language);
+                delete socket.handshake.session.client;
+            }
+            console.info('sender :: Sender (' + socket.id + ') disconnected');
+            questionDistributor.removeListener('newQuestionPending', listenPendingQuestion);
         }
 
 
@@ -52,23 +64,23 @@ var consumerConnector = function (socketChannel) {
                 data.language = 'en';
             }
 
-            if (socket.client.userReg != null) {
-                console.info('translations :: Client ' + data.sender + ' change his language settings from ' + socket.client.userReg.language + ' to ' + data.language);
-                serviceDistributor.removeTranslationLanguage(socket.client.userReg.language);
+            if (socket.handshake.session.client != null) {
+                console.info('translations :: Client ' + data.sender + ' change his language settings from ' + socket.handshake.session.client.language + ' to ' + data.language);
+                serviceDistributor.removeTranslationLanguage(socket.handshake.session.client.language);
                 socket.leave('lang_' + data.language);
-                console.info('translations :: Client ' + data.sender + ' excluded from room ' + 'lang_' + socket.client.userReg.language);
+                console.info('translations :: Client ' + data.sender + ' excluded from room ' + 'lang_' + socket.handshake.session.client.language);
             }
 
-            socket.client.userReg = data;
+            socket.handshake.session.client = data;
             socket.join('lang_' + data.language);
-            serviceDistributor.addTranslationLanguage(socket.client.userReg.language);
+            serviceDistributor.addTranslationLanguage(socket.handshake.session.client.language);
 
             // Recipe connection
             console.info('translations :: Client ' + data.sender + ' added to room  lang_' + data.language);
             socket.emit('singinCompleted', {success: true});
 
             // Send cached messages if any
-            var cachedMsgs = serviceDistributor.getCachedMessages(socket.client.userReg.language);
+            var cachedMsgs = serviceDistributor.getCachedMessages(socket.handshake.session.client.language);
             if (cachedMsgs && cachedMsgs.length > 0) {
                 socket.emit('cachedTranslations', cachedMsgs);
             }

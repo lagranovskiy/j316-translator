@@ -1,4 +1,5 @@
 var config = {
+    appName: process.env.APPLICATION_NAME || 'J316-Translator',
     host: process.env.HOST || 'localhost',
     port: process.env.PORT || 1080,
     consumer: {},

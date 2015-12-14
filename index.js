@@ -1,4 +1,5 @@
 // Setup basic express server
+require('newrelic');
 var express = require('express');
 var config = require('./config/config');
 var morgan = require('morgan');

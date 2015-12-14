@@ -1,6 +1,6 @@
 <div ng-controller="NavCtrl" ng-cloak>
-    <h2 class="md-headline" style="position:absolute; left: 10px; color: dimgrey">J316 Translator</h2>
-    <md-fab-toolbar md-open="isOpen" md-direction="left">
+    <h2 ng-if="!isOnline()" class="md-padding" style="color: dimgrey">J316 Translator</h2>
+    <md-fab-toolbar ng-if="isOnline()" md-open="isOpen" md-direction="left">
         <md-fab-trigger class="align-with-text ">
             <md-button aria-label="menu" class="md-fab" ng-class="isOnline()?'md-warn':'md-primary md-hue-1'">
                 <md-icon md-font-set="material-icons">settings_remote</md-icon>
@@ -9,12 +9,12 @@
         <md-toolbar>
             <md-fab-actions class="md-toolbar-tools">
                 <h1>J316 Translator</h1>
-                <md-button ng-if="isOnline()" ng-click="disconnect()">
+                <md-button  ng-click="disconnect()">
                     <md-icon md-font-set="material-icons">power_settings_new</md-icon>
                     <span class="hide-sm">Leave</span>
                 </md-button>
 
-                <md-button ng-click="showAsk()">
+                <md-button  ng-click="showAsk()">
                     <md-icon md-font-set="material-icons ">sms</md-icon>
                     <span class="hide-sm">Question</span>
                 </md-button>

@@ -37,7 +37,7 @@ var serviceDistributor = _.extend(new EventEmitter(), {
      * @param translationSource person submitted the message
      */
     requestTranslation: function (text, sourceLanguage, translationSource) {
-        console.info('Translating: ' + text);
+        console.info('Service :: Translating: ' + text);
         var timestamp = new Date().getTime();
 
 
@@ -53,10 +53,10 @@ var serviceDistributor = _.extend(new EventEmitter(), {
 
             }, function (err, translation) {
                 if (err) {
-                    return console.error('Problem by the translation of ' + language + ':' + err);
+                    return console.error('Service :: Problem by the translation of ' + language + ':' + err);
                 }
 
-                console.info('Translation completed: ' + language);
+                console.info('Service :: Translation completed: ' + language);
 
                 var translationRs = {
                     translation: translation,
@@ -70,7 +70,7 @@ var serviceDistributor = _.extend(new EventEmitter(), {
 
                 serviceDistributor.emit('translationReady', translationRs);
 
-                console.info('Translation emitted to language ' + language);
+                console.info('Service :: Translation emitted to language ' + language);
             }, this);
         });
     },
@@ -96,7 +96,7 @@ var serviceDistributor = _.extend(new EventEmitter(), {
      */
     addTranslationLanguage: function (language) {
         if (!language) {
-            console.error('Cannot add consumer for illegal language ' + language);
+            console.error('Service :: Cannot add consumer for illegal language ' + language);
             return;
         }
         if (!this.languageList[language]) {
@@ -115,7 +115,7 @@ var serviceDistributor = _.extend(new EventEmitter(), {
      */
     removeTranslationLanguage: function (language) {
         if (!language) {
-            console.error('Cannot remove consumer for illegal language ' + language);
+            console.error('Service ::Cannot remove consumer for illegal language ' + language);
             return;
         }
         if (this.languageList[language] && this.languageList[language] > 0) {

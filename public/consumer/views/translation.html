@@ -10,11 +10,28 @@
 
             <div layout="row" ng-repeat="item in messages | orderBy:'-timestamp' | limitTo:showLastMsgCount"
                  class="animate-repeat">
-                <div class="md-list-item-text md-title md-padding">
+                <div class="md-list-item-text md-title md-padding" ng-if="item.type=='message'">
                     <span ng-class="localizeLang(clientInfo.lang).rtl ? 'rtl_text' : ''"> {{item.translation}}</span><br/>
                     <small class="md-caption">{{formatDate(item.timestamp)}} by {{item.sourceName}}</small>
                 </div>
 
+                <div class="md-list-item-text md-title md-padding" ng-if="item.type=='answer'">
+                    <div layout="row">
+                        <md-button ng-click="replyAnswer(item)">
+                            <md-icon md-font-set="material-icons">chat bubble</md-icon>
+                        </md-button>
+                        <div layout="column">
+                            <span class="md-caption">Your question is answered:</span>
+                            <span class="senderAnswer"><b>{{item.answerTranslation}}</b></span>
+                            <span class="md-caption">Original question:</span>
+                            <small ng-class="localizeLang(clientInfo.lang).rtl ? 'rtl_text' : ''">
+                                {{item.questionText}}
+                            </small>
+                            <small class="md-caption">by {{item.answerSenderName}}
+                            </small>
+                        </div>
+                    </div>
+                </div>
             </div>
 
         </div>

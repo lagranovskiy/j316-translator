@@ -27,10 +27,10 @@
     "angular-sanitize": "~1.4.8",
     "angular-underscore": "~0.5.0",
     "underscore": "~1.8.3",
-    "angular-material": "~0.11.4",
     "ngInfiniteScroll": "~1.2.1",
     "angular-socket-io": "~0.7.0",
     "socket.io-client": "~1.3.7",
-    "jquery": "~2.1.4"
+    "jquery": "~2.1.4",
+    "angular-material": "~0.11.4"
   }
 }

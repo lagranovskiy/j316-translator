@@ -94,10 +94,13 @@ var consumerConnector = function (socketChannel) {
 
         function handleNewQuestion(msg) {
             console.info('client :: New Question!!' + JSON.stringify(msg));
+            if (!msg.msg || msg.msg.length == 0) {
+                console.info('client :: Ignoring empty question');
+                return;
+            }
             questionDistributor.submitQuestion(socket.id, msg.sender, msg.msg, msg.language);
             console.info('client :: Message pending...' + JSON.stringify(msg));
         }
-
 
     });
 
@@ -114,19 +117,31 @@ var consumerConnector = function (socketChannel) {
     function emitTranslation(translationObject) {
         console.info('client :: Emitting translation ' + translationObject.timestamp + 'to socket roam for ' + translationObject.targetLanguage);
         socketChannel.to('lang_' + translationObject.targetLanguage).emit('newTranslation', translationObject);
-        //io.sockets.to('lang_' + translationObject.targetLanguage).emit('newTranslation', translationObject);
     }
 
     /**
      * Emits answered question to the source
      * @param translationObject
      */
-    questionDistributor.on('newQuestionAnswerTranslated', emitQuestionTranslated);
+    questionDistributor.on('newQuestionAnswerTranslated', emitAnswerTranslated);
 
-    function emitQuestionTranslated(translationObject) {
-        console.info('client :: Emitting question answer to the client ' + translationObject.questionSource);
 
-        socketChannel.to(translationObject.questionSource).emit('newQuestionAnswer', translationObject);
+    /**
+     *  * {
+    *     questionUUID: 'qww23un2r3r3',
+     *    questionSourceId: 'iX28un2dcc',
+     *    questionSourceName: 'Leo',
+     *    questionText: 'Hello how are you',
+     *    answerSource: 'Danke gut',
+     *    answerText: 'Fine thanks',
+     *    answerTranslation: 'Danke gut',
+     *    answerSenderName: 'Max'
+     * }
+     * @param translatedQuestion  question answer object
+     */
+    function emitAnswerTranslated(translatedQuestion) {
+        console.info('client :: Emitting question answer to the client ' + translatedQuestion.questionSourceId);
+        socketChannel.to(translatedQuestion.questionSourceId).emit('newQuestionAnswer', translatedQuestion);
     }
 
     return socketChannel;

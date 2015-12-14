@@ -1,5 +1,5 @@
 angular.module('j316.translate.controller.translation', ['angular-underscore'])
-    .controller('TranslationCtrl', function ($scope, $anchorScroll, $location, $timeout, $window, $http, $log, TranslationService, languages) {
+    .controller('TranslationCtrl', function ($scope, $rootScope, $anchorScroll, $location, $timeout, $window, $http, $log, TranslationService, languages) {
 
         $scope.showLastMsgCount = 20;
         $scope.messages = [];
@@ -34,8 +34,37 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
             }
         });
 
+        $scope.$on('newQuestionAnswer', function (event, msg) {
+
+            /**
+             *{
+             *    questionUUID: 'qww23un2r3r3',
+             *    questionSourceId: 'iX28un2dcc',
+             *    questionSourceName: 'Leo',
+             *    questionText: 'Hello how are you',
+             *    answerSource: 'Danke gut',
+             *    answerText: 'Fine thanks',
+             *    answerTranslation: 'Danke gut',
+             *    answerSenderName: 'Max'
+             * }
+             */
+            var displayableMessage = {
+                questionUUID: msg.questionUUID,
+                questionText: msg.questionText,
+                answerText: msg.answerText,
+                answerTranslation: msg.answerTranslation,
+                answerSenderName: msg.answerSenderName,
+                type: 'answer'
+            };
+
+            $scope.messages.unshift(displayableMessage);
+            if ($scope.messages.length > 300) {
+                $scope.messages.pop();
+            }
+        });
+
         $scope.$on('cachedTranslations', function (event, msg) {
-            _.each(msg, function(singleMsg){
+            _.each(msg, function (singleMsg) {
                 var displayableMessage = {
                     translation: singleMsg.translation,
                     sourceName: singleMsg.sourceName,
@@ -52,7 +81,13 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
             });
         });
 
-
+        /**
+         * Emits event that will be caught by nav and question dialog will be opened
+         * @param item
+         */
+        $scope.replyAnswer = function (item) {
+            $rootScope.$broadcast('askQuestion', item);
+        };
 
         $scope.formatDate = function (timestamp) {
             return new Date(timestamp).getHours() + ':' + new Date(timestamp).getMinutes();

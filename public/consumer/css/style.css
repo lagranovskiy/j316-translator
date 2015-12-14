@@ -11,6 +11,10 @@
     line-height: initial;
 }
 
+.senderAnswer{
+    color: red;
+}
+
 .animate-repeat {
     list-style:none;
     box-sizing:border-box;

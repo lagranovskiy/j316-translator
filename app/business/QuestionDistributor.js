@@ -20,27 +20,56 @@ var serviceDistributor = _.extend(new EventEmitter(), {
      * Because there can be more than one sender who can answer the question, we dont know language which sender speaks.
      * In this step they should be informed and may request the translation by id
      *
+     *
+     * Cached Question:
+     *   {
+    *     questionUUID: 'qww23un2r3r3',
+     *    questionSourceId: 'iX28un2dcc',
+     *    questionSourceName: 'Leo',
+     *    questionText: 'Hello how are you',
+     *    questionLanguage: 'en',
+     *    questionTimestamp: '1234235255'              // Timestamp of question
+     *   }
+     *
      * @param questionSource
+     * @param questionSourceName
      * @param questionText
      * @param originalLang
      */
     submitQuestion: function (questionSource, questionSourceName, questionText, originalLang) {
+
         var questionUUID = uuid.v4();
         var timestamp = new Date().getTime();
         this.msgCache.set(questionUUID, {
             questionUUID: questionUUID,
-            questionSource: questionSource,
+            questionSourceId: questionSource,
             questionSourceName: questionSourceName,
-            text: questionText,
-            sourceLanguage: originalLang,
-            timestamp: timestamp
+            questionText: questionText,
+            questionLanguage: originalLang,
+            questionTimestamp: timestamp
         });
+
+        console.info('Question :: New question cached. Emitting to the senders.');
 
         serviceDistributor.emit('newQuestionPending', questionUUID);
     },
 
     /**
      * Request question translation. emits newQuestionTranslated event if ready. translated item is stored in event body.
+     *
+     *   Translated Question:
+     *   {
+     *    questionUUID: 'qww23un2r3r3',
+     *    questionSourceId: 'iX28un2dcc',
+     *    questionSourceName: 'Leo',
+     *    questionText: 'Hello how are you',
+     *    questionLanguage: 'en',
+     *    questionTimestamp: '1234235255',              // Timestamp of question
+     *    questionTranslation: "Hallo wie gehts",       // Translated text for sender
+     *    targetId: "N3424nNOUINDD",                    // Sender who are going to answer
+     *    targetLanguage: "de"                          // Langauge of sender where the question is translated
+     *   }
+     *
      * @param questionUUID
      * @param senderId
      * @param senderLanguage
@@ -52,9 +81,10 @@ var serviceDistributor = _.extend(new EventEmitter(), {
             return;
         }
 
+
         translationWorker.translationQueue.push({
-            text: question.text,
-            sourceLanguage: question.sourceLanguage,
+            text: question.questionText,
+            sourceLanguage: question.questionLanguage,
             targetLanguage: senderLanguage
         }, function (err, translation) {
             if (err) {
@@ -63,7 +93,7 @@ var serviceDistributor = _.extend(new EventEmitter(), {
 
             console.info('Question Translation completed: ' + senderLanguage);
 
-            question.translation = translation;
+            question.questionTranslation = translation;
             question.targetId = senderId;
             question.targetLanguage = senderLanguage;
 
@@ -75,12 +105,24 @@ var serviceDistributor = _.extend(new EventEmitter(), {
 
     /**
      * Provides the back translation from sender to client
+     *
+     * {
+    *     questionUUID: 'qww23un2r3r3',
+     *    questionSourceId: 'iX28un2dcc',
+     *    questionSourceName: 'Leo',
+     *    questionText: 'Hello how are you',
+     *    answerSource: 'Danke gut',
+     *    answerText: 'Fine thanks',
+     *    answerTranslation: 'Danke gut',
+     *    answerSenderName: 'Max'
+     * }
+     *
      * @param answer text to be translated
      * @param questionUUID question uuid
-     * @param senderId sender socket
+     * @param senderName sender name
      * @param senderLanguage sender Language
      */
-    submitQuestionAnswer: function (answer, questionUUID, senderId, senderLanguage) {
+    submitQuestionAnswer: function (answer, questionUUID, senderName, senderLanguage) {
         var question = this.msgCache.get(questionUUID);
         if (!question) {
             console.error('Cannot find msg with uuid ' + questionUUID + ' answer not accepted.');
@@ -90,19 +132,22 @@ var serviceDistributor = _.extend(new EventEmitter(), {
         translationWorker.translationQueue.push({
             text: answer,
             sourceLanguage: senderLanguage,
-            targetLanguage: question.sourceLanguage
+            targetLanguage: question.questionLanguage
         }, function (err, translation) {
             if (err) {
                 return console.error('Problem by the translation of question answer ' + questionUUID + ' in ' + senderLanguage + ':' + err);
             }
 
-            console.info('Question Answer Translation completed: ' + senderLanguage);
+            console.info('Question Answer Translation completed: ' + senderName + ':' + senderLanguage);
 
             var translationRs = {
-                questionSource: question.questionSource,
-                translation: translation,
-                sourceLanguage: senderLanguage,
-                targetLanguage: question.sourceLanguage
+                questionUUID: questionUUID,
+                questionSourceId: question.questionSourceId,
+                questionSourceName: question.questionSourceName,
+                questionText: question.questionText,
+                answerText: answer,
+                answerTranslation: translation,
+                answerSenderName: senderName
             };
 
             serviceDistributor.emit('newQuestionAnswerTranslated', translationRs);

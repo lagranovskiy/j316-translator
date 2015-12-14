@@ -42,10 +42,8 @@ angular.module('consumerApp', [
 
         translatorSocket.forward('newQuestionAnswer', $rootScope);
         $rootScope.$on('socket:newQuestionAnswer', function (ev, data) {
-            $rootScope.$broadcast('newQuestionAnswer', {
-                time: new Date(),
-                msg: data
-            });
+            $log.debug('Answer msg received: ' + JSON.stringify(data));
+            $rootScope.$broadcast('newQuestionAnswer', data);
         });
 
         translatorSocket.forward('newTranslation', $rootScope);

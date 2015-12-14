@@ -11,14 +11,27 @@
 
     <md-content class="md-padding">
         <form name="userForm">
+            <h3>{{question.questionSourceName}} asks:</h3>
+
+            <div>
+                <small>Question:</small>
+                <br/>
+                <b>{{question.questionTranslation}}</b>
+            </div>
+            <div>
+                <br/>
+                <small>Original:</small>
+                <br/>
+                {{question.questionText}}
+            </div>
 
             <md-input-container>
                 <label>Type your personal answer</label>
-                <textarea ng-model="msg" columns="1" md-maxlength="1024" rows="5"></textarea>
+                <textarea ng-model="question.answer" columns="1" md-maxlength="1024" rows="5"></textarea>
             </md-input-container>
         </form>
     </md-content>
     <div class="md-actions" layout="row"><span flex></span>
-        <md-button ng-click="send()"> Ask Question</md-button>
+        <md-button ng-click="send()">Send answer</md-button>
     </div>
 </md-dialog>

@@ -6,30 +6,20 @@ angular.module('j316.translate.service.question', [])
          * Socket communication
          */
 
-        translatorSocket.forward('newQuestionAnswer', $rootScope);
-        $rootScope.$on('socket:newQuestionAnswer', function (ev, data) {
-            $rootScope.$broadcast('newQuestionAnswer', {
-                time: new Date(),
-                msg: data
-            });
+        translatorSocket.forward('questionAnswered', $rootScope);
+        $rootScope.$on('socket:questionAnswered', function (ev, data) {
+            $rootScope.$broadcast('questionAnswered', data);
         });
-
-
 
 
         /**
          * Sends a question
          * @param question question to be sent
          */
-        this.sendQuestion = function (question) {
-
-            var regInf = TranslationService.getRegistrationInfo();
-
-            translatorSocket.emit('question', {
-                sender: regInf.name,
-                language: regInf.lang,
-                time: new Date(),
-                msg: question
+        this.sendAnsweredQuestion = function (answeredQuestion) {
+            translatorSocket.emit('answeredQuestion', {
+                questionUUID: answeredQuestion.questionUUID,
+                answer: answeredQuestion.answer
             });
         };
 

@@ -62,14 +62,28 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
         });
 
 
+        /**
+         *  {
+         *      questionUUID: 'qww23un2r3r3',
+         *      questionSourceId: 'iX28un2dcc',
+         *      questionSourceName: 'Leo',
+         *      questionText: 'Hello how are you',
+         *      questionLanguage: 'en',
+         *      questionTimestamp: '1234235255',              // Timestamp of question
+         *      questionTranslation: "Hallo wie gehts",       // Translated text for sender
+         *      targetId: "N3424nNOUINDD",                    // Sender who are going to answer
+         *      targetLanguage: "de"                          // Langauge of sender where the question is translated
+         *   }
+         *
+         */
         $scope.$on('newQuestion', function (event, msg) {
             var displayableMessage = {
                 questionUUID: msg.questionUUID,
-                translation: msg.translation,
-                text: msg.text,
-                sourceName: msg.questionSourceName,
-                sourceLanguage: msg.sourceLanguage,
-                timestamp: msg.timestamp,
+                questionTranslation: msg.questionTranslation,
+                questionText: msg.questionText,
+                questionSourceName: msg.questionSourceName,
+                questionLanguage: msg.questionLanguage,
+                questionTimestamp: msg.questionTimestamp,
                 type: 'question'
             };
 
@@ -77,6 +91,10 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
             if ($scope.messages.length > 300) {
                 $scope.messages.pop();
             }
+        });
+
+        $scope.$on('questionAnswered', function (event, msg) {
+            $log.info('Answer recieved:' + msg);
         });
 
         $scope.$on('cachedTranslations', function (event, msg) {
@@ -204,6 +222,8 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
             $mdDialog.show(
                 {
                     controller: function ($scope, $mdDialog) {
+                        $scope.question = question;
+
                         $scope.hide = function () {
                             $mdDialog.hide();
                         };
@@ -211,14 +231,14 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
                             $mdDialog.cancel();
                         };
                         $scope.send = function () {
-                            $mdDialog.hide($scope.msg);
+                            $mdDialog.hide($scope.question);
                         };
                     },
                     templateUrl: 'views/dialog/answer.tmpl.html',
                     clickOutsideToClose: true
                 })
                 .then(function (answer) {
-                    QuestionService.sendAnswer(question, answer);
+                    QuestionService.sendAnsweredQuestion(answer);
                 }, function () {
                     $log.info('You cancelled the dialog.');
                 });

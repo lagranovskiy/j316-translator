@@ -3,6 +3,11 @@ angular.module('j316.translate.controller.nav', [])
 
         $scope.question = null;
 
+
+        $scope.$on('askQuestion', function (event, data) {
+            $scope.showAsk(event);
+        });
+
         /**
          * Indicates if user is online
          * @returns {boolean}
@@ -18,10 +23,6 @@ angular.module('j316.translate.controller.nav', [])
             TranslationService.disconnect();
         };
 
-        $scope.$on('newQuestionAnswer', function (event, msg) {
-            alert('Hey here is answer!' + JSON.stringify(msg) );
-            // TODO: implement modal
-        });
 
         /**
          * Displays dialog with settings
@@ -57,6 +58,7 @@ angular.module('j316.translate.controller.nav', [])
                 return $mdMedia('sm');
             });
         };
+
 
         /**
          * Displayes dialog with question handling

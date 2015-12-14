@@ -18,6 +18,8 @@ var senderConnector = function (socketChannel) {
 
         socket.on('newMessage', handleNewMessage);
 
+        socket.on('answeredQuestion', handleAnsweredQuestion);
+
         socket.on('requestListenersInfo', handleRequestListenersInfo);
 
 
@@ -43,8 +45,6 @@ var senderConnector = function (socketChannel) {
                 socket.leave('lang_' + socket.handshake.session.sender.language);
             }
             console.info('sender :: Sender (' + socket.id + ') disconnected');
-            questionDistributor.removeListener('newQuestionPending', listenPendingQuestion);
-
         }
 
         /**
@@ -58,8 +58,6 @@ var senderConnector = function (socketChannel) {
             }
 
             console.info('sender :: Sender (' + socket.id + ') disconnected');
-            questionDistributor.removeListener('newQuestionPending', listenPendingQuestion);
-
         }
 
         /**
@@ -74,12 +72,17 @@ var senderConnector = function (socketChannel) {
             if (!newMessage) {
                 return;
             }
+            if (!newMessage.text || newMessage.text.length == 0) {
+                console.info('sender :: Ignoring empty message');
+                return;
+            }
             console.info('sender ::  Sender ' + socket.handshake.session.sender.name + ' send a new message for translation and distribution');
             if (!newMessage.language) {
                 newMessage.language = socket.handshake.session.sender.language;
             }
             serviceDistributor.requestTranslation(newMessage.text, newMessage.language, socket.handshake.session.sender.name);
         }
+
 
         /**
          * Answers listeners request on demand
@@ -99,6 +102,33 @@ var senderConnector = function (socketChannel) {
             }
             console.info('sender :: Sender connector received question request (' + questionUUID + ')');
             questionDistributor.requestQuestionTranslation(questionUUID, socket.id, socket.handshake.session.sender.language);
+        }
+
+        /**
+         * Handles new answer for a question to be translated and distributed
+         *
+         *  {
+             *  "questionUUID":"9e5a0359-f1a7-485b-aa9e-b6715d1e8273",
+             *  "answer":"answer text"
+             *  }
+         *
+         * @param answeredQuestion
+         */
+        function handleAnsweredQuestion(answeredQuestion) {
+            if (!socket.handshake.session.sender) {
+                socket.error('Authentication broken. Please login again.');
+                return console.error('sender :: Unauthenticated user tries to send translation text.');
+            }
+            if (!answeredQuestion || !answeredQuestion.answer || answeredQuestion.answer.length == 0) {
+                console.info('sender :: Ignoring empty question answer');
+                return;
+            }
+            console.info('sender ::  Sender ' + socket.handshake.session.sender.name + ' send answered a question and it will be distributed');
+            questionDistributor.submitQuestionAnswer(
+                answeredQuestion.answer,
+                answeredQuestion.questionUUID,
+                socket.handshake.session.sender.name,
+                socket.handshake.session.sender.language);
         }
 
 
@@ -178,6 +208,7 @@ var senderConnector = function (socketChannel) {
 
     serviceDistributor.on('translationReady', emitTranslationToSender);
 
+    serviceDistributor.on('listenersChanged', emitListenersChanged);
 
     /**
      * Called if any question was translated and can now be emitted to concrete sender
@@ -185,8 +216,17 @@ var senderConnector = function (socketChannel) {
     questionDistributor.on('newQuestionTranslated', emitTranslatedQuestion);
 
 
-    serviceDistributor.on('listenersChanged', emitListenersChanged);
+    /**
+     * Informs that someone answered a question
+     * @param translationObject
+     */
+    questionDistributor.on('newQuestionAnswerTranslated', emitAnswerTranslatedTranslated);
 
+
+    function emitAnswerTranslatedTranslated(translatedQuestion) {
+        console.info('sender :: Question answered by ' + translatedQuestion.answerSenderName);
+        socketChannel.to(translatedQuestion.questionSourceId).emit('questionAnswered', translatedQuestion);
+    }
 
     /**
      * Sends listeners information to the senders
@@ -204,7 +244,7 @@ var senderConnector = function (socketChannel) {
      * @param translationObject
      */
     function emitTranslationToSender(translationObject) {
-        console.info('sender :: Emitting translation ' + translationObject.timestamp + 'to socket roam for ' + translationObject.targetLanguage);
+        console.info('sender :: Emitting translation ' + translationObject.questionTimestamp + 'to socket roam for ' + translationObject.targetLanguage);
 
         socketChannel.to('lang_' + translationObject.targetLanguage).emit('newTranslation', translationObject);
     }

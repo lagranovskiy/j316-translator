@@ -76,6 +76,12 @@ angular.module('senderApp', [
             $log.debug('Cached Translation msg retrieved: ' + JSON.stringify(data));
             $rootScope.$broadcast('cachedTranslations', data);
         });
+
+        translatorSocket.forward('cachedQuestions', $rootScope);
+        $rootScope.$on('socket:cachedQuestions', function (ev, data) {
+            $log.debug('Cached Question msgs retrieved: ' + JSON.stringify(data));
+            $rootScope.$broadcast('cachedQuestions', data);
+        });
         return translatorSocket;
     })
 

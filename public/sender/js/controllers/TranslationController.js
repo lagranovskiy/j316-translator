@@ -101,6 +101,25 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
             });
         });
 
+        $scope.$on('cachedQuestions', function (event, msg) {
+            _.each(msg, function (singleMsg) {
+                var displayableMessage = {
+                    questionUUID: singleMsg.questionUUID,
+                    questionTranslation: singleMsg.questionTranslation,
+                    questionText: singleMsg.questionText,
+                    questionSourceName: singleMsg.questionSourceName,
+                    questionLanguage: singleMsg.questionLanguage,
+                    questionTimestamp: singleMsg.questionTimestamp,
+                    type: 'question'
+                };
+
+                $scope.messages.unshift(displayableMessage);
+                if ($scope.messages.length > 300) {
+                    $scope.messages.pop();
+                }
+            });
+        });
+
 
         $scope.$on('cachedTranslations', function (event, msg) {
             _.each(msg, function (singleMsg) {

@@ -132,6 +132,11 @@ var serviceDistributor = _.extend(new EventEmitter(), {
             return;
         }
 
+        question.answered = true;
+        question.answeredBy = senderName;
+
+        this.msgCache.set(questionUUID, question);
+
         translationWorker.translationQueue.push({
             text: answer,
             sourceLanguage: senderLanguage,
@@ -157,6 +162,20 @@ var serviceDistributor = _.extend(new EventEmitter(), {
 
             console.info('Question Answer Translation emitted to language ' + question.sourceLanguage);
         });
+    },
+
+    /**
+     * Returns the cached questions.
+     * @param languageKey
+     * @returns {Array} of msgs
+     */
+    getCachedQuestions: function () {
+        var retVal = [];
+        _.each(this.msgCache.keys(), function (key) {
+            retVal.unshift(this.msgCache.get(key));
+        }, this);
+
+        return retVal;
     }
 
 

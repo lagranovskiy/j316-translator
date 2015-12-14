@@ -203,6 +203,10 @@ var senderConnector = function (socketChannel) {
             socket.emit('cachedTranslations', cachedMsgs);
         }
 
+        var cachedQuestions = questionDistributor.getCachedQuestions();
+        if (cachedQuestions && cachedQuestions.length > 0) {
+            socket.emit('cachedQuestions', cachedQuestions);
+        }
     }
 
 

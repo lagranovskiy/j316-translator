@@ -8,6 +8,12 @@ angular.module('j316.translate.controller.nav', [])
             $scope.showAsk(event);
         });
 
+        $scope.isOpen = false;
+
+        $scope.toggleOpen = function(){
+            $scope.isOpen = !$scope.isOpen;
+        };
+
         /**
          * Indicates if user is online
          * @returns {boolean}

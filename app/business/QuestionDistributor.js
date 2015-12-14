@@ -40,18 +40,21 @@ var serviceDistributor = _.extend(new EventEmitter(), {
 
         var questionUUID = uuid.v4();
         var timestamp = new Date().getTime();
-        this.msgCache.set(questionUUID, {
+        var question = {
             questionUUID: questionUUID,
             questionSourceId: questionSource,
             questionSourceName: questionSourceName,
             questionText: questionText,
             questionLanguage: originalLang,
             questionTimestamp: timestamp
-        });
+        };
+        this.msgCache.set(questionUUID, question);
 
         console.info('Question :: New question cached. Emitting to the senders.');
 
         serviceDistributor.emit('newQuestionPending', questionUUID);
+
+        return question;
     },
 
     /**

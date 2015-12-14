@@ -129,6 +129,10 @@ var senderConnector = function (socketChannel) {
                 answeredQuestion.questionUUID,
                 socket.handshake.session.sender.name,
                 socket.handshake.session.sender.language);
+
+            answeredQuestion.answerSenderName = socket.handshake.session.sender.name;
+            socketChannel.emit('answerAck', answeredQuestion);
+
         }
 
 
@@ -215,18 +219,6 @@ var senderConnector = function (socketChannel) {
      */
     questionDistributor.on('newQuestionTranslated', emitTranslatedQuestion);
 
-
-    /**
-     * Informs that someone answered a question
-     * @param translationObject
-     */
-    questionDistributor.on('newQuestionAnswerTranslated', emitAnswerTranslatedTranslated);
-
-
-    function emitAnswerTranslatedTranslated(translatedQuestion) {
-        console.info('sender :: Question answered by ' + translatedQuestion.answerSenderName);
-        socketChannel.to(translatedQuestion.questionSourceId).emit('questionAnswered', translatedQuestion);
-    }
 
     /**
      * Sends listeners information to the senders

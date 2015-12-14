@@ -93,9 +93,14 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
             }
         });
 
-        $scope.$on('questionAnswered', function (event, msg) {
-            $log.info('Answer recieved:' + msg);
+        $scope.$on('answerAck', function (event, msg) {
+            var questions = _.where($scope.messages, {questionUUID: msg.questionUUID});
+            _.each(questions, function(question){
+                question.answered = true;
+                question.answeredBy = msg.answerSenderName;
+            });
         });
+
 
         $scope.$on('cachedTranslations', function (event, msg) {
             _.each(msg, function (singleMsg) {
@@ -122,8 +127,6 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
 
 
         $scope.startVoiceRecognition = function () {
-
-
             if (!('webkitSpeechRecognition' in window)) {
                 $log.log("webkitSpeechRecognition is not available");
             } else {

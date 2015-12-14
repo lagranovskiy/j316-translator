@@ -1,13 +1,13 @@
 <div ng-controller="NavCtrl" ng-cloak>
     <h2 ng-if="!isOnline()" class="md-padding" style="color: dimgrey;">J316 Translator Control</h2>
-    <md-fab-toolbar ng-if="isOnline()" md-open="isOpen" md-direction="left">
+    <md-fab-toolbar ng-if="isOnline()" md-open="isOpen" md-direction="right">
         <md-fab-trigger class="align-with-text">
             <md-button aria-label="menu" ng-click="toggleOpen()" class="md-fab" ng-class="isOnline()?'md-warn':'md-primary md-hue-1'">
                 <md-icon md-font-set="material-icons">settings_remote</md-icon>
             </md-button>
         </md-fab-trigger>
         <md-toolbar>
-            <md-fab-actions class="md-toolbar-tools">
+            <md-fab-actions class="md-toolbar-tools " layout-align="end center">
                 <h1>J316 Translator Control</h1>
                 <md-button ng-if="isOnline()" ng-click="disconnect()">
                     <md-icon md-font-set="material-icons">power_settings_new</md-icon>

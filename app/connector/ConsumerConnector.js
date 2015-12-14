@@ -92,13 +92,18 @@ var consumerConnector = function (socketChannel) {
         }
 
 
+        /**
+         * Add Question to queue and ack the message
+         * @param msg
+         */
         function handleNewQuestion(msg) {
             console.info('client :: New Question!!' + JSON.stringify(msg));
             if (!msg.msg || msg.msg.length == 0) {
                 console.info('client :: Ignoring empty question');
                 return;
             }
-            questionDistributor.submitQuestion(socket.id, msg.sender, msg.msg, msg.language);
+            var question = questionDistributor.submitQuestion(socket.id, msg.sender, msg.msg, msg.language);
+            socketChannel.to(socket.id).emit('questionAck', question);
             console.info('client :: Message pending...' + JSON.stringify(msg));
         }
 

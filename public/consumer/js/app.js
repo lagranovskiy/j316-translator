@@ -46,6 +46,12 @@ angular.module('consumerApp', [
             $rootScope.$broadcast('newQuestionAnswer', data);
         });
 
+        translatorSocket.forward('questionAck', $rootScope);
+        $rootScope.$on('socket:questionAck', function (ev, data) {
+            $log.debug('Question received: ' + JSON.stringify(data));
+            $rootScope.$broadcast('questionAck', data);
+        });
+
         translatorSocket.forward('newTranslation', $rootScope);
         $rootScope.$on('socket:newTranslation', function (ev, data) {
             $log.debug('Translation msg retrieved: ' + JSON.stringify(data));

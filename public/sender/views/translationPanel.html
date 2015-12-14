@@ -26,13 +26,22 @@
                     <div layout="column">
                         <md-button ng-click="sendMessage()">
                             <md-icon md-font-set="material-icons">send</md-icon>
+                            <md-tooltip md-direction="left">
+                                Send given message. Key: Ctrl+Enter
+                            </md-tooltip>
                         </md-button>
                         <md-button ng-click="undo()">
                             <md-icon md-font-set="material-icons">undo</md-icon>
+                            <md-tooltip md-direction="left">
+                                Send given message. Key: Ctrl+Backspace
+                            </md-tooltip>
                         </md-button>
                         <md-button class="" ng-click="startVoiceRecognition()"
                                    ng-class="recognizing==true ? 'md-warn':'md-primary'">
                             <md-icon md-font-set="material-icons">mic</md-icon>
+                            <md-tooltip md-direction="left">
+                                Start voice recognition
+                            </md-tooltip>
                         </md-button>
 
                     </div>
@@ -73,17 +82,25 @@
                     <small class="md-caption">{{formatDate(item.timestamp)}} by {{item.sourceName}}</small>
                 </div>
 
-                <div class="md-list-item-text md-title md-padding" ng-if="item.type=='question'">
+                <div class="md-list-item-text md-padding" ng-if="item.type=='question'">
                     <div layout="row">
-                        <md-button ng-click="answerQuestion(item)">
-                            <md-icon md-font-set="material-icons">chat bubble</md-icon>
-                        </md-button>
-                        <div layout="column">
+                        <div layout="column" layout-align="center center">
+                            <md-button ng-click="answerQuestion(item)">
+                                <md-icon ng-class="item.answered==true ? 'answeredQuestion': 'notAnsweredQuestion'"
+                                         md-font-set="material-icons">chat bubble
+                                </md-icon>
+                            </md-button>
+                            <span ng-class="item.answered==true ? 'answeredQuestion': 'notAnsweredQuestion'"> {{item.answeredBy}}</span>
+                        </div>
+                        <div layout="column" class="md-title">
                             <span class="md-caption">New question:</span>
-                            <span class="clientQuestion"><b>{{item.questionTranslation}}</b></span>
+                            <span class="clientQuestion" ><b>{{item.questionTranslation}}</b></span>
                             <span class="md-caption">Original question:</span>
-                            <small ng-class="localizeLang(item.questionLanguage).rtl ? 'rtl_text' : ''"> {{item.questionText}} </small>
-                            <small class="md-caption">{{formatDate(item.questionTimestamp)}} by {{item.questionSourceName}}
+                            <small ng-class="localizeLang(item.questionLanguage).rtl ? 'rtl_text' : ''">
+                                {{item.questionText}}
+                            </small>
+                            <small class="md-caption">{{formatDate(item.questionTimestamp)}} by
+                                {{item.questionSourceName}}
                                 ({{localizeLang(item.questionLanguage).lang}})
                             </small>
                         </div>

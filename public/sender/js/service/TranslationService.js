@@ -96,7 +96,7 @@ angular.module('j316.translate.service.translation', [])
          * @returns {*}
          */
         this.getRegistrationInfo = function () {
-            var savedInfo = $cookies.getObject('j316-translation-reg');
+            var savedInfo = $cookies.getObject('j316-translation-control-reg');
             if (savedInfo) {
                 registrationInfo = savedInfo;
                 return registrationInfo;
@@ -115,36 +115,10 @@ angular.module('j316.translate.service.translation', [])
                 regInfo.name = 'Anonym'
             }
 
-            $cookies.putObject('j316-translation-reg', regInfo);
+            $cookies.putObject('j316-translation-control-reg', regInfo);
             registrationInfo = regInfo;
 
             return registrationInfo;
-        };
-
-        /**
-         * Returns current settings
-         * @returns {{scrollToBottom: boolean, readingTime: number}}
-         */
-        this.getSettings = function () {
-            var savedInfo = $cookies.getObject('j316-translation-settings');
-
-            if (savedInfo) {
-                settings = savedInfo;
-                return settings;
-            }
-
-            return settings;
-        };
-
-
-        /**
-         * Save changed settings
-         * @param settingsData
-         */
-        this.saveSettings = function (settingsData) {
-            $cookies.putObject('j316-translation-settings', settingsData);
-            settings = settingsData;
-            $rootScope.$broadcast('settingsUpdated', settingsData);
         };
 
 

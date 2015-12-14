@@ -19,6 +19,8 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
         });
 
 
+
+
         $scope.$on('newTranslation', function (event, msg) {
             var displayableMessage = {
                 translation: msg.translation,
@@ -63,6 +65,21 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
             }
         });
 
+        $scope.$on('questionAck', function (event, msg) {
+            var displayableMessage = {
+                questionUUID: msg.questionUUID,
+                questionText: msg.questionText,
+                answerText: msg.answerText,
+                answerTranslation: msg.answerTranslation,
+                answerSenderName: msg.answerSenderName,
+                type: 'questionAck'
+            };
+
+            $scope.messages.unshift(displayableMessage);
+            if ($scope.messages.length > 300) {
+                $scope.messages.pop();
+            }
+        });
         $scope.$on('cachedTranslations', function (event, msg) {
             _.each(msg, function (singleMsg) {
                 var displayableMessage = {

@@ -58,6 +58,13 @@ angular.module('senderApp', [
             $rootScope.$broadcast('newQuestion', data);
         });
 
+        translatorSocket.forward('answerAck', $rootScope);
+        $rootScope.$on('socket:answerAck', function (ev, data) {
+            $log.debug('answerAck msg received: ' + JSON.stringify(data));
+            $rootScope.$broadcast('answerAck', data);
+        });
+
+
         translatorSocket.forward('newTranslation', $rootScope);
         $rootScope.$on('socket:newTranslation', function (ev, data) {
             $log.debug('Translation msg retrieved: ' + JSON.stringify(data));

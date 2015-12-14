@@ -8,7 +8,7 @@ angular.module('j316.translate.controller.nav', [])
         $scope.toggleOpen = function(){
             $scope.isOpen = !$scope.isOpen;
         };
-        
+
         /**
          * Indicates if user is online
          * @returns {boolean}

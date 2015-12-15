@@ -157,11 +157,13 @@ var serviceDistributor = _.extend(new EventEmitter(), {
                 answerTranslation: translation,
                 answerSenderName: senderName
             };
+            question.questionTranslation = translation;
 
+            serviceDistributor.msgCache.set(questionUUID, question);
             serviceDistributor.emit('newQuestionAnswerTranslated', translationRs);
 
             console.info('Question Answer Translation emitted to language ' + question.sourceLanguage);
-        });
+        }, this);
     },
 
     /**

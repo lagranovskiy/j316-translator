@@ -83,12 +83,12 @@
     font-family: 'Material Icons';
     font-style: normal;
     font-weight: 400;
-    src: url(https://translator.seidheilig.de/fonts/MaterialIcons-Regular.eot); /* For IE6-8 */
+    src: url(https://translator.seidheilig.de/control/fonts/MaterialIcons-Regular.eot); /* For IE6-8 */
     src: local('Material Icons'),
     local('MaterialIcons-Regular'),
-    url(https://translator.seidheilig.de/fonts/MaterialIcons-Regular.woff2) format('woff2'),
-    url(https://translator.seidheilig.de/fonts/MaterialIcons-Regular.woff) format('woff'),
-    url(https://translator.seidheilig.de/fonts/MaterialIcons-Regular.ttf) format('truetype');
+    url(https://translator.seidheilig.de/control/fonts/MaterialIcons-Regular.woff2) format('woff2'),
+    url(https://translator.seidheilig.de/control/fonts/MaterialIcons-Regular.woff) format('woff'),
+    url(https://translator.seidheilig.de/control/fonts/MaterialIcons-Regular.ttf) format('truetype');
 }
 
 .material-icons {

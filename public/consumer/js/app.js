@@ -115,7 +115,10 @@ angular.module('consumerApp', [
         {key: 'cs', lang: 'Czech'},
         {key: 'sv', lang: 'Swedish'},
         {key: 'et', lang: 'Estonian'},
-        {key: 'ja', lang: 'Japanese'}
+        {key: 'ja', lang: 'Japanese'},
+        {key: 'be', lang: 'Belarusian'},
+        {key: 'ru', lang: 'Russian'},
+        {key: 'uk', lang: 'Ukrainian'}
     ])
 
     .config(function ($mdThemingProvider) {

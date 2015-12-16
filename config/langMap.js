@@ -334,6 +334,20 @@ var langMap = {
             nt: 'JPNCJVN2ET',
             ot: 'JPNCJVO2ET'
         }
+    },
+    be:{
+        langName: 'Belarusian',
+        dam: {
+            nt: 'RUSS76N2ET',
+            ot: 'RUSS76O2ET'
+        }
+    },
+    uk:{
+        langName: 'Ukrainian',
+        dam: {
+            nt: 'UKRO30N2ET',
+            ot: 'UKRO30O2ET'
+        }
     }
 };
 

@@ -6,11 +6,11 @@
         </div>
         <div layout="row" layout-sm="column" layout-align="center center" layout-fill>
             <div flex="20"></div>
-            <md-input-container layout-fill>
+            <md-input-container layout-fill  style="height: 100px;">
                 <label>Your name</label>
                 <input class="" ng-model="registrationInfo.name">
             </md-input-container>
-            <md-input-container layout-fill>
+            <md-input-container layout-fill  style="height: 100px;">
                 <label>Language</label>
                 <md-select ng-model="registrationInfo.lang" ng-model="registrationInfo.lang">
                     <md-option ng-repeat="value in langList | orderBy:'lang'" value="{{value.key}}" value="{{value.key}}">

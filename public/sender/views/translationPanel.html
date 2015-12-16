@@ -10,9 +10,9 @@
 
                 <div layout="row">
                     <div layout="column" layout-fill="" ng-if="recognizing==false">
-                        <md-input-container class="md-block">
+                        <md-input-container class="md-block" >
                             <label>Type your next translation sentence</label>
-                            <textarea required ng-model="message.text" columns="1" rows="5"
+                            <textarea required ng-model="message.text" columns="1" rows="10" class="control_field"
                                       ng-keydown="evaluateKeyPress($event)"></textarea>
 
                         </md-input-container>

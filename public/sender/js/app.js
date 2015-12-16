@@ -26,14 +26,14 @@ angular.module('senderApp', [
             $rootScope.$location = $location;
 
             _.mixin({
-                capitalize: function(string) {
+                capitalize: function (string) {
                     return string.charAt(0).toUpperCase() + string.substring(1).toLowerCase();
                 }
             });
         }
     ])
     .factory('translatorSocket', function (socketFactory, $rootScope, $log) {
-        var translatorSocket = socketFactory( {
+        var translatorSocket = socketFactory({
             ioSocket: io.connect(window.location.origin + '/sender')
         });
 
@@ -88,7 +88,7 @@ angular.module('senderApp', [
 
     .value('languages', [
         {key: 'sq', lang: 'Albanian'},
-        {key: 'en', lang: 'English', known:true, voicelang:'en-GB'},
+        {key: 'en', lang: 'English', known: true, voicelang: 'en-GB'},
         {key: 'ar', lang: 'Arabic', rtl: true},
         {key: 'hy', lang: 'Armenian'},
         {key: 'az', lang: 'Azerbaijan'},
@@ -113,8 +113,8 @@ angular.module('senderApp', [
         {key: 'no', lang: 'Norwegian'},
         {key: 'fa', lang: 'Persian', rtl: true},
         {key: 'kk', lang: 'Kazakh', rtl: true},
-        {key: 'ru', lang: 'Russian', known:true, voicelang:'ru-RU'},
-        {key: 'de', lang: 'German', known:true, voicelang:'de-DE'},
+        {key: 'ru', lang: 'Russian', known: true, voicelang: 'ru-RU'},
+        {key: 'de', lang: 'German', known: true, voicelang: 'de-DE'},
         {key: 'pl', lang: 'Polish'},
         {key: 'pt', lang: 'Portuguese'},
         {key: 'ro', lang: 'Romanian'},
@@ -133,7 +133,10 @@ angular.module('senderApp', [
         {key: 'cs', lang: 'Czech'},
         {key: 'sv', lang: 'Swedish'},
         {key: 'et', lang: 'Estonian'},
-        {key: 'ja', lang: 'Japanese'}
+        {key: 'ja', lang: 'Japanese'},
+        {key: 'be', lang: 'Belarusian'},
+        {key: 'ru', lang: 'Russian'},
+        {key: 'uk', lang: 'Ukrainian'}
     ])
 
 

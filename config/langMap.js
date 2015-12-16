@@ -2,8 +2,8 @@ var langMap = {
     default: {
         langName: 'Default',
         dam: {
-            nt: 'ENGKJVN2ET',
-            ot: 'ENGKJVO2ET'
+            nt: 'ENGNASN2ET',
+            ot: 'ENGNASO2ET'
         }
     },
     sq: {
@@ -16,15 +16,15 @@ var langMap = {
     en: {
         langName: 'English',
         dam: {
-            nt: 'ENGKJVN2ET',
-            ot: 'ENGKJVO2ET'
+            nt: 'ENGNASN2ET',
+            ot: 'ENGNASO2ET'
         }
     },
     ar: {
         langName: 'Arabic',
         dam: {
-            nt: 'ARBAS1N2ET',
-            ot: 'ARBAS1O2ET'
+            nt: 'ARZVDVN2ET',
+            ot: 'ARZVDVO2ET'
         }
     },
     hy: {

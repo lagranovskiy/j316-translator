@@ -78,8 +78,10 @@
             <div layout="row" ng-repeat="item in messages | orderBy:'-timestamp' | limitTo:showLastMsgCount  "
                  class="animate-repeat">
                 <div class="md-list-item-text md-title md-padding" ng-if="item.type=='message'">
-                    <span ng-class="localizeLang(originLanguage.lang).rtl ? 'rtl_text' : ''"> {{item.translation}}</span><br/>
-                    <small class="md-caption">{{formatDate(item.timestamp)}} by {{item.sourceName}}</small>
+                    <div ng-class="item.contentType === 'verse' ? 'content_verse' : 'content_translation'  ">
+                        <span ng-class="localizeLang(originLanguage.lang).rtl ? 'rtl_text' : ''"> {{item.translation}}</span><br/>
+                        <small class="md-caption">{{formatDate(item.timestamp)}} by {{item.sourceName}}</small>
+                    </div>
                 </div>
 
                 <div class="md-list-item-text md-padding" ng-if="item.type=='question'">
@@ -94,7 +96,7 @@
                         </div>
                         <div layout="column" class="md-title md-padding">
                             <span class="md-caption">New question:</span>
-                            <span class="clientQuestion" ><b>{{item.questionTranslation}}</b></span>
+                            <span class="clientQuestion"><b>{{item.questionTranslation}}</b></span>
                             <span class="md-caption">Original question:</span>
                             <small ng-class="localizeLang(item.questionLanguage).rtl ? 'rtl_text' : ''">
                                 {{item.questionText}}

@@ -18,50 +18,75 @@ var translationWorker = function () {
          *
          *@param lookupJobArray [{bookId:'Ps', part: 'ot', chapterId: 2, verseStart:1, verseEnd:2}]
          * @param targetLang targetLang
+         * @return   [{verse: 'There comes the text',  location: 'Ps. 1,1'}];
          */
-        verseQueue: async.queue(function (lookupJobArray, targetLanguage, callback) {
+        verseQueue: async.queue(function (job, callback) {
+
+                var lookupJobArray = job.verseJobs;
+                var targetLanguage = job.targetLanguage;
+                var verse = job.verse;
+
+                var parallelJobs = [];
 
                 _.each(lookupJobArray, function (verseJob) {
 
+                    if (!langMap[targetLanguage]) {
+                        return callback('Unknown language ' + targetLanguage + ' for verse: ' + verse);
+                    }
                     var damId = langMap[targetLanguage].dam[verseJob.part];
                     if (!damId) {
                         damId = langMap.default.dam[verseJob.part];
                     }
+                    var singleJob = function (jobCallback) {
+                        dbt.getVersInLang(damId, verseJob.bookId, verseJob.chapterId, verseJob.verseStart, verseJob.verseEnd,
+                            function (error, translatedArray) {
+                                if (error) {
+                                    console.info('VerseWorker :: Cannot process verse lookup to ' + targetLanguage + ' for verse: ' + verse + ' : ' + error);
+                                    return callback('Cannot process verse lookup to ' + targetLanguage + ' for verse: ' + verse + ' : ' + error);
+                                }
+                                if (translatedArray.length == 0) {
+                                    return callback('No lookup possible for lang ' + targetLanguage + ' for verse: ' + verse);
+                                }
 
-                    dbt.getVersInLang(damId, verseJob.bookId, verseJob.chapterId, verseJob.verseStart, verseJob.verseEnd,
-                        function (error, translatedObject) {
-                            if (error) {
-                                return callback('Cannot process verse lookup to ' + targetLanguage + ' : ' + error);
-                            }
-                            if (translatedObject.length == 0) {
-                                return callback('No lookup possible for lang ' + targetLanguage + JSON.stringify(verseJob));
-                            }
+                                var lookupText = _.pluck(translatedArray, 'verse_text').join('\n');
+                                var maxVerse = _.max(translatedArray, function (vers) {
+                                        return vers.verse_id * 1;
+                                    }).verse_id * 1;
+                                var minVerse = _.max(translatedArray, function (vers) {
+                                        return vers.verse_id * 1;
+                                    }).verse_id * 1;
 
-                            var lookupText = _.pluck(translatedObject, 'verse_text').join('\n');
-                            var maxVerse = _.max(translatedObject, function (vers) {
-                                return vers.verse_id;
+                                var verseLocation = translatedArray[0].book_name + ' ' + translatedArray[0].chapter_id + '.';
+                                if (maxVerse != minVerse) {
+                                    verseLocation += minVerse + '-' + maxVerse;
+                                } else {
+                                    verseLocation += minVerse;
+                                }
+
+                                var lookupRs = {
+                                    verse: lookupText,
+                                    location: verseLocation
+                                };
+
+                                return jobCallback(null, lookupRs);
                             });
-                            var minVerse = _.max(translatedObject, function (vers) {
-                                return vers.verse_id;
-                            });
-
-                            var versLocation = translatedObject[0].book_name + ' ' + translatedObject[0].chapter_id + '.';
-                            if (maxVerse != minVerse) {
-                                versLocation += minVerse + '-' + maxVerse;
-                            } else {
-                                versLocation += minVerse;
-                            }
-
-                            var lookupRs = {
-                                verse: lookupText,
-                                location: versLocation,
-                                language: targetLanguage
-                            };
-
-                            return callback(null, lookupRs);
-                        });
+                    };
+                    parallelJobs.push(singleJob);
                 });
 
+                // Start parallel execution to get performance and bundle all answers together
+                async.parallel(parallelJobs, function (err, verseArray) {
+                    // [{verse: 'There comes the text',  location: 'Ps. 1,1'}]
+                    if (err) {
+                        console.info('VerseWorker :: Cannot process jobs : ' + err);
+                        return callback(err);
+                    }
+
+                    callback(null, {
+                        targetLanguage: targetLanguage,
+                        verseArray: verseArray
+                    });
+                })
             }, 5
         ),
 
@@ -69,7 +94,7 @@ var translationWorker = function () {
          * Prepare verse lookup. Get from till values for the request to the worker
          * @param  senderLanguage en/de/ru,
          * @param verse Mathaus 1,2-7
-         * @param callback
+         * @param callback with [{bookId:'Ps', part: 'ot', chapterId: 2, verseStart:1, verseEnd:2}]
          */
         prepareVerseLookup: function (senderLanguage, verse, callback) {
             refParser.parseOSIS(senderLanguage, verse, function (err, refInfoArray) {

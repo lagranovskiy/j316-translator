@@ -38,14 +38,16 @@ var referenceParser = {
         var result = parser.parse(parseText);
         var osis = result.osis();
         var parsedEntities = result.parsed_entities();
-        callback(null, parsedEntities, osis);
+        if (parsedEntities.length == 0) {
+            return callback('Cannot parse verse: ' + parseText);
+        }
+        return callback(null, parsedEntities, osis);
 
     },
 
     /**
      * Returns meta info about given book
      * @param language
-     * @param bookId
      * @param callback
      * @returns {*}
      */

@@ -45,6 +45,13 @@
     opacity: 1;
 }
 
+.j316-translator .content_verse{
+    color: red;
+}
+
+.j316-translator .content_translation{
+    color: black;
+}
 .j316-translator .md-title{
     font-size: 2em;
     line-height: initial;

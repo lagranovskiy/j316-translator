@@ -27,6 +27,7 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
                 sourceName: msg.sourceName,
                 sourceLanguage: msg.sourceLanguage,
                 timestamp: msg.timestamp,
+                contentType: msg.contentType,
                 type: 'message'
             };
 
@@ -87,6 +88,7 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
                     sourceName: singleMsg.sourceName,
                     sourceLanguage: singleMsg.sourceLanguage,
                     timestamp: singleMsg.timestamp,
+                    contentType: singleMsg.contentType,
                     type: 'message'
                 };
 

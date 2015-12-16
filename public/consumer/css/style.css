@@ -1,41 +1,49 @@
-.rtl_text{
+.j316-translator .rtl_text {
     direction: rtl;
 }
 
-.layout-fill {
+.j316-translator .layout-fill {
     height: auto;
 }
 
-.md-title{
+.j316-translator .md-title {
     font-size: 2em;
     line-height: initial;
 }
 
-.senderAnswer{
+.j316-translator .content_verse {
     color: red;
 }
 
-.animate-repeat {
-    list-style:none;
-    box-sizing:border-box;
+.j316-translator .content_translation {
+    color: black;
 }
 
-.animate-repeat.ng-move,
-.animate-repeat.ng-enter,
-.animate-repeat.ng-leave {
-    -webkit-transition:all linear 0.25s;
-    transition:all linear 0.25s;
+.j316-translator .senderAnswer {
+    color: red;
 }
 
-.animate-repeat.ng-leave.ng-leave-active,
-.animate-repeat.ng-move,
-.animate-repeat.ng-enter {
-    opacity:0;
-    max-height:0;
+.j316-translator .animate-repeat {
+    list-style: none;
+    box-sizing: border-box;
 }
 
-.animate-repeat.ng-leave,
-.animate-repeat.ng-move.ng-move-active,
-.animate-repeat.ng-enter.ng-enter-active {
-    opacity:1;
+.j316-translator .animate-repeat.ng-move,
+.j316-translator .animate-repeat.ng-enter,
+.j316-translator .animate-repeat.ng-leave {
+    -webkit-transition: all linear 0.25s;
+    transition: all linear 0.25s;
+}
+
+.j316-translator .animate-repeat.ng-leave.ng-leave-active,
+.j316-translator .animate-repeat.ng-move,
+.j316-translator .animate-repeat.ng-enter {
+    opacity: 0;
+    max-height: 0;
+}
+
+.j316-translator .animate-repeat.ng-leave,
+.j316-translator .animate-repeat.ng-move.ng-move-active,
+.j316-translator .animate-repeat.ng-enter.ng-enter-active {
+    opacity: 1;
 }

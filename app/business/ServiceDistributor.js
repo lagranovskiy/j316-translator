@@ -2,7 +2,7 @@ var async = require('neo-async');
 var _ = require('underscore');
 var EventEmitter = require("events").EventEmitter;
 var NodeCache = require("node-cache");
-var uuid = require('node-uuid');
+var bibleVerseWorker = require('../provider/BibleVerseWorker');
 var util = require('util');
 var translationWorker = require('../provider/TranslationWorker');
 
@@ -20,6 +20,25 @@ function cacheMsg(key, msg) {
     serviceDistributor.msgCache.set(key, msgArray);
 }
 
+
+/**
+ * Extracts () separated verses from given text
+ * @param text text to be evaluated
+ * @return array of verses in ()
+ */
+function extractVerses(text) {
+    if (!text) {
+        return null;
+    }
+    var re = /\(([^()]*)\)/g;
+    var retVal = [];
+    _.each(text.match(re), function (vers) {
+        retVal.push(vers.replace(/[()]/g, ''))
+    });
+    return retVal;
+}
+
+
 /**
  * Service distributor provides the connection between business logic and clients communication
  */
@@ -35,11 +54,113 @@ var serviceDistributor = _.extend(new EventEmitter(), {
      * @param text
      * @param sourceLanguage
      * @param translationSource person submitted the message
+     * @param cb cb
      */
     requestTranslation: function (text, sourceLanguage, translationSource) {
+        if (!text) {
+            console.error('Service :: Cannot request a translation of null');
+            return;
+        }
+        text = text.trim();
+
         console.info('Service :: Translating: ' + text);
         var timestamp = new Date().getTime();
 
+        // Find out if there are any bible verses in the original text.
+        // If yes, they also need to be lookup'ed separately as a job on bibleVerseWorker
+        var verseArray = extractVerses(text);
+
+        // Iterate over array of verses
+        _.each(verseArray, function (verse) {
+            async.waterfall([
+                    /**
+                     * Call preparation of verse lookup
+                     * @param callback
+                     */
+                        function (callback) {
+
+                        bibleVerseWorker.prepareVerseLookup(sourceLanguage, verse, callback);
+                    },
+                    /**
+                     * Push prepared jobs for every language to the job queue
+                     *
+                     * @param verseArray   [{bookId:'Ps', part: 'ot', chapterId: 2, verseStart:1, verseEnd:2}]
+                     * @param callback
+                     */
+                        function (verseArray, callback) {
+
+                        var langTranslationMap = {};
+                        async.forEachOf(serviceDistributor.languageList, function (numConsumers, language, callback) {
+                            if (numConsumers <= 0) {
+                                return callback(null, []);
+                            }
+
+                            bibleVerseWorker.verseQueue.push({
+                                verse: verse,
+                                targetLanguage: language,
+                                verseJobs: verseArray
+                            }, function (err, langLookupResult) {
+                                /* {
+                                 *   targetLanguage: 'tr',
+                                 *   verseArray: [{verse: 'There comes the text',  location: 'Ps. 1,1'}]
+                                 * }
+                                 * */
+                                if (err) {
+                                    return callback(err);
+                                }
+
+                                langTranslationMap[langLookupResult.targetLanguage] = langLookupResult.verseArray;
+                                return callback();
+                            });
+                        }, function (err) {
+                            // We transfer the result of the step: map with lang>versArray
+                            return callback(err, langTranslationMap);
+                        });
+
+                    }
+                ],
+
+                /**
+                 * Finally Process lookup'ed verses
+                 * @param langTranslationMap
+                 * { en: [{verse: 'There comes the text',  location: 'Ps. 1,1'}],
+                 *   de: [{verse: 'There comes the text',  location: 'Ps. 1,1'}] ... }
+                 *
+                 * @param err error if any
+                 */
+                function (err, langTranslationMap) {
+                    if (err) {
+                        return console.info('Service :: Problem by lookup of verse :' + verse + ' : ' + err);
+                    }
+                    _.each(langTranslationMap, function (lookupedVerseArray, language) {
+                        _.each(lookupedVerseArray, function (singleVers) {
+                            console.info('Service :: Verse ' + singleVers.location + ' lookup completed');
+
+                            var translationRs = {
+                                translation: '\"' + singleVers.verse + '\" (' + singleVers.location + ')',
+                                sourceLanguage: sourceLanguage,
+                                targetLanguage: language,
+                                sourceName: 'Holy Bible',
+                                contentType: 'verse',
+                                timestamp: timestamp
+                            };
+
+                            cacheMsg(language, translationRs);
+
+                            serviceDistributor.emit('translationReady', translationRs);
+
+                            console.info('Service :: Verse lookup emitted to language ' + language);
+                        });
+                    });
+                }
+            );
+
+        });
+
+        // If The text is only a single verse reference, than we do not need to translate it separately.
+        if (verseArray.length === 1 && verseArray[0].length === (text.length - 2)) {
+            return;
+        }
 
         _.each(this.languageList, function (numConsumers, language) {
             if (numConsumers <= 0) {
@@ -49,8 +170,7 @@ var serviceDistributor = _.extend(new EventEmitter(), {
             translationWorker.translationQueue.push({
                 text: text,
                 sourceLanguage: sourceLanguage,
-                targetLanguage: language,
-
+                targetLanguage: language
             }, function (err, translation) {
                 if (err) {
                     return console.error('Service :: Problem by the translation of ' + language + ':' + err);
@@ -63,6 +183,7 @@ var serviceDistributor = _.extend(new EventEmitter(), {
                     sourceLanguage: sourceLanguage,
                     targetLanguage: language,
                     sourceName: translationSource,
+                    contentType: 'translation',
                     timestamp: timestamp
                 };
 
@@ -71,7 +192,7 @@ var serviceDistributor = _.extend(new EventEmitter(), {
                 serviceDistributor.emit('translationReady', translationRs);
 
                 console.info('Service :: Translation emitted to language ' + language);
-            }, this);
+            });
         });
     },
 

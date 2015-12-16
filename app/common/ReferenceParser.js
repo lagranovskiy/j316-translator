@@ -4,6 +4,16 @@ bcvMap = {
     de: require("bible-passage-reference-parser/js/de_bcv_parser").bcv_parser
 };
 
+var parseSettings = {
+    invalid_passage_strategy: 'include',
+    invalid_sequence_strategy: 'ignore',
+    book_alone_strategy: 'first_chapter',
+    consecutive_combination_strategy: 'separate',
+    osis_compaction_strategy: 'bc',
+    versification_system: 'nab',
+    punctuation_strategy: 'eu'
+};
+
 var referenceParser = {
 
 
@@ -23,19 +33,30 @@ var referenceParser = {
         }
 
         var parser = new bcvMap[language];
-        parser.set_options({
-            invalid_passage_strategy: 'include',
-            invalid_sequence_strategy: 'ignore',
-            book_alone_strategy: 'first_chapter',
-            consecutive_combination_strategy:'separate',
-            osis_compaction_strategy:'bc'
-        });
+        parser.set_options(parseSettings);
 
         var result = parser.parse(parseText);
         var osis = result.osis();
         var parsedEntities = result.parsed_entities();
         callback(null, parsedEntities, osis);
 
+    },
+
+    /**
+     * Returns meta info about given book
+     * @param language
+     * @param bookId
+     * @param callback
+     * @returns {*}
+     */
+    getMetaInfo: function (language, callback) {
+        var parser = new bcvMap[language];
+        parser.set_options(parseSettings);
+        var info = parser.translation_info('nab');
+        if (callback) {
+            return callback(info);
+        }
+        return info;
     }
 };
 

@@ -25,7 +25,7 @@ var dbtConnector = function () {
                 console.info('dbtConnector :: no damID given.');
                 return callback('Unknown translation');
             }
-            if (!book_id) {
+            if (!bookId) {
                 console.info('dbtConnector :: no bookId given.');
                 return callback('Unknown book');
             }

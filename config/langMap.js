@@ -1,4 +1,11 @@
 var langMap = {
+    default: {
+        langName: 'Default',
+        dam: {
+            nt: 'ENGKJVN2ET',
+            ot: 'ENGKJVO2ET'
+        }
+    },
     sq: {
         langName: 'Albanian',
         dam: {

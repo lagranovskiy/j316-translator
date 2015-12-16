@@ -1,4 +1,5 @@
 var async = require('neo-async');
+var langMap = require('../../config/langMap');
 var dbt = require('./connectors/DbtConnector');
 var _ = require('underscore');
 
@@ -15,79 +16,129 @@ var translationWorker = function () {
         /**
          * Translation Queue.
          *
-         *@param lookupJobArray [{damId:'ANETNN2NO', bookId:'Ps', chapterId: 2, verseStart:1, verse_end:2}]
+         *@param lookupJobArray [{bookId:'Ps', part: 'ot', chapterId: 2, verseStart:1, verseEnd:2}]
          * @param targetLang targetLang
          */
         verseQueue: async.queue(function (lookupJobArray, targetLanguage, callback) {
 
-            _.each(lookupJobArray, function (verseJob) {
+                _.each(lookupJobArray, function (verseJob) {
 
-                dbt.getVersInLang(verseJob.damId, verseJob.bookId, verseJob.chapterId, verseJob.verseStart, verseJob.verse_end,
-                    function (error, translatedObject) {
-                        if (error) {
-                            return callback('Cannot process verse lookup to ' + targetLanguage + ' : ' + error);
-                        }
-                        if (translatedObject.length == 0) {
-                            return callback('No lookup possible for lang ' + targetLanguage + JSON.stringify(verseJob));
-                        }
+                    var damId = langMap[targetLanguage].dam[verseJob.part];
+                    if (!damId) {
+                        damId = langMap.default.dam[verseJob.part];
+                    }
 
-                        var lookupText = _.pluck(translatedObject, 'verse_text').join('\n');
-                        var maxVerse = _.max(translatedObject, function (vers) {
-                            return vers.verse_id;
+                    dbt.getVersInLang(damId, verseJob.bookId, verseJob.chapterId, verseJob.verseStart, verseJob.verseEnd,
+                        function (error, translatedObject) {
+                            if (error) {
+                                return callback('Cannot process verse lookup to ' + targetLanguage + ' : ' + error);
+                            }
+                            if (translatedObject.length == 0) {
+                                return callback('No lookup possible for lang ' + targetLanguage + JSON.stringify(verseJob));
+                            }
+
+                            var lookupText = _.pluck(translatedObject, 'verse_text').join('\n');
+                            var maxVerse = _.max(translatedObject, function (vers) {
+                                return vers.verse_id;
+                            });
+                            var minVerse = _.max(translatedObject, function (vers) {
+                                return vers.verse_id;
+                            });
+
+                            var versLocation = translatedObject[0].book_name + ' ' + translatedObject[0].chapter_id + '.';
+                            if (maxVerse != minVerse) {
+                                versLocation += minVerse + '-' + maxVerse;
+                            } else {
+                                versLocation += minVerse;
+                            }
+
+                            var lookupRs = {
+                                verse: lookupText,
+                                location: versLocation,
+                                language: targetLanguage
+                            };
+
+                            return callback(null, lookupRs);
                         });
-                        var minVerse = _.max(translatedObject, function (vers) {
-                            return vers.verse_id;
-                        });
+                });
 
-                        var versLocation = translatedObject[0].book_name + ' ' + translatedObject[0].chapter_id + '.';
-                        if (maxVerse != minVerse) {
-                            versLocation += minVerse + '-' + maxVerse;
-                        } else {
-                            versLocation += minVerse;
-                        }
-
-                        var lookupRs = {
-                            verse: lookupText,
-                            location: versLocation,
-                            language: targetLanguage
-                        };
-
-                        return callback(null, lookupRs);
-                    });
-            });
-
-        }, 5),
+            }, 5
+        ),
 
         /**
          * Prepare verse lookup. Get from till values for the request to the worker
-         * @param  senderLang en/de/ru
-         * @param vers Mathaus 1.2-7
+         * @param  senderLanguage en/de/ru,
+         * @param verse Mathaus 1,2-7
          * @param callback
          */
-        prepareVerseLookup: function (senderLang, vers, callback) {
-            refParser.parseOSIS(senderLang, vers, function (err, refInfoArray) {
+        prepareVerseLookup: function (senderLanguage, verse, callback) {
+            refParser.parseOSIS(senderLanguage, verse, function (err, refInfoArray) {
                 if (!refInfoArray || refInfoArray.length == 0) {
                     return callback('VerseWorker :: no parsing of verse possible');
                 }
 
-                var refInfo = refInfoArray[0];
+                var retVal = [];
                 /**
-                 *    should(refInfo[0].entities.length).be.exactly(2);
-                 should(refInfo[0].entities[0].start.b).be.exactly('Ps');
-                 should(refInfo[0].entities[0].start.c).be.exactly(3);
-                 should(refInfo[0].entities[0].start.v).be.exactly(17);
-                 should(refInfo[0].entities[0].end.b).be.exactly('Ps');
-                 should(refInfo[0].entities[0].end.c).be.exactly(3);
-                 should(refInfo[0].entities[0].end.v).be.exactly(17);
-
-                 should(refInfo[0].entities[1].start.b).be.exactly('Ps');
-                 should(refInfo[0].entities[1].start.c).be.exactly(3);
-                 should(refInfo[0].entities[1].start.v).be.exactly(19);
-                 should(refInfo[0].entities[1].end.b).be.exactly('Ps');
-                 should(refInfo[0].entities[1].end.c).be.exactly(3);
-                 should(refInfo[0].entities[1].end.v).be.exactly(19);
+                 * 1 Mo 1,3, 2Mo 2.3 -> refInfoArray[2]
                  */
+                _.each(refInfoArray, function (bibleRef) {
 
+                    _.each(bibleRef.entities, function (bibleRefPart) {
+
+                        var partStartBook = bibleRefPart.start.b;
+                        var partStartChapter = bibleRefPart.start.c;
+                        var partStartVerse = bibleRefPart.start.v;
+
+                        var partEndBook = bibleRefPart.end.b;
+                        var partEndChapter = bibleRefPart.end.c;
+                        var partEndVerse = bibleRefPart.end.v;
+
+                        if (partStartBook !== partEndBook) {
+                            console.error('Illegal verse reference; ' + verse);
+                            callback('Illegal verse reference; ' + verse);
+                        }
+
+                        var bookOrderArray = refParser.getMetaInfo(senderLanguage).order;
+                        var part = 'nt';
+                        if (bookOrderArray['Matt'] > bookOrderArray[partStartBook]) {
+                            part = 'ot';
+                        }
+
+                        var bookVerseMap = refParser.getMetaInfo(senderLanguage).chapters;
+                        var bookVerseArray = bookVerseMap[partStartBook];
+
+
+                        // At a time we can lookup only x verses for one chapter in one book. We need to separate the reference into this parts and fetch them separately.
+                        // For example. Ps. 3,2-4,7 need to be fetched to 3,2-12, 4,1-7
+                        for (var i = 0; i < (partEndChapter - partStartChapter) + 1; i++) {
+                            var currentChapter = partStartChapter + i;
+
+                            var chapterEndVerse = bookVerseArray[currentChapter - 1];
+                            var chapterStartVerse = 1;
+
+                            if (currentChapter === partStartChapter) {
+                                chapterStartVerse = partStartVerse
+                            }
+
+                            if (currentChapter === partEndChapter) {
+                                chapterEndVerse = partEndVerse
+                            }
+
+                            retVal.push(
+                                {
+                                    bookId: partStartBook,
+                                    part: part,
+                                    chapterId: currentChapter,
+                                    verseStart: chapterStartVerse,
+                                    verseEnd: chapterEndVerse
+                                }
+                            );
+                        }
+                    });
+
+                });
+
+                callback(null, retVal);
             });
         }
     };

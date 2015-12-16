@@ -15,7 +15,7 @@ exports.config = {
    *
    * @env NEW_RELIC_LICENSE_KEY
    */
-  license_key:  process.env.NEWRELIC_KEY || '19b2c9c5d9a1293c273fb703749d2c23b48a945e',
+  license_key:  process.env.NEWRELIC_KEY,
   /**
    * Hostname for the New Relic collector proxy.
    *

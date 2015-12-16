@@ -163,7 +163,7 @@ var senderConnector = function (socketChannel) {
         var accessKey = data.accessKey;
 
         if (!accessKey) return callback(new Error("Access key not found"));
-        var retVal = callback(null, accessKey === config.sender.accessKey);
+        var retVal = callback(null, accessKey === config.accessKey);
 
         socket.handshake.session.sender = data.sender;
         return retVal;

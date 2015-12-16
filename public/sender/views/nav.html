@@ -1,19 +1,12 @@
-<div ng-controller="NavCtrl" ng-cloak>
-    <h2 ng-if="!isOnline()" class="md-padding" style="color: dimgrey;">J316 Translator Control</h2>
-    <md-fab-toolbar ng-if="isOnline()" md-open="isOpen" md-direction="right">
-        <md-fab-trigger class="align-with-text">
-            <md-button aria-label="menu" class="md-fab" ng-class="isOnline()?'md-warn':'md-primary md-hue-1'">
-                <md-icon md-font-set="material-icons">settings_remote</md-icon>
+<div layout="row" ng-controller="NavCtrl" ng-cloak>
+    <div class="md-padding" flex="40"><img src="img/logo.png"></div>
+
+    <div layout="row" layout-align="end start" flex="60">
+        <div ng-if="isOnline()" layout="row" layout-align="end start" flex="60">
+            <md-button ng-click="disconnect()" ng-if="isOnline()" class="md-raised md-warn">
+                <md-icon md-font-set="material-icons">power_settings_new</md-icon>
+                <span class="hide-sm hide-xs">Leave</span>
             </md-button>
-        </md-fab-trigger>
-        <md-toolbar>
-            <md-fab-actions class="md-toolbar-tools " layout-align="end center">
-                <h1>J316 Translator Control</h1>
-                <md-button ng-if="isOnline()" ng-click="disconnect()">
-                    <md-icon md-font-set="material-icons">power_settings_new</md-icon>
-                    <span class="hide-sm">Leave</span>
-                </md-button>
-            </md-fab-actions>
-        </md-toolbar>
-    </md-fab-toolbar>
+        </div>
+    </div>
 </div>

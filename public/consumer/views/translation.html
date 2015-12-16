@@ -23,13 +23,12 @@
                             <md-icon md-font-set="material-icons">chat bubble</md-icon>
                         </md-button>
                         <div layout="column">
-                            <span class="md-caption">Your question is answered:</span>
+                            <span class="md-caption">Your question is answered by {{item.answerSenderName}}:</span>
                             <span class="senderAnswer"><b>{{item.answerTranslation}}</b></span>
                             <span class="md-caption">Original question:</span>
                             <small ng-class="localizeLang(clientInfo.lang).rtl ? 'rtl_text' : ''">
                                 {{item.questionText}}
                             </small>
-                            <small class="md-caption">by {{item.answerSenderName}}
                             </small>
                         </div>
                     </div>

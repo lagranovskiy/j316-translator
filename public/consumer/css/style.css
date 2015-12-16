@@ -47,3 +47,7 @@
 .j316-translator .animate-repeat.ng-enter.ng-enter-active {
     opacity: 1;
 }
+
+.j316-translator .control_field{
+    min-height: 150px;
+}

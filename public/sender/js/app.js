@@ -135,7 +135,6 @@ angular.module('senderApp', [
         {key: 'et', lang: 'Estonian'},
         {key: 'ja', lang: 'Japanese'},
         {key: 'be', lang: 'Belarusian'},
-        {key: 'ru', lang: 'Russian'},
         {key: 'uk', lang: 'Ukrainian'}
     ])
 

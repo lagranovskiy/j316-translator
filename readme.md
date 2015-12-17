@@ -5,8 +5,8 @@
 The J316 Translator is a small application that makes it possible for multilingual worship visitors to read a translation of sermons in his native language. It supports the visitor by understanding and gives him a possibility to ask a quastion or note the translator about difficult sentence or unclear meaning of it.
 
 ## Info Pages
-* [Functionality Information](functionality.md)
-* [Technical solution overview](technical.md)
+* [Functionality Information](doc/functionality.md)
+* [Technical solution overview](doc/technical.md)
 
 
 ## Quick Functionality overview
@@ -30,4 +30,3 @@ The J316 Translator is a small application that makes it possible for multilingu
 ## Known issues
 * Android standard browser dont display icons.
 * Verse parsing is actually hard coded to a single versification system. It leads to wrong lookups by translations that use other versification.
-

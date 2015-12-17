@@ -58,11 +58,17 @@ var dbtConnector = function () {
                     body += chunk;
                 });
                 res.on('end', function () {
-                    var fbResponse = JSON.parse(body);
-                    _.each(fbResponse, function (vers) {
-                        vers.verse_text = vers.verse_text.trim()
-                    });
-                    callback(null, fbResponse);
+                    try {
+                        var fbResponse = JSON.parse(body);
+                        _.each(fbResponse, function (vers) {
+                            vers.verse_text = vers.verse_text.trim()
+                        });
+                        return callback(null, fbResponse);
+                    }
+                    catch (err) {
+                        return callback(err);
+                    }
+
                 });
             }).on('error', function (e) {
                 console.log("Got error: " + e.message);

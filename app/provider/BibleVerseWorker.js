@@ -52,7 +52,7 @@ var translationWorker = function () {
                                 var maxVerse = _.max(translatedArray, function (vers) {
                                         return vers.verse_id * 1;
                                     }).verse_id * 1;
-                                var minVerse = _.max(translatedArray, function (vers) {
+                                var minVerse = _.min(translatedArray, function (vers) {
                                         return vers.verse_id * 1;
                                     }).verse_id * 1;
 

@@ -1,5 +1,8 @@
 ![J316 Translator](doc/logo.png)
 
+[![Code Climate](https://codeclimate.com/github/lagranovskiy/j316-translator/badges/gpa.svg)](https://codeclimate.com/github/lagranovskiy/j316-translator)
+[![Dev Dependency Status](https://david-dm.org/lagranovskiy/j316-translator.png)](https://david-dm.org/lagranovskiy/j316-translator)
+
 # J316 Translator Readme
 
 The J316 Translator is a small application that makes it possible for multilingual worship visitors to read a translation of sermons in his native language. It supports the visitor by understanding and gives him a possibility to ask a quastion or note the translator about difficult sentence or unclear meaning of it.

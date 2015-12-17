@@ -84,7 +84,7 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
                 questionText: msg.questionText,
                 questionSourceName: msg.questionSourceName,
                 questionLanguage: msg.questionLanguage,
-                questionTimestamp: msg.questionTimestamp,
+                timestamp: msg.questionTimestamp,
                 type: 'question'
             };
 
@@ -110,7 +110,7 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
                     questionText: singleMsg.questionText,
                     questionSourceName: singleMsg.questionSourceName,
                     questionLanguage: singleMsg.questionLanguage,
-                    questionTimestamp: singleMsg.questionTimestamp,
+                    timestamp: singleMsg.questionTimestamp,
                     answered: singleMsg.answered,
                     answeredBy: singleMsg.answeredBy,
                     type: 'question'

@@ -1,0 +1,709 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"f",
+				"foreach	<?php foreach (…) … <?php endforeach ?>"
+			],
+			[
+				"c",
+				"color	Attr"
+			],
+			[
+				"fo",
+				"font	Tag"
+			],
+			[
+				"export",
+				"export:variable	ES6 Module Export Variable"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "j316.xml",
+			"settings":
+			{
+				"buffer_size": 1134,
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 392.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"Prev",
+				"Markdown Preview: Preview in Browser"
+			],
+			[
+				"html",
+				"HTML: Encode Special Characters"
+			],
+			[
+				"Previ",
+				"Markdown Preview: Preview in Browser"
+			],
+			[
+				"previ",
+				"Markdown Preview: Preview in Browser"
+			],
+			[
+				"preview",
+				"Markdown Preview: Preview in Browser"
+			],
+			[
+				"tabs",
+				"Indentation: Convert to Tabs"
+			],
+			[
+				"intend",
+				"Indentation: Reindent Lines"
+			],
+			[
+				"re",
+				"Indentation: Reindent Lines"
+			],
+			[
+				"rein",
+				"Indentation: Reindent Lines"
+			],
+			[
+				"markdown",
+				"Markdown Preview: Preview in Browser"
+			],
+			[
+				"remove",
+				"Package Control: Remove Package"
+			],
+			[
+				"Preview",
+				"Markdown Preview: Preview in Browser"
+			],
+			[
+				"Packa",
+				"Package Control: Install Package"
+			],
+			[
+				"reinte",
+				"Indentation: Reindent Lines"
+			],
+			[
+				"",
+				"Changelog"
+			],
+			[
+				"in",
+				"Indentation: Convert to Tabs"
+			],
+			[
+				"prev",
+				"Markdown Preview: Preview in Browser"
+			],
+			[
+				"mark",
+				"Markdown Preview: Open Markdown Cheat sheet"
+			],
+			[
+				"inde",
+				"Indentation: Reindent Lines"
+			],
+			[
+				"Pre",
+				"Markdown Preview: Preview in Browser"
+			],
+			[
+				"Set Syntax: Ma",
+				"Set Syntax: Markdown"
+			],
+			[
+				"insta",
+				"Package Control: Install Package"
+			],
+			[
+				"NodeJS",
+				"Nodejs::Default File Settings"
+			],
+			[
+				"packa",
+				"Package Control: Install Package"
+			],
+			[
+				"insall",
+				"Package Control: Install Package"
+			],
+			[
+				"Insta",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control: ",
+				"Package Control: Install Package"
+			],
+			[
+				"GitSideBar",
+				"Git (SideBarGit): Commit Amend"
+			],
+			[
+				"Git",
+				"Git (SideBarGit): Log: diffs of changes full"
+			],
+			[
+				"GitG",
+				"Git (SideBarGit): Git GUI"
+			],
+			[
+				"GitGu",
+				"GitGutter: Compare Against Commit"
+			],
+			[
+				"sort",
+				"Sort Lines"
+			],
+			[
+				"Set Sy",
+				"Set Syntax: R"
+			],
+			[
+				"Convert ",
+				"Indentation: Convert to Tabs"
+			],
+			[
+				"Convert",
+				"Indentation: Convert to Tabs"
+			],
+			[
+				"set Syntax",
+				"Set Syntax: Lua"
+			]
+		],
+		"width": 746.0
+	},
+	"console":
+	{
+		"height": 114.0,
+		"history":
+		[
+			"console.log(\"trt\")",
+			"import urllib.request,os,hashlib; h = 'eb2297e1a458f27d836c04bb0cbaf282' + 'd0e7a3098092775ccb37ca9d6b2e4b7d'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://packagecontrol.io/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by)"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/home/lagranovskiy/learning/j316-translator/doc"
+	],
+	"file_history":
+	[
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/unterlagen/docs/tests/liveAllotments/LAVorbereitung.md",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/unterlagen/other/TC_Release.md",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/unterlagen/docs/tests/liveAllotments/LA_Hotel_Szenario1.L.md",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/unterlagen/docs/tests/liveAllotments/LA_Flug_Szenario2.4.md",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/unterlagen/docs/tests/liveAllotments/LA_Flug_Szenario2.Z.md",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/unterlagen/docs/tests/liveAllotments/LA_Hotel_Szenario1.4.md",
+		"/home/lagranovskiy/translator.seidheilig.de.pem",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/unterlagen/docs/tests/liveAllotments/LA_Hotel_Szenario1.2.md",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/unterlagen/docs/tests/singleEDF/SEDF_Hotel_Szenario3.1.md",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/unterlagen/docs/tests/liveAllotments/LA_Hotel_Szenario1.3.md",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/unterlagen/docs/tests/singleEDF/SEDF_Flug_Szenario4.1.md",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/unterlagen/docs/plan/20151118 Status Pups.md",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/unterlagen/docs/tests/liveAllotments/LA_Flug_Szenario2.Z.2.md",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/unterlagen/docs/diagramms/pups_ablauf.md",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/unterlagen/docs/tests/liveAllotments/LA_Flug_Szenario2.3.md",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/unterlagen/docs/plan/20151130 Status Pups.md",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/unterlagen/docs/tests/liveAllotments/LA_Flug_Szenario2.2.md",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/unterlagen/docs/tests/liveAllotments/LA_Flug_Szenario2.1.md",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/unterlagen/docs/tests/liveAllotments/LA_Flug_Szenario2.L.md",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/unterlagen/docs/tests/liveAllotments/LA_Hotel_Szenario1.Z.md",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/unterlagen/docs/tests/liveAllotments/LA_Hotel_Szenario1.1.md",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/unterlagen/docs/quellen/aufh allotment/msg.md",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/unterlagen/docs/plan/20151110 Status Pups.md",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/unterlagen/docs/plan/20151102 Status Pups.md",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/unterlagen/docs/quellen/befg allotment/FlugAllotmentBom.md",
+		"/home/lagranovskiy/projects/thomascook/documentation/GHCM/knowhow/SAP.md",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/unterlagen/docs/quellen/befg allotment/msgs.md",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/unterlagen/docs/env.md",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/unterlagen/other/PW1469.md",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/unterlagen/docs/quellen/aufh preis/usecases/UseCase_HotelPreis_Änderung.md",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/unterlagen/docs/quellen/aufh allotment/usecases/UseCase_HotelVerfügbarkeit_Reduce.md",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/unterlagen/docs/quellen/aufh allotment/usecases/UseCase_HotelVerfügbarkeit_Ausgebucht.md",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/unterlagen/docs/quellen/befg allotment/usecases/UseCase_FlugVerfügbarkeit_Ausgebucht.md",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/unterlagen/docs/quellen/befg allotment/usecases/UseCase_FlugVerfügbarkeit_Reduce.md",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/unterlagen/docs/quellen/aufh preis/usecases/UseCase_HotelPreis.md",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/unterlagen/docs/tests/liveAllotments/fehlern/EDF-W16-NAH--NEC-21142AP.xml",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/env/svn.md",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/unterlagen/docs/quellen/aufh preis/HotelPreisBenachrichtigung.md",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/unterlagen/docs/live/20150730_140518028_2908_DEOBE1L6DPOVY1_1_NEC_S15.zip",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/unterlagen/plan/20151102 Status Pups.md",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/unterlagen/docs/quellen/befg allotment/BEFG.VERFUGBARKEIT Rollout.md",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/unterlagen/docs/actual.md",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/unterlagen/docs/tests/liveAllotments/ZIPSzenarien.md",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/unterlagen/plan/20151021 Status Pups.md",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/unterlagen/docs/tests/liveAllotments/LATestszenarien.md",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/unterlagen/docs/tests/liveAllotments/LA_Hotel_Szenario1.D.md",
+		"/home/lagranovskiy/projects/thomascook/documentation/GHCM/knowhow/Git SVN Branching",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/unterlagen/docs/tests/liveAllotments/fehlern/fulllauf.md",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/unterlagen/docs/tests/liveAllotments/fehlern/liveallotments.md",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/unterlagen/docs/tests/liveAllotments/fehlern/lastLAHotel.md",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/unterlagen/docs/tests/liveAllotments/fehlern/duplLAHotel.md",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/unterlagen/plan/201510?? Status Pups.md",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/unterlagen/diagramms/BEFG.VERFUEGBARKEIT_2.pdf",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/unterlagen/docs/quellen/HotelIndividualPreisBom.md",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/unterlagen/docs/quellen/FlugAllotmentBom.md",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/unterlagen/plan/20151008 Status Pups.md",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/unterlagen/plan/20151001 Status Pups.md",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/unterlagen/plan/20150817 JourFix.md",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/unterlagen/plan/20150810 Status.md",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/unterlagen/plan/20150724 JourFix Tino Bahr.md",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/unterlagen/plan/20150723 Status Pups.md",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/unterlagen/docs/pupsfunc.md",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/unterlagen/docs/tests/singleEDF",
+		"/home/lagranovskiy/projects/thomascook/documentation/GHCM/knowhow/links.md",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/unterlagen/docs/tests/singleEDF/SEDF_Flug_Szenario4.3.md",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/unterlagen/docs/tests/singleEDF/SEDF_Flug_Szenario4.2.md",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/unterlagen/docs/quellen/HotelAllotmentBom.md",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/unterlagen/docs/boms.md",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/unterlagen/docs/tests/singleEDF/SEDF_Hotel_Szenario3.2.md",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/unterlagen/docs/tests/singleEDF/SingleEDFVorbereitung.md",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/unterlagen/docs/SingleEDFTestszenarien.md",
+		"/home/lagranovskiy/.config/sublime-text-3/Packages/MarkdownEditing/README.md",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/unterlagen/docs/LATestProtokoll.md",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/unterlagen/docs/LATestszenarien.md",
+		"/home/lagranovskiy/projects/thomascook/documentation/GHCM/knowhow/markdown.md",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/unterlagen/plan/20150622 Besprechung mit Sieper.md",
+		"/home/lagranovskiy/.config/sublime-text-3/Packages/User/MarkdownPreview.sublime-settings",
+		"/home/lagranovskiy/.config/sublime-text-3/Packages/Markdown Preview/MarkdownPreview.sublime-settings",
+		"/home/lagranovskiy/.config/sublime-text-3/Packages/User/Markdown (Standard).sublime-settings",
+		"/home/lagranovskiy/.config/sublime-text-3/Packages/User/Distraction Free.sublime-settings",
+		"/home/lagranovskiy/.config/sublime-text-3/Packages/User/Preferences.sublime-settings",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/unterlagen/diagramms/fälleAggregation.xml",
+		"/home/lagranovskiy/projects/thomascook/documentation/GHCM/knowhow/node.txt",
+		"/home/lagranovskiy/.config/sublime-text-3/Packages/User/JSON.sublime-settings",
+		"/home/lagranovskiy/.config/sublime-text-3/Packages/User/Default (Linux).sublime-keymap",
+		"/home/lagranovskiy/.config/sublime-text-3/Packages/MarkdownEditing/Default (Linux).sublime-keymap",
+		"/home/lagranovskiy/.config/sublime-text-3/Packages/MarkdownEditing/Markdown.sublime-settings",
+		"/home/lagranovskiy/.config/sublime-text-3/Packages/MarkdownEditing/Bold and Italic Markers.tmPreferences",
+		"/home/lagranovskiy/.config/sublime-text-3/Packages/MarkdownEditing/MultiMarkdown.sublime-settings",
+		"/home/lagranovskiy/.config/sublime-text-3/Packages/MarkdownEditing/Markdown (Standard).sublime-settings",
+		"/home/lagranovskiy/.config/sublime-text-3/Packages/User/Markdown.sublime-settings",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/unterlagen/plan/20150622 Besprechung mit Sieper.html",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/unterlagen/plan/20150624 Fragen an Thorsten Pivl.md",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/unterlagen/docs/ReqList.md",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/unterlagen/docs/liveallotmenttest.md",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/unterlagen/plan/20150622 Besprechung mit Sieper",
+		"/home/lagranovskiy/.config/sublime-text-3/Packages/User/MultiMarkdown.sublime-settings",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/sonstiges/env.md",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/sonstiges/boms.md",
+		"/home/lagranovskiy/projects/thomascook/documentation/GHCM/knowhow/ssh tunnel",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/plan/20151015 Status Pups",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/sonstiges/liveallotmenttest.md",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/live/livetestHotel_danach",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/live/livetestHotel_davor",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/plan/20151008 Status Pups",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/sonstiges/ddl/updateScript.1.3.sql",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/sonstiges/befg.verf_topic",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/diagramms/BEFG.VERFUEGBARKEIT.pdf",
+		"/home/lagranovskiy/projects/thomascook/documentation/Frankreich/JLC/2015.10.01/ohneKpreisP.aicp",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/sonstiges/spec/FlugAllotmentFormat.odt",
+		"/home/lagranovskiy/.config/sublime-text-3/Packages/User/SideBarEnhancements/Open With/Side Bar.sublime-menu",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/sonstiges/svn.md",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/sonstiges/aggregationRegeln.md",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/plan/20151001 Statusmeeting.md",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/sonstiges/norvis2davosmsg.xml",
+		"/home/lagranovskiy/projects/thomascook/server/apache-tomcat-6.0.35-pups/conf/server.xml",
+		"/home/lagranovskiy/projects/thomascook/documentation/GHCM/knowhow/test.js",
+		"/home/lagranovskiy/.config/sublime-text-3/Packages/User/Nodejs.sublime-settings",
+		"/home/lagranovskiy/.config/sublime-text-3/Packages/User/Side Bar.sublime-settings",
+		"/home/lagranovskiy/.config/sublime-text-3/Packages/Nodejs/Nodejs.sublime-settings",
+		"/home/lagranovskiy/.config/sublime-text-3/Packages/JsFormat/JsFormat.sublime-settings",
+		"/home/lagranovskiy/.config/sublime-text-3/Packages/Emmet/Emmet.sublime-settings",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/plan/20150622 kickoff",
+		"/home/lagranovskiy/projects/thomascook/documentation/PUPS/plan/20150810 Status",
+		"/home/lagranovskiy/projects/thomascook/documentation/Frankreich/20150908_AICPFrankreich",
+		"/home/lagranovskiy/projects/thomascook/documentation/Frankreich/JB1/2015.09.10/JB1JBO-Fehlende-Datensätze.txt",
+		"/home/lagranovskiy/.config/sublime-text-3/Packages/GitGutter/GitGutter.sublime-settings",
+		"/home/lagranovskiy/.config/sublime-text-3/Packages/Package Control/Package Control.sublime-settings"
+	],
+	"find":
+	{
+		"height": 25.0
+	},
+	"find_in_files":
+	{
+		"height": 93.0,
+		"where_history":
+		[
+			"/home/lagranovskiy/projects/thomascook/documentation/PUPS/",
+			"/home/lagranovskiy/projects/thomascook/documentation/PUPS/plan",
+			"/home/lagranovskiy/projects/thomascook/documentation/Frankreich/JB1/2015.09.10",
+			"/home/lagranovskiy/projects/thomascook/documentation/Frankreich/JB1/2015.09.10.*23.09.2015",
+			"/home/lagranovskiy/projects/thomascook/documentation/Frankreich/JB1/2015.09.10",
+			"/home/lagranovskiy/projects/thomascook/documentation/Frankreich"
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"2016-01-09",
+			"i",
+			"017624974966",
+			"$",
+			"443,80,22 ",
+			"allow",
+			"-j DROP",
+			"iptables -A INPUT -s",
+			"-j ALLOW",
+			"iptables -A INPUT -s",
+			"DROP",
+			"||",
+			"Ergebnis",
+			"\"",
+			"0603FAMSAY",
+			"FAMSAY",
+			"\"",
+			"resta",
+			"H11641A1A20160429010 0AUFHNVBUCS16  0.",
+			"H87332A2C20160131007K1AUFHNVBUCW16  01AIPUJNDQCU",
+			"H87470A2S20160629014 0AUFHNVXNES16  01AIPUJNDQEU",
+			"H78631A2B20151129006 0AUFHNVBUCW16  01AIAYTNDQCU",
+			"H11168A1A20160503009 0AUFHNVYNES16  01HPPMINDQCU",
+			"  02",
+			"20160110FVIEMRU12     007NUR 015JN01NDQCU   TIP   ",
+			"20151225FFRAMRU12     007NUR 010JN01NDQCU   TIP   ",
+			"20151225FVIEMRU12     007NUR 010JN01NDQCU   TIP   ",
+			"20160103FFRAMRU12     007NUR 015JN01NDQCU   TIP   ",
+			"20160103FAMSFUE1202",
+			"20151203FWAWTFS12",
+			"20160725FAMSTFS1203",
+			"20160529FAMSFUE1202",
+			"20160110FVIEMRU12",
+			"20151225FFRAMRU12",
+			"20151225FVIEMRU12",
+			"20160103FFRAMRU12",
+			"20160110FVIEMRU12",
+			"20160529FAMSFUE1202",
+			"20160725FAMSTFS1203",
+			"20151203FWAWTFS12",
+			"20160103FAMSFUE1202",
+			"20151225FVIEMRU12",
+			"20160103FFRAMRU12",
+			"\\n\\n\\n\\n\\n\\n\\n",
+			"[Zeile",
+			"[Neue",
+			"2016-01-09",
+			"´´´",
+			"svn",
+			"IN",
+			"21142A",
+			"Es werden 721 Delta Dateien produziert",
+			"last test",
+			"peakwork@aws-lnx-tc-x-dvsq-accep-01:/var/peakwork/NEC_PROD/NEC/Package/NEC>",
+			"Bob",
+			"Alice",
+			"Batch",
+			"Event",
+			"|\n",
+			"\\*\\*(.*) \\*\\*",
+			"\\+ (.*)$",
+			"\\+.*^",
+			"\\+ ^",
+			"\\+.*^",
+			"\\+.* ^",
+			"\\+.*$ ",
+			"\\+ ",
+			"+ ",
+			"\\+ ",
+			"+ ",
+			"\\+ ",
+			"+",
+			"\n|-------|--------|",
+			"note-id",
+			"\\*(\\w*)\\*",
+			"\\*\\w*\\*",
+			"\\*.*\\*",
+			"*.**",
+			" SingleEDF ",
+			" LiveAllotment ",
+			" AICP ",
+			" LPAC ",
+			":			",
+			"neute",
+			"markieren",
+			"1",
+			"cats",
+			"email",
+			"note-id",
+			"extensions",
+			"MRSMLE.*01\\.10\\.2015",
+			"MRSMLE.*2015\\.10\\.01",
+			"MRSMLE.*2015.10.01",
+			"PARTFS",
+			"TLSDJE",
+			"PARDJE",
+			"MRSDJE",
+			"	867: JBO JMB1S15 DJEFCFEDJE1212.09.2015XXXXXXVXXXXXXVXXXXXXNXXXXXXNXXXXXXXXXXXXXXXXXXXXXX014N         NJN12.09.2015                                        \n  			868: JBO JMB1S15 DJEFCFEDJE1219.09.2015XXXXXXVXXXXXXNXXXXXXNXXXXXXNXXXXXXXXXXXXXXXXXXXXXX007N         NJN19.09.2015               \n",
+			"867: JBO JMB1S15 DJEFCFEDJE1212.09.2015XXXXXXVXXXXXXVXXXXXXNXXXXXXNXXXXXXXXXXXXXXXXXXXXXX014N         NJN12.09.2015                                        \n  			868: JBO JMB1S15 DJEFCFEDJE1219.09.2015XXXXXXVXXXXXXNXXXXXXNXXXXXXNXXXXXXXXXXXXXXXXXXXXXX007N         NJN19.09.2015               \n",
+			"CFEDJE",
+			"CJEDJE",
+			"BODDJE",
+			"BODMLE",
+			"DOLHER",
+			"DOLDJE",
+			"TLSMLE",
+			"PARMLE",
+			"NCEMLE",
+			"MRSMLE",
+			".*MRSPUJ.*",
+			".*LYSPUJ.*",
+			".*84483.*TLSMLE.*23.09.20150071A",
+			".*84483.*NCEMLE.*24.09.20150071A",
+			".*84483AFMRSNCEMLE.*      26.09.20150073A",
+			".*84483AFMRSMLEMLEMRS      26.09.20150073A",
+			"JBO JMB1S15 MLE84483AFBODMLEMLEBOD      24.09.20150073A",
+			"JBO JMB1S15 MLE84483AFBODMLEMLEBOD      24.09.2015",
+			"84483.*BODMLEMLEBOD.*23\\.09\\.2015.*",
+			"84483.*BODMLEMLEBOD",
+			"84483.*BODMLE",
+			"MLEBOD",
+			"06:15:00\\+02",
+			"15337",
+			"FRIRD",
+			"AGDADFALS15",
+			"ANEX",
+			"Verfollständigung",
+			"Cache"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": true,
+		"replace_history":
+		[
+			"to any port 443,80,22 ",
+			"",
+			"ufw allow",
+			"",
+			"allow 443,80,22 from ",
+			"",
+			"ufw allow 22,443,80 from ",
+			"ALLOW",
+			"\\\"",
+			"",
+			"```",
+			">",
+			"`Batch`",
+			"`Event`",
+			"**\\1**",
+			"**{1}**",
+			"",
+			"* ",
+			"*",
+			" **\\1** ",
+			" *\\1* ",
+			" *\\2* ",
+			" *\\1* ",
+			" *{$1}* ",
+			" *{$2}* ",
+			" \\*\\*\\w*\\*\\* ",
+			" *SingleEDF* ",
+			" *LiveAllotment* ",
+			" *AICP* ",
+			" *LPAC* ",
+			"*LPAC*",
+			" ",
+			"\\\\\"",
+			"",
+			"\\\"",
+			"\\\\\"",
+			"\"",
+			"\\\\\"",
+			"\\\"",
+			"",
+			"\\\"",
+			"\"",
+			"\\\\\\\"",
+			"\\\\\\\\\"",
+			"\\\\\"",
+			"",
+			"\\\\\"",
+			"",
+			"\\\\\"",
+			"\\\"",
+			"",
+			"\\\""
+		],
+		"reverse": false,
+		"show_context": false,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "j316.xml",
+					"semi_transient": true,
+					"settings":
+					{
+						"buffer_size": 1134,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/XML/XML.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 25.0
+	},
+	"input":
+	{
+		"height": 39.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "",
+	"project": "readme.sublime-project",
+	"replace":
+	{
+		"height": 46.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"bo",
+				"sonstiges/boms.md"
+			],
+			[
+				"player",
+				"Frankreich/AQB/2015.08.31/playerHotelEDFExtracted.csv"
+			],
+			[
+				"playered",
+				"Frankreich/AQB/2015.08.31/playerHotelEDFExtracted.csv"
+			],
+			[
+				"gitsvnbranching",
+				"knowhow/Git SVN Branching"
+			],
+			[
+				"201",
+				"Frankreich/20150908_AICPFrankreich"
+			],
+			[
+				"gits",
+				"knowhow/Git SVN Branching"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 526.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"",
+				"~/projects/thomascook/documentation/Frankreich/frenchAICP.sublime-project"
+			]
+		],
+		"width": 788.0
+	},
+	"select_symbol":
+	{
+		"height": 392.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 791.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": false,
+	"show_open_files": true,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 423.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

@@ -100,6 +100,9 @@ var serviceDistributor = _.extend(new EventEmitter(), {
             question.targetId = senderId;
             question.targetLanguage = senderLanguage;
 
+            // Known issue: According to the architecture we need to ignore the possibility that there can be multiple language senders.
+            // Only the last question translation will be cached because of simplicity.
+            serviceDistributor.msgCache.set(questionUUID, question);
             serviceDistributor.emit('newQuestionTranslated', question);
 
             console.info('Question Translation emitted to language ' + senderLanguage);
@@ -157,7 +160,6 @@ var serviceDistributor = _.extend(new EventEmitter(), {
                 answerTranslation: translation,
                 answerSenderName: senderName
             };
-            question.questionTranslation = translation;
 
             serviceDistributor.msgCache.set(questionUUID, question);
             serviceDistributor.emit('newQuestionAnswerTranslated', translationRs);

@@ -1,6 +1,6 @@
 <div ng-controller="TranslationPanelCtrl" ng-init="requestListenersInfo()">
     <!-- angemeldet view form -->
-    <div layout="column" layout-align="left center" layout-no-wrap>
+    <div layout="column" layout-align="left center" >
 
 
         <md-tabs layout-fill md-selected="selectedIndex" md-dynamic-height md-autoselect>
@@ -64,6 +64,10 @@
 
             </md-tab>
 
+            <md-tab label="" class="">
+                <!-- Workaroud for the bug https://github.com/angular/material/issues/4873 -->
+            </md-tab>
+
 
         </md-tabs>
 
@@ -101,7 +105,7 @@
                             <small ng-class="localizeLang(item.questionLanguage).rtl ? 'rtl_text' : ''">
                                 {{item.questionText}}
                             </small>
-                            <small class="md-caption">{{formatDate(item.questionTimestamp)}} by
+                            <small class="md-caption">{{formatDate(item.timestamp)}} by
                                 {{item.questionSourceName}}
                                 ({{localizeLang(item.questionLanguage).lang}})
                             </small>

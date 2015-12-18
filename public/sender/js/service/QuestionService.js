@@ -14,12 +14,14 @@ angular.module('j316.translate.service.question', [])
 
         /**
          * Sends a question
-         * @param question question to be sent
+         * @param answeredQuestion  answered question text
+         * @param language language of the answer
          */
-        this.sendAnsweredQuestion = function (answeredQuestion) {
+        this.sendAnsweredQuestion = function (answeredQuestion, language) {
             translatorSocket.emit('answeredQuestion', {
                 questionUUID: answeredQuestion.questionUUID,
-                answer: answeredQuestion.answer
+                answer: answeredQuestion.answer,
+                language: language
             });
         };
 

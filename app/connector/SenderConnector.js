@@ -128,7 +128,7 @@ var senderConnector = function (socketChannel) {
                 answeredQuestion.answer,
                 answeredQuestion.questionUUID,
                 socket.handshake.session.sender.name,
-                socket.handshake.session.sender.language);
+                answeredQuestion.language);
 
             answeredQuestion.answerSenderName = socket.handshake.session.sender.name;
             socketChannel.emit('answerAck', answeredQuestion);

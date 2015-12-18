@@ -96,7 +96,7 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
 
         $scope.$on('answerAck', function (event, msg) {
             var questions = _.where($scope.messages, {questionUUID: msg.questionUUID});
-            _.each(questions, function(question){
+            _.each(questions, function (question) {
                 question.answered = true;
                 question.answeredBy = msg.answerSenderName;
             });
@@ -264,7 +264,7 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
                     clickOutsideToClose: true
                 })
                 .then(function (answer) {
-                    QuestionService.sendAnsweredQuestion(answer);
+                    QuestionService.sendAnsweredQuestion(answer, $scope.message.language);
                 }, function () {
                     $log.info('You cancelled the dialog.');
                 });

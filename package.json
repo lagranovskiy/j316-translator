@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "Translator application to provide simultanous language translation on multiple client",
   "main": "index.js",
+  "engines": {
+    "node": "4.2.3"
+  },
   "scripts": {
     "start": "node index.js",
     "postinstall": "bower install"

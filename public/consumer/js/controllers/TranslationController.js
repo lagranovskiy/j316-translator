@@ -19,8 +19,6 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
         });
 
 
-
-
         $scope.$on('newTranslation', function (event, msg) {
             var displayableMessage = {
                 translation: msg.translation,
@@ -57,6 +55,7 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
                 answerText: msg.answerText,
                 answerTranslation: msg.answerTranslation,
                 answerSenderName: msg.answerSenderName,
+                timestamp: msg.timestamp ? msg.timestamp : new Date().getTime(),
                 type: 'answer'
             };
 
@@ -73,6 +72,7 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
                 answerText: msg.answerText,
                 answerTranslation: msg.answerTranslation,
                 answerSenderName: msg.answerSenderName,
+                timestamp: msg.timestamp ? msg.timestamp : new Date().getTime(),
                 type: 'questionAck'
             };
 

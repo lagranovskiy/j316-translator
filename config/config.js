@@ -5,7 +5,7 @@ var config = {
     host: process.env.HOST || 'localhost',
     port: process.env.PORT || 1080,
     accessKey: process.env.ACCESS_KEY || 'j316',
-    redis: process.env.REDIS_SESSION || 'redis://192.168.99.100:32768',
+    redis: process.env.REDIS_URL || 'redis://192.168.99.100:32768',
     keys: {
         yandexTranslate: {
             yandex_api_key: process.env.YANDEX_TRANSLATE_KEY || 'dummy'

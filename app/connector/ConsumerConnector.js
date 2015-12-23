@@ -12,7 +12,10 @@ var consumerConnector = function (socketChannel) {
 
         console.info('client :: New Client is online. ' + socket.id);
 
-        if (!socket.handshake.session.sender) {
+        if (socket.handshake.session && socket.handshake.session.clientAuthenticated) {
+            console.info('client :: Returning authenticated client ' + socket.id);
+            initSubscribtions();
+        } else {
             console.info('client :: Send auth request to sender ' + socket.id);
             socket.emit('authenticate');
         }
@@ -34,10 +37,9 @@ var consumerConnector = function (socketChannel) {
          * Process client disconnect
          */
         function disconnectClient() {
-            if (socket.handshake.session.client && socket.handshake.session.client.language) {
-                serviceDistributor.removeTranslationLanguage(socket.handshake.session.client.language);
-                socket.leave('lang_' + socket.handshake.session.client.language);
-                console.info('client :: Client ' + socket.handshake.session.client.sender + '(' + socket.id + ')' + ' leaved roam lang_' + socket.handshake.session.client.language);
+            if (socket.handshake.session && socket.handshake.session.clientLanguage != undefined) {
+                serviceDistributor.removeTranslationLanguage(socket.handshake.session.clientLanguage);
+                console.info('client :: Client ' + socket.handshake.session.clientName + '(' + socket.id + ')' + ' leaved roam lang_' + socket.handshake.session.clientLanguage);
             }
 
         }
@@ -46,10 +48,12 @@ var consumerConnector = function (socketChannel) {
          * Process user disconnect
          */
         function handleLogout() {
-            if (socket.handshake.session.client) {
-                serviceDistributor.removeTranslationLanguage(socket.handshake.session.client.language);
-                socket.leave('lang_' + socket.handshake.session.client.language);
-                delete socket.handshake.session.client;
+            if (socket.handshake.session && socket.handshake.session.clientLanguage != undefined) {
+                serviceDistributor.removeTranslationLanguage(socket.handshake.session.clientLanguage);
+                socket.leave('lang_' + socket.handshake.session.clientLanguage);
+                socket.handshake.session.clientAuthenticated = false;
+                delete  socket.handshake.session.clientName;
+                delete  socket.handshake.session.clientLanguage;
             }
             console.info('client :: Client (' + socket.id + ') disconnected');
         }
@@ -57,38 +61,49 @@ var consumerConnector = function (socketChannel) {
 
         /**
          * Process user registration in system and subscribtion to a language channel
-         * @param data
+         * @param authRq
          */
-        function handleSingIn(data) {
+        function handleSingIn(authRq) {
 
-            console.info('client :: Sing in the client: ' + JSON.stringify(data));
+            console.info('client :: Sing in the client: ' + JSON.stringify(authRq));
 
-            if (!data.language) {
-                console.error('client :: Client ' + data.sender + ' has no lang preference defined. Default: en');
-                data.language = 'en';
+            if (!authRq.clientLanguage) {
+                console.error('client :: Client ' + authRq.clientName + ' has no lang preference defined. Default: en');
+                authRq.clientLanguage = 'en';
             }
 
-            if (socket.handshake.session.client != null) {
-                console.info('client :: Client ' + data.sender + ' change his language settings from ' + socket.handshake.session.client.language + ' to ' + data.language);
-                serviceDistributor.removeTranslationLanguage(socket.handshake.session.client.language);
-                socket.leave('lang_' + data.language);
-                console.info('client :: Client ' + data.sender + ' excluded from room ' + 'lang_' + socket.handshake.session.client.language);
+            var sessionData = socket.handshake.session;
+            if (sessionData.clientLanguage && (sessionData.clientLanguage != authRq.clientLanguage)) {
+                console.info('client :: ' + sessionData.clientName + ' changing language from ' + socket.handshake.session.clientLanguage + ' to ' + authRq.clientLanguage);
+                serviceDistributor.removeTranslationLanguage(sessionData.clientLanguage);
+                socket.leave('lang_' + sessionData.clientLanguage);
             }
+            sessionData.clientAuthenticated = true;
+            sessionData.clientName = authRq.clientName;
+            sessionData.clientLanguage = authRq.clientLanguage;
 
-            socket.handshake.session.client = data;
-            socket.join('lang_' + data.language);
-            serviceDistributor.addTranslationLanguage(socket.handshake.session.client.language);
+            initSubscribtions();
 
             // Recipe connection
-            console.info('client :: Client ' + data.sender + ' added to room  lang_' + data.language);
             socket.emit('singinCompleted', {success: true});
 
             // Send cached messages if any
-            var cachedMsgs = serviceDistributor.getCachedMessages(socket.handshake.session.client.language);
+            var cachedMsgs = serviceDistributor.getCachedMessages(sessionData.clientLanguage);
             if (cachedMsgs && cachedMsgs.length > 0) {
                 socket.emit('cachedTranslations', cachedMsgs);
             }
 
+        }
+
+        /**
+         * Process subscription update if any
+         */
+        function initSubscribtions() {
+            var data = socket.handshake.session;
+
+            socket.join('lang_' + data.clientLanguage);
+            serviceDistributor.addTranslationLanguage(data.clientLanguage);
+            console.info('client :: Client ' + data.clientName + ' added to room  lang_' + data.clientLanguage);
         }
 
 
@@ -120,7 +135,7 @@ var consumerConnector = function (socketChannel) {
     serviceDistributor.on('translationReady', emitTranslation);
 
     function emitTranslation(translationObject) {
-        console.info('client :: Emitting translation ' + translationObject.timestamp + 'to socket roam for ' + translationObject.targetLanguage);
+        console.info('client :: Emitting translation ' + translationObject.timestamp + ' to socket roam for ' + translationObject.targetLanguage);
         socketChannel.to('lang_' + translationObject.targetLanguage).emit('newTranslation', translationObject);
     }
 

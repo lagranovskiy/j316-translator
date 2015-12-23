@@ -11,10 +11,98 @@ var senderConnector = function (socketChannel) {
 
         console.info('sender :: New Sender is online. ' + socket.id);
 
-        if (!socket.handshake.session.sender) {
+        if (socket.handshake.session && socket.handshake.session.senderAuthenticated) {
+            console.info('sender :: Returning authenticated sender ' + socket.id);
+            initSubscribtions();
+        } else {
             console.info('sender :: Send auth request to sender ' + socket.id);
             socket.emit('authenticate');
         }
+
+        // Authentication
+        socket.on('authentication', authentication);
+
+
+        /**
+         * Process socket user authentication
+         * @param authRq auth request
+         * @returns {*}
+         */
+        function authentication(authRq) {
+            //get credentials sent by the client
+            if (!authRq) {
+                return socket.error('sender ::  wrong auth request');
+            }
+
+            var accessKey = authRq.accessKey;
+
+            if (config.accessKey === accessKey) {
+                socket.handshake.session.senderAuthenticated = true;
+
+                console.info('sender :: authentication success for ' + authRq.senderName);
+                socket.emit('authenticated');
+                singIn(authRq);
+            } else {
+                socket.handshake.session.senderAuthenticated = false;
+                socket.emit('unauthorized', 'Access key wrong');
+                console.info('sender :: authentication failure for ' + authRq.senderName);
+            }
+        }
+
+
+        /**
+         * Connects a sender to the engine
+         * @param authRq
+         */
+        function singIn(authRq) {
+            console.info('sender :: Sing in the sender: ' + JSON.stringify(authRq));
+
+            if (!authRq.senderLanguage) {
+                console.error('sender :: Sender ' + authRq.senderName + ' has no lang preference defined. Default: de');
+                authRq.senderLanguage = 'de';
+            }
+
+            var sessionData = socket.handshake.session;
+            if (sessionData.senderLanguage && (sessionData.senderLanguage != authRq.senderLanguage)) {
+                console.info('sender :: Sender ' + authRq.sender.name + ' change his language settings from ' + sessionData.senderLanguage + ' to ' + authRq.senderLanguage);
+                socket.leave('lang_' + sessionData.senderLanguage);
+                serviceDistributor.removeTranslationLanguage(sessionData.senderLanguage);
+            }
+
+            sessionData.senderName = authRq.senderName;
+            sessionData.senderLanguage = authRq.senderLanguage;
+
+            initSubscribtions();
+
+            // Recipe connection
+            console.info('sender :: Sender ' + authRq.senderName + ' added to room  lang_' + authRq.senderLanguage);
+            socket.emit('singinCompleted', {success: true});
+
+            // Send cached messages if any
+            var cachedMsgs = serviceDistributor.getCachedMessages(sessionData.senderLanguage);
+            if (cachedMsgs && cachedMsgs.length > 0) {
+                socket.emit('cachedTranslations', cachedMsgs);
+            }
+
+            var cachedQuestions = questionDistributor.getCachedQuestions();
+            if (cachedQuestions && cachedQuestions.length > 0) {
+                socket.emit('cachedQuestions', cachedQuestions);
+            }
+        }
+
+
+        /**
+         * Process subscription update if any
+         */
+        function initSubscribtions() {
+            var sessionData = socket.handshake.session;
+
+            socket.join('lang_' + sessionData.senderLanguage);
+            serviceDistributor.addTranslationLanguage(sessionData.senderLanguage);
+            console.info('client :: Client ' + sessionData.senderName + ' added to room  lang_' + sessionData.senderLanguage);
+        }
+
+        // handling of messages
 
         socket.on('newMessage', handleNewMessage);
 
@@ -39,10 +127,8 @@ var senderConnector = function (socketChannel) {
          * Process user disconnect
          */
         function handleDisconnect() {
-
-            if (socket.handshake.session.sender && socket.handshake.session.sender.language) {
-                serviceDistributor.removeTranslationLanguage(socket.handshake.session.sender.language);
-                socket.leave('lang_' + socket.handshake.session.sender.language);
+            if (socket.handshake.session && socket.handshake.session.senderLanguage) {
+                serviceDistributor.removeTranslationLanguage(socket.handshake.session.senderLanguage);
             }
             console.info('sender :: Sender (' + socket.id + ') disconnected');
         }
@@ -51,10 +137,12 @@ var senderConnector = function (socketChannel) {
          * Process user disconnect
          */
         function handleLogout() {
-            if (socket.handshake.session.sender) {
-                serviceDistributor.removeTranslationLanguage(socket.handshake.session.sender.language);
-                socket.leave('lang_' + socket.handshake.session.sender.language);
-                delete socket.handshake.session.sender;
+            if (socket.handshake.session) {
+                serviceDistributor.removeTranslationLanguage(socket.handshake.session.senderLanguage);
+                socket.leave('lang_' + socket.handshake.session.senderLanguage);
+                socket.handshake.session.senderAuthenticated = false;
+                delete  socket.handshake.session.senderName;
+                delete  socket.handshake.session.senderLanguage;
             }
 
             console.info('sender :: Sender (' + socket.id + ') disconnected');
@@ -65,7 +153,7 @@ var senderConnector = function (socketChannel) {
          * @param newMessage
          */
         function handleNewMessage(newMessage) {
-            if (!socket.handshake.session.sender) {
+            if (!socket.handshake.session) {
                 socket.error('Authentication broken. Please login again.');
                 return console.error('sender :: Unauthenticated user tries to send translation text.');
             }
@@ -76,11 +164,11 @@ var senderConnector = function (socketChannel) {
                 console.info('sender :: Ignoring empty message');
                 return;
             }
-            console.info('sender ::  Sender ' + socket.handshake.session.sender.name + ' send a new message for translation and distribution');
+            console.info('sender ::  Sender ' + socket.handshake.session.senderName + ' send a new message for translation and distribution');
             if (!newMessage.language) {
-                newMessage.language = socket.handshake.session.sender.language;
+                newMessage.language = socket.handshake.session.senderLanguage;
             }
-            serviceDistributor.requestTranslation(newMessage.text, newMessage.language, socket.handshake.session.sender.name);
+            serviceDistributor.requestTranslation(newMessage.text, newMessage.language, socket.handshake.session.senderName);
         }
 
 
@@ -96,12 +184,12 @@ var senderConnector = function (socketChannel) {
          * @param questionUUID uuid of new question
          */
         function listenPendingQuestion(questionUUID) {
-            if (!socket.handshake.session.sender) {
+            if (!socket.handshake.session.senderAuthenticated) {
                 socket.error('Authentication broken. Please login again.');
                 return;
             }
             console.info('sender :: Sender connector received question request (' + questionUUID + ')');
-            questionDistributor.requestQuestionTranslation(questionUUID, socket.id, socket.handshake.session.sender.language);
+            questionDistributor.requestQuestionTranslation(questionUUID, socket.id, socket.handshake.session.senderLanguage);
         }
 
         /**
@@ -115,7 +203,7 @@ var senderConnector = function (socketChannel) {
          * @param answeredQuestion
          */
         function handleAnsweredQuestion(answeredQuestion) {
-            if (!socket.handshake.session.sender) {
+            if (!socket.handshake.session.senderAuthenticated) {
                 socket.error('Authentication broken. Please login again.');
                 return console.error('sender :: Unauthenticated user tries to send translation text.');
             }
@@ -123,91 +211,20 @@ var senderConnector = function (socketChannel) {
                 console.info('sender :: Ignoring empty question answer');
                 return;
             }
-            console.info('sender ::  Sender ' + socket.handshake.session.sender.name + ' send answered a question and it will be distributed');
+            console.info('sender ::  Sender ' + socket.handshake.session.senderName + ' send answered a question and it will be distributed');
             questionDistributor.submitQuestionAnswer(
                 answeredQuestion.answer,
                 answeredQuestion.questionUUID,
-                socket.handshake.session.sender.name,
+                socket.handshake.session.senderName,
                 answeredQuestion.language);
 
-            answeredQuestion.answerSenderName = socket.handshake.session.sender.name;
+            answeredQuestion.answerSenderName = socket.handshake.session.senderName;
             socketChannel.emit('answerAck', answeredQuestion);
 
         }
 
 
     });
-
-
-    /**
-     * Service part
-     *
-     */
-
-    socketAuth(socketChannel, {
-            authenticate: authenticate,
-            postAuthenticate: singIn,
-            timeout: 'none'
-        }
-    );
-
-    /**
-     * Process socket user authentication
-     * @param socket
-     * @param data
-     * @param callback
-     * @returns {*}
-     */
-    function authenticate(socket, data, callback) {
-        //get credentials sent by the client
-        var accessKey = data.accessKey;
-
-        if (!accessKey) return callback(new Error("Access key not found"));
-        var retVal = callback(null, accessKey === config.accessKey);
-
-        socket.handshake.session.sender = data.sender;
-        return retVal;
-    }
-
-
-    /**
-     * Connects a sender to the engine
-     * @param socket
-     * @param data
-     */
-    function singIn(socket, data) {
-        console.info('sender :: Sing in the sender: ' + JSON.stringify(data));
-
-        if (!data.sender.language) {
-            console.error('sender :: Sender ' + data.sender.name + ' has no lang preference defined. Default: de');
-            data.sender.language = 'de';
-        }
-
-        if (socket.handshake.session.sender != null) {
-            console.info('sender :: Sender ' + data.sender.name + ' change his language settings from ' + data.sender.language + ' to ' + data.sender.language);
-            socket.leave('lang_' + data.sender.language);
-            serviceDistributor.removeTranslationLanguage(data.sender.language);
-        }
-
-        socket.handshake.session.sender = data.sender;
-        socket.join('lang_' + data.sender.language);
-        serviceDistributor.addTranslationLanguage(data.sender.language);
-
-        // Recipe connection
-        console.info('sender :: Sender ' + data.sender.name + ' added to room  lang_' + data.sender.language);
-        socket.emit('singinCompleted', {success: true});
-
-        // Send cached messages if any
-        var cachedMsgs = serviceDistributor.getCachedMessages(socket.handshake.session.sender.language);
-        if (cachedMsgs && cachedMsgs.length > 0) {
-            socket.emit('cachedTranslations', cachedMsgs);
-        }
-
-        var cachedQuestions = questionDistributor.getCachedQuestions();
-        if (cachedQuestions && cachedQuestions.length > 0) {
-            socket.emit('cachedQuestions', cachedQuestions);
-        }
-    }
 
 
     /**
@@ -240,7 +257,7 @@ var senderConnector = function (socketChannel) {
      * @param translationObject
      */
     function emitTranslationToSender(translationObject) {
-        console.info('sender :: Emitting translation ' + translationObject.questionTimestamp + 'to socket roam for ' + translationObject.targetLanguage);
+        console.info('sender :: Emitting translation ' + translationObject.timestamp + ' to socket roam for ' + translationObject.targetLanguage);
 
         socketChannel.to('lang_' + translationObject.targetLanguage).emit('newTranslation', translationObject);
     }

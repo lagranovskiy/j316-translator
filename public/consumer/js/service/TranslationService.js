@@ -33,9 +33,9 @@ angular.module('j316.translate.service.translation', [])
 
 
             translatorSocket.emit('singin', {
-                sender: registrationInfo.name,
-                language: registrationInfo.lang,
-                time: new Date()
+                clientName: registrationInfo.name,
+                clientLanguage: registrationInfo.lang,
+                clientTime: new Date()
             });
 
 

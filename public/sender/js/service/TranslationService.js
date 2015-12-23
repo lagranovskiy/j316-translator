@@ -8,10 +8,6 @@ angular.module('j316.translate.service.translation', [])
 
         var isOnline = false;
 
-        var settings = {};
-
-
-
 
         /**
          * Indicates if client is online
@@ -50,8 +46,8 @@ angular.module('j316.translate.service.translation', [])
             var defer = $q.defer();
 
             translatorSocket.on('unauthorized', function (err) {
-                $log.log("There was an error with the authentication:", err.message);
-                defer.reject("There was an error with the authentication:" + err.message);
+                $log.log("There was an error with the authentication:", err);
+                defer.reject("There was an error with the authentication:" + err);
                 translatorSocket.removeAllListeners('unauthorized');
             });
 
@@ -64,7 +60,8 @@ angular.module('j316.translate.service.translation', [])
 
 
             translatorSocket.emit('authentication', {
-                sender: registrationInfo,
+                senderName: registrationInfo.name,
+                senderLanguage: registrationInfo.language,
                 accessKey: accessKey,
                 time: new Date().getTime()
             });

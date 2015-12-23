@@ -20,16 +20,25 @@ j316app.set('trust proxy', 1); // trust first proxy
 
 var redisStore = new RedisStore({
     client: redis.createClient(config.redis, {return_buffers: true, socket_keepalive: true}),
-    ttl: 24 * 60 * 60
+    ttl: 4 * 60 * 60
 });
+
+var sessionExpiry = 1000 * 60 * 60 * 4;// 4 hours
+
 var expressSession = cookieSession({
     store: redisStore,
     secret: config.sessionSecret,
     key: 'j316.sessionID',
     resave: true,
     saveUninitialized: true,
-    maxAge: 24 * 60 * 60 * 1000, // req.session.cookie.maxAge will return the time remaining in milliseconds, which we may also re-assign a new value to adjust the .expires property appropriately
-    cookie: {path: '/', httpOnly: true, secure: false, maxAge: null}
+    maxAge: sessionExpiry, // req.session.cookie.maxAge will return the time remaining in milliseconds, which we may also re-assign a new value to adjust the .expires property appropriately
+    cookie: {
+        path: '/',
+        httpOnly: true,
+        secure: false,
+        expires: new Date(Date.now() + sessionExpiry),
+        maxAge: sessionExpiry
+    }
 });
 
 j316app.use(expressSession);

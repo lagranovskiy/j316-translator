@@ -70,11 +70,14 @@ ioServer.set('origins', '*:*');
  * Clustering shares eminitted messages between multiple nodes
  */
 if (config.clusterMode == 'true') {
+    console.info('index :: Entering a cluster mode');
     ioServer.adapter(socketIOredis({
         pubClient: redis.createClient(config.redis, {return_buffers: true, socket_keepalive: true}),
         subClient: redis.createClient(config.redis, {return_buffers: true, socket_keepalive: true}),
-        ttl: 24 * 60 * 60
+        ttl: 1 * 60 * 60
     }));
+} else {
+    console.info('index :: Entering a non clustered mode');
 }
 
 var consumerConnectorSetup = require('./app/connector/ConsumerConnector');

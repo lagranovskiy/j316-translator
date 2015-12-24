@@ -2,23 +2,23 @@
 
 
 angular.module('consumerApp', [
-    'ngCookies',
-    'ngRoute',
-    'ngAnimate',
-    'ngSanitize',
-    'angular-underscore',
+        'ngCookies',
+        'ngRoute',
+        'ngAnimate',
+        'ngSanitize',
+        'angular-underscore',
 
-    'ngMaterial',
-    'btford.socket-io',
-    'infinite-scroll',
-    'j316.translate.service.translation',
-    'j316.translate.service.question',
+        'ngMaterial',
+        'btford.socket-io',
+        'infinite-scroll',
+        'j316.translate.service.translation',
+        'j316.translate.service.question',
 
-    'j316.translate.controller.nav',
-    'j316.translate.controller.translation',
-    'j316.translate.controller.client'
+        'j316.translate.controller.nav',
+        'j316.translate.controller.translation',
+        'j316.translate.controller.client'
 
-])
+    ])
 
     .run(['$rootScope', '$location',
 
@@ -30,8 +30,7 @@ angular.module('consumerApp', [
     ])
     .factory('translatorSocket', function (socketFactory, $rootScope, $log) {
         var translatorSocket = socketFactory({
-            reconnection: true,
-            ioSocket: io.connect(window.location.origin + '/consumer')
+            ioSocket: io.connect(window.location.origin + '/consumer', {reconnection: true, reconnectionAttempts: 100})
         });
 
         translatorSocket.forward('authenticate', $rootScope);

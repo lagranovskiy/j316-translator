@@ -9,6 +9,7 @@ var RedisStore = require('connect-redis')(cookieSession);
 var socketIOredis = require('socket.io-redis');
 var sharedsession = require("express-socket.io-session");
 var redis = require("redis");
+var sticky = require('sticky-session');
 
 var j316app = express();
 
@@ -100,6 +101,11 @@ j316app.use('/control', express.static(__dirname + '/public/sender/'));
 j316app.use(morgan(':method :url :response-time'));
 
 
-httpServer.listen(config.port, function () {
-    console.log('J316 Server listening at port %d', config.port);
-});
+/**
+ * Sticky session module
+ */
+if (!sticky.listen(httpServer, config.port)) {
+    httpServer.once('listening', function () {
+        console.log('J316 Server listening at port %d', config.port);
+    });
+}

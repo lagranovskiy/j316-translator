@@ -34,6 +34,7 @@
     "socket.io-session": "0.0.5",
     "socket.io.session": "^1.0.13",
     "socketio-auth": "0.0.5",
+    "sticky-session": "^1.0.2",
     "underscore": "^1.8.3",
     "yandex-translate": "^2.1.0"
   },

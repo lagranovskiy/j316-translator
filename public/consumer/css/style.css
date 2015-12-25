@@ -1,5 +1,6 @@
 .j316-translator .rtl_text {
-    direction: rtl;
+    /*direction: rtl;*/
+    text-align: right;
 }
 
 .j316-translator .layout-fill {
@@ -48,6 +49,6 @@
     opacity: 1;
 }
 
-.j316-translator .control_field{
+.j316-translator .control_field {
     min-height: 150px;
 }

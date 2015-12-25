@@ -3,7 +3,7 @@
 }
 
 .j316-translator .md-pagination-wrapper {
-    width:auto !important;
+    width: auto !important;
 }
 
 .j316-translator .animate-show {
@@ -12,7 +12,7 @@
 }
 
 .j316-translator .animate-show.ng-hide-add,
-.j316-translator  .animate-show.ng-hide-remove {
+.j316-translator .animate-show.ng-hide-remove {
     transition: all linear 0.5s;
 }
 
@@ -49,35 +49,38 @@
     opacity: 1;
 }
 
-.j316-translator .content_verse{
+.j316-translator .content_verse {
     color: red;
 }
 
-.j316-translator .content_translation{
+.j316-translator .content_translation {
     color: black;
 }
-.j316-translator .md-title{
+
+.j316-translator .md-title {
     font-size: 2em;
     line-height: initial;
 }
+
 .j316-translator .clientQuestion {
     color: red;
 }
 
 .j316-translator .answeredQuestion,
-.j316-translator .md-icon.answeredQuestion{
+.j316-translator .md-icon.answeredQuestion {
     color: green;
 }
 
 .j316-translator .notAnsweredQuestion,
-.j316-translator .md-icon.notAnsweredQuestion{
+.j316-translator .md-icon.notAnsweredQuestion {
     color: #000088;
 }
 
 .j316-translator .rtl_text {
-    direction: rtl;
+    /*direction: rtl;*/
+    text-align: right;
 }
 
-.j316-translator .control_field{
+.j316-translator .control_field {
     min-height: 150px;
 }

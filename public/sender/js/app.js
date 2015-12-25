@@ -88,6 +88,8 @@ angular.module('senderApp', [
 
     .value('languages', [
         {key: 'sq', lang: 'Albanian'},
+        {key: 'de', lang: 'German', known: true, voicelang: 'de-DE'},
+        {key: 'ru', lang: 'Russian', known: true, voicelang: 'ru-RU'},
         {key: 'en', lang: 'English', known: true, voicelang: 'en-GB'},
         {key: 'ar', lang: 'Arabic', rtl: true},
         {key: 'hy', lang: 'Armenian'},
@@ -113,8 +115,6 @@ angular.module('senderApp', [
         {key: 'no', lang: 'Norwegian'},
         {key: 'fa', lang: 'Persian', rtl: true},
         {key: 'kk', lang: 'Kazakh', rtl: true},
-        {key: 'ru', lang: 'Russian', known: true, voicelang: 'ru-RU'},
-        {key: 'de', lang: 'German', known: true, voicelang: 'de-DE'},
         {key: 'pl', lang: 'Polish'},
         {key: 'pt', lang: 'Portuguese'},
         {key: 'ro', lang: 'Romanian'},

@@ -13,6 +13,7 @@ angular.module('senderApp', [
         'infinite-scroll',
         'j316.translate.service.translation',
         'j316.translate.service.question',
+        'j316.translate.service.info',
 
         'j316.translate.controller.nav',
         'j316.translate.controller.translation',
@@ -34,11 +35,25 @@ angular.module('senderApp', [
     ])
     .factory('translatorSocket', function (socketFactory, $rootScope, $log) {
         var translatorSocket = socketFactory({
-            ioSocket: io.connect(window.location.origin + '/sender', {reconnection: true, reconnectionAttempts: 100})
+            ioSocket: io.connect(window.location.origin + '/sender', {
+                reconnection: true, transports: ['websocket', 'polling', 'xhr-polling'],
+                reconnectionAttempts: 100
+            })
         });
 
         translatorSocket.forward('error');
 
+        translatorSocket.forward('info', $rootScope);
+        $rootScope.$on('socket:info', function (ev, data) {
+            $log.debug('Info msg retrieved: ' + JSON.stringify(data));
+            $rootScope.$broadcast('info', data);
+        });
+
+        translatorSocket.forward('alreadyAuthenticated', $rootScope);
+        $rootScope.$on('socket:alreadyAuthenticated', function (ev, data) {
+            $log.debug('Sender already authenticated.');
+            $rootScope.$broadcast('alreadyAuthenticated', data);
+        });
 
         translatorSocket.forward('authenticate', $rootScope);
         $rootScope.$on('socket:authenticate', function (ev, data) {
@@ -82,6 +97,8 @@ angular.module('senderApp', [
             $log.debug('Cached Question msgs retrieved: ' + JSON.stringify(data));
             $rootScope.$broadcast('cachedQuestions', data);
         });
+
+
         return translatorSocket;
     })
 

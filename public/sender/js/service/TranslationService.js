@@ -70,6 +70,13 @@ angular.module('j316.translate.service.translation', [])
             return defer.promise;
         };
 
+
+        $rootScope.$on('alreadyAuthenticated', function (event, data) {
+            registrationInfo.name = data.senderName;
+            registrationInfo.language = data.senderLanguage;
+            isOnline = true;
+        });
+
         /**
          * Requests info about listeners
          */

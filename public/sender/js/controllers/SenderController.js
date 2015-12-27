@@ -10,6 +10,17 @@ angular.module('j316.translate.controller.sender', [])
             TranslationService.disconnect();
         });
 
+        $scope.isOnline = function () {
+            return TranslationService.isOnline()
+        };
+
+        $scope.$watch('isOnline()', function (newVal) {
+            if (newVal) {
+                $location.path('/translationPanel');
+            }
+        });
+
+
         $scope.connect = function () {
             $scope.registrationInfo = TranslationService.register($scope.registrationInfo);
             $scope.isConnecting = true;

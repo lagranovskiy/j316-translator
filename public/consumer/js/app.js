@@ -13,6 +13,7 @@ angular.module('consumerApp', [
         'infinite-scroll',
         'j316.translate.service.translation',
         'j316.translate.service.question',
+        'j316.translate.service.info',
 
         'j316.translate.controller.nav',
         'j316.translate.controller.translation',
@@ -28,9 +29,26 @@ angular.module('consumerApp', [
 
         }
     ])
-    .factory('translatorSocket', function (socketFactory, $rootScope, $log) {
+
+    .factory('translatorSocket', function (socketFactory, $rootScope, $log, InfoService) {
         var translatorSocket = socketFactory({
-            ioSocket: io.connect(window.location.origin + '/consumer', {reconnection: true, reconnectionAttempts: 100})
+            ioSocket: io.connect(window.location.origin + '/consumer', {
+                reconnection: true,
+                transports: ['websocket', 'polling', 'xhr-polling'],
+                reconnectionAttempts: 100
+            })
+        });
+
+        translatorSocket.forward('info', $rootScope);
+        $rootScope.$on('socket:info', function (ev, data) {
+            $log.debug('Info msg retrieved: ' + JSON.stringify(data));
+            $rootScope.$broadcast('info', data);
+        });
+
+        translatorSocket.forward('alreadyAuthenticated', $rootScope);
+        $rootScope.$on('socket:alreadyAuthenticated', function (ev, data) {
+            $log.debug('User already authenticated.');
+            $rootScope.$broadcast('alreadyAuthenticated', data);
         });
 
         translatorSocket.forward('authenticate', $rootScope);
@@ -38,6 +56,7 @@ angular.module('consumerApp', [
             $log.debug('Auth request received.');
             $rootScope.$broadcast('authenticate', data);
         });
+
 
         translatorSocket.forward('newQuestionAnswer', $rootScope);
         $rootScope.$on('socket:newQuestionAnswer', function (ev, data) {
@@ -62,6 +81,7 @@ angular.module('consumerApp', [
             $log.debug('Cached Translation msg retrieved: ' + JSON.stringify(data));
             $rootScope.$broadcast('cachedTranslations', data);
         });
+
 
         return translatorSocket;
     })

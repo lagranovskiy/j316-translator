@@ -1,8 +1,6 @@
-var socketIO = require('socket.io');
 var config = require('../../config/config');
 var serviceDistributor = require('../business/ServiceDistributor');
 var questionDistributor = require('../business/QuestionDistributor');
-var socketAuth = require('socketio-auth');
 
 var senderConnector = function (socketChannel) {
 
@@ -11,9 +9,40 @@ var senderConnector = function (socketChannel) {
 
         console.info('sender :: New Sender is online. ' + socket.id);
 
+        socket.emit('info', {
+            brand: config.info.appBrand,
+            brandContact: config.info.brandContact
+        });
+
+
+        socket.conn.on('heartbeat', function () {
+            if (socket.handshake.session && socket.handshake.session.senderAuthenticated) {
+                // Allow idling for new clients
+                if (!socket.handshake.session.senderAuthenticatedOn ||
+                    new Date().getTime() - socket.handshake.session.senderAuthenticatedOn > 1000 * 60 * config.maxWaitingTime) {
+                    // If a sender forgot to logout then force logout after configured inactivity timeout of translator
+                    if (new Date().getTime() - serviceDistributor.getLastActivity() > 1000 * 60 * config.inactiveTimeout) {
+                        console.info('sender :: no active translation session. Forcing disconnect of the sender ' + socket.id);
+                        handleLogout();
+                        socket.handshake.session.save();
+                        socket.emit('authenticate');
+                    }
+                    else
+                    {
+                        console.info('client :: Client online without sender');
+                    }
+                }
+            }
+        });
+
+
         if (socket.handshake.session && socket.handshake.session.senderAuthenticated) {
             console.info('sender :: Returning authenticated sender ' + socket.id);
             initSubscribtions();
+            socket.emit('alreadyAuthenticated', {
+                senderName: socket.handshake.session.senderName,
+                senderLanguage: socket.handshake.session.senderLanguage
+            });
         } else {
             console.info('sender :: Send auth request to sender ' + socket.id);
             socket.emit('authenticate');
@@ -38,7 +67,7 @@ var senderConnector = function (socketChannel) {
 
             if (config.accessKey === accessKey) {
                 socket.handshake.session.senderAuthenticated = true;
-
+                socket.handshake.session.senderAuthenticatedOn = new Date().getTime();
                 console.info('sender :: authentication success for ' + authRq.senderName);
                 socket.emit('authenticated');
                 singIn(authRq);
@@ -63,10 +92,10 @@ var senderConnector = function (socketChannel) {
             }
 
             var sessionData = socket.handshake.session;
-            if (sessionData.senderLanguage && (sessionData.senderLanguage != authRq.senderLanguage)) {
-                console.info('sender :: Sender ' + authRq.sender.name + ' change his language settings from ' + sessionData.senderLanguage + ' to ' + authRq.senderLanguage);
-                socket.leave('lang_' + sessionData.senderLanguage);
+            if (sessionData.senderLanguage) {
+                console.info('sender :: Signing in of already signed sender. clearing subscribtions');
                 serviceDistributor.removeTranslationLanguage(sessionData.senderLanguage);
+                socket.leave('lang_' + sessionData.senderLanguage);
             }
 
             sessionData.senderName = authRq.senderName;
@@ -100,6 +129,9 @@ var senderConnector = function (socketChannel) {
             socket.join('lang_' + sessionData.senderLanguage);
             serviceDistributor.addTranslationLanguage(sessionData.senderLanguage);
             console.info('client :: Client ' + sessionData.senderName + ' added to room  lang_' + sessionData.senderLanguage);
+
+            // Help session handling. If sender authenticated, it will be expected that in max configured waiting time any message arrives to preven client disconnection
+            serviceDistributor.renewLastActivity();
         }
 
         // handling of messages
@@ -143,6 +175,7 @@ var senderConnector = function (socketChannel) {
                 socket.handshake.session.senderAuthenticated = false;
                 delete  socket.handshake.session.senderName;
                 delete  socket.handshake.session.senderLanguage;
+                delete  socket.handshake.session.senderAuthenticatedOn;
             }
 
             console.info('sender :: Sender (' + socket.id + ') disconnected');

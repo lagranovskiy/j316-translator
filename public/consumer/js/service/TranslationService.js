@@ -31,7 +31,6 @@ angular.module('j316.translate.service.translation', [])
             });
 
 
-
             translatorSocket.emit('singin', {
                 clientName: registrationInfo.name,
                 clientLanguage: registrationInfo.lang,
@@ -41,6 +40,12 @@ angular.module('j316.translate.service.translation', [])
 
             return defer.promise;
         };
+
+        $rootScope.$on('alreadyAuthenticated', function (event, data) {
+            registrationInfo.name = data.clientName;
+            registrationInfo.lang = data.clientLanguage;
+            isOnline = true;
+        });
 
 
         /**

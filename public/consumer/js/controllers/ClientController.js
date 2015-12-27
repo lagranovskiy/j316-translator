@@ -4,6 +4,16 @@ angular.module('j316.translate.controller.client', [])
         $scope.registrationInfo = TranslationService.getRegistrationInfo();
         $scope.isConnecting = false;
 
+        $scope.isOnline = function () {
+            return TranslationService.isOnline()
+        };
+        
+        $scope.$watch('isOnline()', function (newVal) {
+            if (newVal) {
+                $location.path('/translation');
+            }
+        });
+
         $scope.connect = function () {
             $scope.registrationInfo = TranslationService.register($scope.registrationInfo);
             $scope.isConnecting = true;

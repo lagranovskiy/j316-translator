@@ -1,4 +1,4 @@
-var socketIO = require('socket.io');
+var config = require('../../config/config');
 var serviceDistributor = require('../business/ServiceDistributor');
 var questionDistributor = require('../business/QuestionDistributor');
 
@@ -12,9 +12,38 @@ var consumerConnector = function (socketChannel) {
 
         console.info('client :: New Client is online. ' + socket.id);
 
+        socket.conn.on('heartbeat', function () {
+            if (socket.handshake.session && socket.handshake.session.clientAuthenticated) {
+                // Allow idling for new clients
+                if (!socket.handshake.session.clientAuthenticatedOn ||
+                    new Date().getTime() - socket.handshake.session.clientAuthenticatedOn > 1000 * 60 * config.maxWaitingTime) {
+                    // If a client forgot to logout then force logout after configured inactivity timeout of translator
+                    if (new Date().getTime() - serviceDistributor.getLastActivity() > 1000 * 60 * config.inactiveTimeout) {
+                        console.info('client :: no active translation session. Forcing disconnect of the client ' + socket.id);
+                        handleLogout();
+                        socket.handshake.session.save();
+                        socket.emit('authenticate');
+                    }
+                    else {
+                        console.info('client :: Client online without sender');
+                    }
+                }
+            }
+        });
+
+        // Inform client about application branch
+        socket.emit('info', {
+            brand: config.info.appBrand,
+            brandContact: config.info.brandContact
+        });
+
         if (socket.handshake.session && socket.handshake.session.clientAuthenticated) {
             console.info('client :: Returning authenticated client ' + socket.id);
             initSubscribtions();
+            socket.emit('alreadyAuthenticated', {
+                clientName: socket.handshake.session.clientName,
+                clientLanguage: socket.handshake.session.clientLanguage
+            });
         } else {
             console.info('client :: Send auth request to sender ' + socket.id);
             socket.emit('authenticate');
@@ -54,6 +83,7 @@ var consumerConnector = function (socketChannel) {
                 socket.handshake.session.clientAuthenticated = false;
                 delete  socket.handshake.session.clientName;
                 delete  socket.handshake.session.clientLanguage;
+                delete  socket.handshake.session.clientAuthenticatedOn;
             }
             console.info('client :: Client (' + socket.id + ') disconnected');
         }
@@ -73,12 +103,13 @@ var consumerConnector = function (socketChannel) {
             }
 
             var sessionData = socket.handshake.session;
-            if (sessionData.clientLanguage && (sessionData.clientLanguage != authRq.clientLanguage)) {
-                console.info('client :: ' + sessionData.clientName + ' changing language from ' + socket.handshake.session.clientLanguage + ' to ' + authRq.clientLanguage);
+            if (sessionData.clientLanguage) {
+                console.info('client :: Signing in of already signed user. clearing subscribtions');
                 serviceDistributor.removeTranslationLanguage(sessionData.clientLanguage);
                 socket.leave('lang_' + sessionData.clientLanguage);
             }
             sessionData.clientAuthenticated = true;
+            sessionData.clientAuthenticatedOn = new Date().getTime();
             sessionData.clientName = authRq.clientName;
             sessionData.clientLanguage = authRq.clientLanguage;
 

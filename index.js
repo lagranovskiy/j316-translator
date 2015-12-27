@@ -23,7 +23,7 @@ var redisStore = new RedisStore({
     ttl: 4 * 60 * 60
 });
 
-var sessionExpiry = 1000 * 60 * 60 * 4;// 4 hours
+var sessionExpiry = 1000 * 60 * 60 * 2;// 4 hours
 
 var expressSession = cookieSession({
     store: redisStore,
@@ -31,7 +31,7 @@ var expressSession = cookieSession({
     key: 'j316.sessionID',
     resave: true,
     saveUninitialized: true,
-    maxAge: sessionExpiry, // req.session.cookie.maxAge will return the time remaining in milliseconds, which we may also re-assign a new value to adjust the .expires property appropriately
+    maxAge: sessionExpiry,
     cookie: {
         path: '/',
         httpOnly: true,
@@ -47,7 +47,7 @@ j316app.use(expressSession);
  * Important! This session modification provides the client with a persistene cookie id.
  */
 j316app.get("/*", function (req, res, next) {
-    if (!req.session.identified) {
+    if (req.session && !req.session.identified) {
         req.session.identified = true;
     }
     next();
@@ -92,12 +92,14 @@ senderConnectorSetup(senderIO);
 
 
 ////////////////// HTTP Init ////////////////////
+
+j316app.use(morgan(':method :url :response-time'));
+
+
 j316app.use('/bower_components', express.static(__dirname + '/public/bower_components/'));
 j316app.use('/control/bower_components', express.static(__dirname + '/public/bower_components/'));
 j316app.use('/', express.static(__dirname + '/public/consumer/'));
 j316app.use('/control', express.static(__dirname + '/public/sender/'));
-
-j316app.use(morgan(':method :url :response-time'));
 
 
 httpServer.listen(config.port, function () {

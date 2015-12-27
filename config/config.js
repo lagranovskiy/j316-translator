@@ -2,13 +2,13 @@ var config = {
     appName: process.env.APPLICATION_NAME || 'J316-Translator',
     info: {
         // Will be communicated to the client after connection
-        appBrand: process.env.PROCESS_BRAND || 'Gemeinde Teststadt',
+        appBrand: process.env.APPLICATION_BRAND || 'Gemeinde Teststadt',
         brandContact: process.env.BRAND_CONTACT || 'Max Mustermann (0176 123 45 56)'
     },
     // Max time in Minutes as a client may wait for a sender (min)
     maxWaitingTime: process.env.MAX_IDLE_TIME || '30',
     // Time after all client are forced to logout after translation activity closed (min)
-    inactiveTimeout: process.env.MAX_IDLE_TIME || '30',
+    inactiveTimeout: process.env.MAX_INACTIVE_TIME || '30',
 
     sessionSecret: process.env.SESSION_SECRET || 'mysecret',
     clusterMode: process.env.CLUSTER_MODE || 'false',

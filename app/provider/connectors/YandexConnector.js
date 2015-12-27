@@ -29,6 +29,10 @@ var yandexTranslator = function () {
                 if (err) {
                     return callback(err);
                 }
+                if(!res.text){
+                    console.error('yandex :: Translation service returned invalid data');
+                    return;
+                }
                 console.log('Translation received: ', JSON.stringify(res.text));
                 if (res.text.length && res.text.length > 0) {
                     callback(null, res.text[0]);

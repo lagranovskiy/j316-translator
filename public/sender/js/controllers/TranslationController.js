@@ -26,6 +26,12 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
 
         $scope.$watch('isOnline()', function (newVal) {
             if (newVal === false) {
+                //release() is used to release the lock.
+                if (navigator.wakeLock) {
+                    navigator.wakeLock.release("display");
+                    navigator.wakeLock.release("system");
+                }
+
                 $location.path('/');
             }
         });
@@ -41,6 +47,12 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
             _.each(msg, function (val) {
                 listenerCount = listenerCount + val;
             });
+
+
+            // Try to give vibration feedback
+            if (window.navigator && window.navigator['vibrate']) {
+                navigator.vibrate(50);
+            }
 
             $scope.listenerCount = listenerCount;
         });
@@ -60,6 +72,7 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
             if ($scope.messages.length > 300) {
                 $scope.messages.pop();
             }
+
         });
 
 
@@ -91,6 +104,11 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
             $scope.messages.unshift(displayableMessage);
             if ($scope.messages.length > 300) {
                 $scope.messages.pop();
+            }
+
+            // Try to give vibration feedback
+            if (window.navigator && window.navigator['vibrate']) {
+                navigator.vibrate(200);
             }
         });
 
@@ -155,7 +173,7 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
             } else {
                 if (!$scope.recognition) {
                     $scope.recognition = new webkitSpeechRecognition();
-                    $scope.recognition.continuous = true;
+                    $scope.recognition.continuous = false;
                     $scope.recognition.interimResults = true;
 
                     $scope.recognition.onstart = function () {
@@ -242,6 +260,11 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
             }, 500);
             TranslationService.sendMessage($scope.message);
             $scope.message.text = null;
+
+            // Try to give vibration feedback
+            if (window.navigator && window.navigator['vibrate']) {
+                navigator.vibrate(10);
+            }
         };
 
         $scope.answerQuestion = function (question) {
@@ -286,6 +309,16 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
         };
 
         /**
+         * Get lang sent message again
+         */
+        $scope.redo = function () {
+            var next = TranslationService.getNext();
+            if (next) {
+                $scope.message.text = next;
+            }
+        };
+
+        /**
          * Evaluates keydown and fire if shift+enter / ctrl+enter pressed
          * @param event
          */
@@ -297,6 +330,11 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
             }
             if (event.keyCode == 8 && (event.ctrlKey == true || event.shiftKey == true)) {
                 $scope.undo();
+                event.defaultPrevented = true;
+                event.preventDefault();
+            }
+            if (event.keyCode == 8 && (event.ctrlKey == true && event.shiftKey == true)) {
+                $scope.redo();
                 event.defaultPrevented = true;
                 event.preventDefault();
             }
@@ -338,4 +376,28 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
         };
 
 
-    });
+// HTML5 Standby API
+        if (navigator['wakeLock'] !== undefined) {
+            var wakeLock = navigator['wakeLock'];
+            //navigator.wakeLock is the main standby API property.
+            //request method requests the computer to not enter standby mode. Here "display" indicates that the monitor shouldn't enter standby mode.
+            wakeLock.request("display").then(
+                function successFunction() {
+                    $log.info('Preventing display to sleep is enabled');
+                },
+                function errorFunction() {
+                    $log.info('Preventing display to sleep is not supported');
+                });
+            //here system indicates CPU, GPU, radio, wifi etc.
+            wakeLock.request("system").then(
+                function successFunction() {
+                    $log.info('Preventing system to sleep is enabled');
+                },
+                function errorFunction() {
+                    $log.info('Preventing system to sleep is not supported');
+                }
+            );
+        }
+
+    })
+;

@@ -27,8 +27,7 @@ var senderConnector = function (socketChannel) {
                         socket.handshake.session.save();
                         socket.emit('authenticate');
                     }
-                    else
-                    {
+                    else {
                         console.info('client :: Client online without sender');
                     }
                 }
@@ -43,6 +42,7 @@ var senderConnector = function (socketChannel) {
                 senderName: socket.handshake.session.senderName,
                 senderLanguage: socket.handshake.session.senderLanguage
             });
+            emitCache();
         } else {
             console.info('sender :: Send auth request to sender ' + socket.id);
             socket.emit('authenticate');
@@ -113,10 +113,7 @@ var senderConnector = function (socketChannel) {
                 socket.emit('cachedTranslations', cachedMsgs);
             }
 
-            var cachedQuestions = questionDistributor.getCachedQuestions();
-            if (cachedQuestions && cachedQuestions.length > 0) {
-                socket.emit('cachedQuestions', cachedQuestions);
-            }
+            emitCache();
         }
 
 
@@ -132,6 +129,17 @@ var senderConnector = function (socketChannel) {
 
             // Help session handling. If sender authenticated, it will be expected that in max configured waiting time any message arrives to preven client disconnection
             serviceDistributor.renewLastActivity();
+        }
+
+        /**
+         * Send cached messages if any
+         */
+        function emitCache() {
+            // Send cached messages if any
+            var cachedMsgs = serviceDistributor.getCachedMessages(socket.handshake.session.clientLanguage);
+            if (cachedMsgs && cachedMsgs.length > 0) {
+                socket.emit('cachedTranslations', cachedMsgs);
+            }
         }
 
         // handling of messages

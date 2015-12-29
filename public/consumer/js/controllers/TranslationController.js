@@ -10,6 +10,11 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
 
         $scope.$watch('isOnline()', function (newVal) {
             if (!newVal) {
+                //release() is used to release the lock.
+                if (navigator.wakeLock) {
+                    navigator.wakeLock.release("display");
+                    navigator.wakeLock.release("system");
+                }
                 $location.path('/');
             }
         });
@@ -32,6 +37,13 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
             $scope.messages.unshift(displayableMessage);
             if ($scope.messages.length > 300) {
                 $scope.messages.pop();
+            }
+
+            // Try to give vibration feedback
+            if (window.navigator && window.navigator.vibrate) {
+                navigator.vibrate(100);
+            } else {
+                // Not supported
             }
         });
 
@@ -63,6 +75,14 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
             if ($scope.messages.length > 300) {
                 $scope.messages.pop();
             }
+
+
+            // Try to give vibration feedback
+            if (window.navigator && window.navigator.vibrate) {
+                navigator.vibrate(500);
+            } else {
+                // Not supported
+            }
         });
 
         $scope.$on('questionAck', function (event, msg) {
@@ -79,6 +99,13 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
             $scope.messages.unshift(displayableMessage);
             if ($scope.messages.length > 300) {
                 $scope.messages.pop();
+            }
+
+            // Try to give vibration feedback
+            if (window.navigator && window.navigator.vibrate) {
+                navigator.vibrate(300);
+            } else {
+                // Not supported
             }
         });
         $scope.$on('cachedTranslations', function (event, msg) {
@@ -121,6 +148,30 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
 
         $scope.localizeLang = function (key) {
             return _.findWhere(languages, {key: key});
+        };
+
+
+        // HTML5 Standby API
+        if (navigator.wakeLock) {
+            //navigator.wakeLock is the main standby API property.
+            //request method requests the computer to not enter standby mode. Here "display" indicates that the monitor shouldn't enter standby mode.
+            navigator.wakeLock.request("display").then(
+                function successFunction() {
+                    $log.info('Preventing display to sleep is enabled');
+                },
+                function errorFunction() {
+                    $log.info('Preventing display to sleep is not supported');
+                });
+            //here system indicates CPU, GPU, radio, wifi etc.
+            navigator.wakeLock.request("system").then(
+                function successFunction() {
+                    $log.info('Preventing system to sleep is enabled');
+                },
+                function errorFunction() {
+                    $log.info('Preventing system to sleep is not supported');
+                }
+            );
         }
 
     });
+

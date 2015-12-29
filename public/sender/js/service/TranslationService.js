@@ -39,6 +39,15 @@ angular.module('j316.translate.service.translation', [])
             return null;
         };
 
+        this.getNext = function () {
+            if (sentMessages.length > 0 && lastIndex > 0) {
+                var retVal = sentMessages[lastIndex % sentMessages.length];
+                lastIndex--;
+                return retVal;
+            }
+            return null;
+        };
+
         /**
          * Process registration of user
          */

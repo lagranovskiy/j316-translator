@@ -44,6 +44,7 @@ var consumerConnector = function (socketChannel) {
                 clientName: socket.handshake.session.clientName,
                 clientLanguage: socket.handshake.session.clientLanguage
             });
+            emitCache();
         } else {
             console.info('client :: Send auth request to sender ' + socket.id);
             socket.emit('authenticate');
@@ -118,11 +119,7 @@ var consumerConnector = function (socketChannel) {
             // Recipe connection
             socket.emit('singinCompleted', {success: true});
 
-            // Send cached messages if any
-            var cachedMsgs = serviceDistributor.getCachedMessages(sessionData.clientLanguage);
-            if (cachedMsgs && cachedMsgs.length > 0) {
-                socket.emit('cachedTranslations', cachedMsgs);
-            }
+            emitCache();
 
         }
 
@@ -135,6 +132,17 @@ var consumerConnector = function (socketChannel) {
             socket.join('lang_' + data.clientLanguage);
             serviceDistributor.addTranslationLanguage(data.clientLanguage);
             console.info('client :: Client ' + data.clientName + ' added to room  lang_' + data.clientLanguage);
+        }
+
+        /**
+         * Send cached messages if any
+         */
+        function emitCache() {
+            // Send cached messages if any
+            var cachedMsgs = serviceDistributor.getCachedMessages(socket.handshake.session.clientLanguage);
+            if (cachedMsgs && cachedMsgs.length > 0) {
+                socket.emit('cachedTranslations', cachedMsgs);
+            }
         }
 
 

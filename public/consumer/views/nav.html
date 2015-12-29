@@ -1,20 +1,20 @@
 <div ng-controller="NavCtrl">
     <div layout="row" ng-cloak>
+        <div class="md-padding">
+            <img src="img/logo_small.png" style="width: 40px"></div>
         <div class="md-padding"
-             layout="row" flex="70" layout-align="left center">
-             <h1 style="color:grey" >
-                <img src="img/logo_small.png" style="width: 40px">
-
-                 {{getInfo().brand}}
-            </h1>
+             layout="row" xs-flex="70" flex="80" layout-align="left center">
+            <h2 style="color:grey">
+                {{getInfo().brand}}
+            </h2>
         </div>
-        <div layout="row" flex="30" layout-align="end start" flex="60">
-            <md-button ng-click="showAsk()" ng-if="isOnline()" class="md-raised">
+        <div layout="row" xs-flex="30" flex="20" layout-align="end start" ng-if="isOnline()">
+            <md-button ng-click="showAsk()" class="md-raised">
                 <md-icon md-font-set="material-icons ">sms</md-icon>
                 <span class="hide-sm hide-xs">Question</span>
             </md-button>
 
-            <md-button ng-click="disconnect()" ng-if="isOnline()" class="md-raised md-warn">
+            <md-button ng-click="disconnect()" class="md-raised md-warn">
                 <md-icon md-font-set="material-icons">power_settings_new</md-icon>
                 <span class="hide-sm hide-xs">Leave</span>
             </md-button>

@@ -1,6 +1,6 @@
 <div ng-controller="TranslationPanelCtrl" ng-init="requestListenersInfo()">
     <!-- angemeldet view form -->
-    <div layout="column" layout-align="left center" >
+    <div layout="column" layout-align="left center">
 
 
         <md-tabs layout-fill md-selected="selectedIndex" md-dynamic-height md-autoselect>
@@ -10,10 +10,11 @@
 
                 <div layout="row">
                     <div layout="column" layout-fill="" ng-if="recognizing==false">
-                        <md-input-container class="md-block" >
+                        <md-input-container class="md-block">
                             <label>Type your next translation sentence</label>
                             <textarea required ng-model="message.text" columns="1" rows="10" class="control_field"
-                                      autocorrect="off" autocomplete="on" autocapitalize="on" spellcheck="true" lang="{{language.key}}" contenteditable="contenteditable"
+                                      autocorrect="off" autocomplete="on" autocapitalize="on" spellcheck="true"
+                                      lang="{{language.key}}" contenteditable="contenteditable"
                                       ng-keydown="evaluateKeyPress($event)"></textarea>
 
                         </md-input-container>
@@ -72,10 +73,8 @@
 
         </md-tabs>
 
-        <div>
-            <p class="md-body-2 md-padding"> Hello <b>{{senderInfo.name}}</b> You are currently translating <b>
-                {{localizeLang(message.language).lang}}</b> and see <b>{{localizeLang(originLanguage).lang}}</b> output
-            </p>
+        <div class="md-body-2"> Hello <b>{{senderInfo.name}}</b> You are currently translating <b>
+            {{localizeLang(message.language).lang}}</b> and see <b>{{localizeLang(originLanguage).lang}}</b> output
         </div>
 
         <div infinite-scroll="incShowedMsgs()">

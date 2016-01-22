@@ -8,13 +8,18 @@
                 {{getInfo().brand}}
             </h2>
         </div>
-        <div layout="row" xs-flex="40" flex="30" layout-align="end start" ng-if="isOnline()">
-            <md-button ng-click="showAsk()" class="md-raised">
-                <md-icon md-font-set="material-icons ">sms</md-icon>
-                <span class="hide-sm hide-xs">Question</span>
+        <div layout="row" layout-xs="column" xs-flex="40" flex="30" layout-align="end start" ng-if="isOnline()">
+            <md-button ng-click="enterFullScreen()" class="md-raised" >
+                <md-icon md-font-set="material-icons">aspect_ratio</md-icon>
+                <span class="hide-sm hide-xs">Full</span>
             </md-button>
 
-            <md-button ng-click="disconnect()" class="md-raised md-warn">
+            <md-button ng-click="showAsk()" class="md-raised" >
+                <md-icon md-font-set="material-icons ">sms</md-icon>
+                <span class="hide-sm hide-xs">Ask</span>
+            </md-button>
+
+            <md-button ng-click="disconnect()" class="md-raised md-warn" >
                 <md-icon md-font-set="material-icons">power_settings_new</md-icon>
                 <span class="hide-sm hide-xs">Leave</span>
             </md-button>

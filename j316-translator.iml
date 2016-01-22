@@ -5,8 +5,6 @@
     <content url="file://$MODULE_DIR$" />
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Node.js v4.0.0 Core Modules" level="application" />
-    <orderEntry type="library" name="j316-translator node_modules" level="project" />
     <orderEntry type="library" name="j316-translator node_modules" level="project" />
   </component>
 </module>

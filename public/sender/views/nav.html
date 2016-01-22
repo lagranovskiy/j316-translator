@@ -8,8 +8,13 @@
                 {{getInfo().brand}}
             </h2>
         </div>
-        <div layout="row" layout-align="end start"  xs-flex="40" flex="30">
-            <div ng-if="isOnline()" layout="row" layout-align="end start" >
+        <div layout="row" layout-xs="column" layout-xs="column" layout-align="end start" xs-flex="40" flex="30">
+            <div ng-if="isOnline()" layout="row" layout-xs="column" layout-align="end start">
+                <md-button ng-click="enterFullScreen()" class="md-raised">
+                    <md-icon md-font-set="material-icons">aspect_ratio</md-icon>
+                    <span class="hide-sm hide-xs">Full</span>
+                </md-button>
+
                 <md-button ng-click="disconnect()" class="md-raised md-warn">
                     <md-icon md-font-set="material-icons">power_settings_new</md-icon>
                     <span class="hide-sm hide-xs">Leave</span>

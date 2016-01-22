@@ -14,6 +14,18 @@ angular.module('j316.translate.controller.nav', [])
         };
 
 
+        $scope.enterFullScreen = function () {
+            var el = document.documentElement;
+            if (!el) {
+                return;
+            }
+            var rfs = el.requestFullScreen || el.webkitRequestFullScreen || el.mozRequestFullScreen;
+            if (rfs) {
+                rfs.call(el);
+                $scope.fullscreen = true;
+            }
+        };
+
         /**
          * Indicates if user is online
          * @returns {boolean}

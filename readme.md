@@ -9,6 +9,7 @@ The J316 Translator is a small application that makes it possible for multilingu
 
 ## Info Pages
 * [Functionality Information](doc/functionality.md)
+* [Installation](doc/installation.md)
 * [Technical solution overview](doc/technical.md)
 
 

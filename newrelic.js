@@ -335,7 +335,8 @@ exports.config = {
          * @env NEW_RELIC_IGNORING_RULES
          */
         ignore : [
-            '^/socket.io/.*/xhr-polling'
+      // Disabling because of the newrelic api bug
+      //      '^/socket.io/.*/xhr-polling'
         ]
     },
     /**

@@ -40,23 +40,23 @@ angular.module('j316.translate.controller.nav', [])
          */
         $scope.showSettings = function (ev) {
             $mdDialog.show({
-                controller: function ($scope, $mdDialog) {
-                    $scope.settings = TranslationService.getSettings();
-                    $scope.hide = function () {
-                        $mdDialog.hide();
-                    };
-                    $scope.cancel = function () {
-                        $mdDialog.cancel();
-                    };
-                    $scope.save = function () {
-                        $mdDialog.hide($scope.settings);
-                    };
-                },
-                templateUrl: 'views/dialog/settings.tmpl.html',
-                targetEvent: ev,
-                autoWrap: true,
-                clickOutsideToClose: true
-            })
+                    controller: function ($scope, $mdDialog) {
+                        $scope.settings = TranslationService.getSettings();
+                        $scope.hide = function () {
+                            $mdDialog.hide();
+                        };
+                        $scope.cancel = function () {
+                            $mdDialog.cancel();
+                        };
+                        $scope.save = function () {
+                            $mdDialog.hide($scope.settings);
+                        };
+                    },
+                    templateUrl: 'views/dialog/settings.tmpl.html',
+                    targetEvent: ev,
+                    autoWrap: true,
+                    clickOutsideToClose: true
+                })
                 .then(function (answer) {
                     console.info('Saving your settings "' + answer + '".');
                     TranslationService.saveSettings(answer);
@@ -73,11 +73,22 @@ angular.module('j316.translate.controller.nav', [])
             if (!el) {
                 return;
             }
-            var rfs = el.requestFullScreen || el.webkitRequestFullScreen || el.mozRequestFullScreen;
-            if (rfs) {
-                rfs.call(el);
-                $scope.fullscreen = true;
+
+            if ($scope.fullscreen) {
+                var rfs = el.exitFullscreen || el.webkitExitFullscreen || el.mozCancelFullScreen ||  el.msExitFullscreen;
+                if (rfs) {
+                    rfs.call(el);
+                    $scope.fullscreen = false;
+                }
+            } else {
+                var rfs = el.requestFullScreen || el.webkitRequestFullScreen || el.mozRequestFullScreen || el.msRequestFullscreen;
+                if (rfs) {
+                    rfs.call(el);
+                    $scope.fullscreen = true;
+                }
             }
+
+
         };
 
 
@@ -87,21 +98,21 @@ angular.module('j316.translate.controller.nav', [])
          */
         $scope.showAsk = function (ev) {
             $mdDialog.show({
-                controller: function ($scope, $mdDialog) {
-                    $scope.hide = function () {
-                        $mdDialog.hide();
-                    };
-                    $scope.cancel = function () {
-                        $mdDialog.cancel();
-                    };
-                    $scope.send = function () {
-                        $mdDialog.hide($scope.msg);
-                    };
-                },
-                templateUrl: 'views/dialog/ask.tmpl.html',
-                targetEvent: ev,
-                clickOutsideToClose: true
-            })
+                    controller: function ($scope, $mdDialog) {
+                        $scope.hide = function () {
+                            $mdDialog.hide();
+                        };
+                        $scope.cancel = function () {
+                            $mdDialog.cancel();
+                        };
+                        $scope.send = function () {
+                            $mdDialog.hide($scope.msg);
+                        };
+                    },
+                    templateUrl: 'views/dialog/ask.tmpl.html',
+                    targetEvent: ev,
+                    clickOutsideToClose: true
+                })
                 .then(function (question) {
                     QuestionService.sendQuestion(question);
                 }, function () {

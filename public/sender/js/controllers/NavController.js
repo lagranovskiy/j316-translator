@@ -20,11 +20,14 @@ angular.module('j316.translate.controller.nav', [])
                 return;
             }
             if ($scope.fullscreen) {
-                var rfs = el.exitFullscreen || document.webkitCancelFullScreen || el.mozCancelFullScreen ||  el.msExitFullscreen;
-                if (rfs) {
-                    rfs.call(el);
-                    $scope.fullscreen = false;
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.mozCancelFullScreen) {
+                    document.mozCancelFullScreen();
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
                 }
+                $scope.fullscreen = false;
             } else {
                 var rfs = el.requestFullScreen || el.webkitRequestFullScreen || el.mozRequestFullScreen || el.msRequestFullscreen;
                 if (rfs) {

@@ -24,6 +24,11 @@ var config = {
         dbt: {
             dbt_url: process.env.DBT_URL || 'http://dbt.io/',
             dbt_key: process.env.DBT_KEY || 'dummy'
+        },
+        algolia:{
+            applicationId: process.env.ALGOLIA_ID || 'JEBNFA62OI',
+            apiKey: process.env.ALGOLIA_API_KEY || 'b246a1c52bfcb9f14932cc4322c62eed',
+            indexName: process.env.ALGOLIA_INDEX || 'songs'
         }
     },
     init: function () {

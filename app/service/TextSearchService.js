@@ -12,6 +12,12 @@ var algoliasearch = require('algoliasearch');
 var textSearchService = function () {
 
     var client = algoliasearch(config.keys.algolia.applicationId, config.keys.algolia.apiKey);
+    var index = client.initIndex(config.keys.algolia.indexName);
+    index.setSettings({
+        'ranking': ['desc(title)']
+    }, function (err, content) {
+        console.log(content);
+    });
 
     var controller = {
 
@@ -22,15 +28,12 @@ var textSearchService = function () {
          * @param next
          */
         searchText: function (req, res, next) {
-            var query = req.body;
-
-            if(!query || query.length() == 0){
-                console.error("Cannot search for empty string");
+            var rqBody = req.body;
+            if (!rqBody || !rqBody.query || rqBody.query.length == 0) {
                 return res.send("Cannot search for empty string");
             }
 
-            var index = client.initIndex(config.keys.algolia.indexName);
-            index.search(query, function searchDone(err, content) {
+            index.search(rqBody.query, function searchDone(err, content) {
                 console.log(err, content);
                 res.send(content);
             });

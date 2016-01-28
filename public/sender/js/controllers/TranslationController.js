@@ -167,6 +167,38 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
         });
 
 
+        /**
+         * Opens a dialog for remote text search
+         */
+        $scope.openTextSearch = function () {
+            $mdDialog.show(
+                {
+                    templateUrl: 'views/dialog/textsearch.tmpl.html',
+                    clickOutsideToClose: true
+                })
+                .then(function (foundText) {
+                    $log.info('Sending of sekected text: ' + foundText.title);
+
+                    var lookupText = foundText.text + '\n\n <<'+foundText.title+'>>';
+
+                    TranslationService.sendMessage({
+                        text: lookupText,
+                        language: foundText.lang
+                    });
+
+                    // Try to give vibration feedback
+                    if (window.navigator && window.navigator['vibrate']) {
+                        navigator.vibrate(10);
+                    }
+                }, function () {
+                    $log.info('You cancelled the dialog.');
+                });
+
+            $scope.$watch(function () {
+                return $mdMedia('sm');
+            });
+        };
+
         $scope.startVoiceRecognition = function () {
             if (!('webkitSpeechRecognition' in window)) {
                 $log.log("webkitSpeechRecognition is not available");

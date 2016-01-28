@@ -2,24 +2,25 @@
 
 
 angular.module('senderApp', [
-        'ngCookies',
-        'ngRoute',
-        'ngAnimate',
-        'ngSanitize',
-        'angular-underscore',
+    'ngCookies',
+    'ngRoute',
+    'ngAnimate',
+    'ngSanitize',
+    'angular-underscore',
 
-        'ngMaterial',
-        'btford.socket-io',
-        'infinite-scroll',
-        'j316.translate.service.translation',
-        'j316.translate.service.question',
-        'j316.translate.service.info',
+    'ngMaterial',
+    'btford.socket-io',
+    'infinite-scroll',
+    'j316.translate.service.translation',
+    'j316.translate.service.question',
+    'j316.translate.service.info',
 
-        'j316.translate.controller.nav',
-        'j316.translate.controller.translation',
-        'j316.translate.controller.sender'
+    'j316.translate.controller.nav',
+    'j316.translate.controller.translation',
+    'j316.translate.controller.sender',
+    'j316.translate.controller.textsearch'
 
-    ])
+])
 
     .run(['$rootScope', '$location',
 

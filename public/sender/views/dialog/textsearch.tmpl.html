@@ -1,0 +1,57 @@
+<md-dialog ng-controller="TextSearchCtrl" aria-label="Text search" flex="85" ng-cloak>
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>Text Search</h2>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="cancel()">
+                <md-icon md-font-set="material-icons" aria-label="Close dialog">clear</md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+
+    <md-content class="md-padding">
+        <form name="userForm">
+            <h3>What text are you searching for?</h3>
+
+            <md-content layout-padding layout="column">
+                <form ng-submit="$event.preventDefault()">
+                    <md-autocomplete
+                            md-no-cache="true"
+                            md-selected-item="selectedItem"
+                            md-search-text="searchText"
+                            md-items="item in querySearch(searchText)"
+                            md-item-text="item.title"
+                            md-min-length="1"
+                            md-delay="500"
+                            md-autofocus="true"
+                            md-autoselect="true"
+                            placeholder="Find text you want to translate"
+                            md-menu-class="autocomplete-custom-template">
+                        <md-item-template>
+                             <span class="item-title">
+                                   <span ng-bind-html="item._highlightResult.title.value"/>
+                              </span>
+                              <span class="item-metadata">
+                                <span class="item-metastat">
+                                  <strong ng-bind-html="item._highlightResult.text.value"/>{{item.watchers}}
+                                </span>
+                              </span>
+                        </md-item-template>
+                        <md-not-found>
+                            No matches found.
+                        </md-not-found>
+                    </md-autocomplete>
+
+                    <md-input-container ng-show="selectedItem != null" class="md-block">
+                        <label>Selected Text</label>
+                        <textarea ng-model="selectedItem.text" columns="2" rows="10" class="control_field"></textarea>
+                    </md-input-container>
+                </form>
+            </md-content>
+
+        </form>
+    </md-content>
+    <div class="md-actions" layout="row"><span flex></span>
+        <md-button ng-class="md-primary" ng-disabled="selectedItem == null" ng-click="sendSelected()">Send text</md-button>
+    </div>
+</md-dialog>

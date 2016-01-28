@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "Translator application to provide simultanous language translation on multiple client",
   "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:lagranovskiy/j316-translator.git"
+  },
   "engines": {
     "node": "4.2.3"
   },
@@ -15,6 +19,7 @@
   "dependencies": {
     "algoliasearch": "^3.10.2",
     "bible-passage-reference-parser": "^1.0.0",
+    "body-parser": "^1.14.2",
     "bower": "^1.6.9",
     "connect-redis": "^3.0.1",
     "cookie-parser": "^1.4.0",

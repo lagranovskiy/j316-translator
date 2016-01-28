@@ -8,6 +8,7 @@ var cookieSession = require("express-session");
 var RedisStore = require('connect-redis')(cookieSession);
 var socketIOredis = require('socket.io-redis');
 var sharedsession = require("express-socket.io-session");
+var bodyParser = require('body-parser')
 var redis = require("redis");
 
 var j316app = express();
@@ -42,16 +43,6 @@ var expressSession = cookieSession({
 });
 
 j316app.use(expressSession);
-
-/**
- * Important! This session modification provides the client with a persistene cookie id.
- */
-j316app.get("/*", function (req, res, next) {
-    if (req.session && !req.session.identified) {
-        req.session.identified = true;
-    }
-    next();
-});
 
 
 var httpServer = require('http').createServer(j316app);
@@ -94,6 +85,9 @@ senderConnectorSetup(senderIO);
 ////////////////// HTTP Init ////////////////////
 
 j316app.use(morgan(':method :url :response-time'));
+j316app.use(bodyParser.json());
+
+require('./app/router')(j316app);
 
 
 j316app.use('/bower_components', express.static(__dirname + '/public/bower_components/'));

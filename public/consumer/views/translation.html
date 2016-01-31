@@ -12,7 +12,7 @@
                  class="animate-repeat">
                 <div class="md-list-item-text md-title md-padding" ng-if="item.type=='message'">
                     <div ng-class="item.contentType === 'verse' ? 'content_verse' : 'content_translation'  ">
-                        <span ng-class="localizeLang(clientInfo.lang).rtl ? 'rtl_text' : ''"> {{item.translation}}</span><br/>
+                        <span style="white-space: pre-line;" ng-class="localizeLang(clientInfo.lang).rtl ? 'rtl_text' : ''"> {{item.translation}}</span><br/>
                         <small class="md-caption">{{formatDate(item.timestamp)}} by {{item.sourceName}}</small>
                     </div>
                 </div>
@@ -26,7 +26,7 @@
                             <span class="md-caption">Your question is answered by {{item.answerSenderName}}:</span>
                             <span class="senderAnswer"><b>{{item.answerTranslation}}</b></span>
                             <span class="md-caption">Original question:</span>
-                            <small ng-class="localizeLang(clientInfo.lang).rtl ? 'rtl_text' : ''">
+                            <small style="white-space: pre-line;" ng-class="localizeLang(clientInfo.lang).rtl ? 'rtl_text' : ''">
                                 {{item.questionText}}
                             </small>
                             </small>
@@ -36,7 +36,7 @@
 
                 <div class="md-list-item-text md-title md-padding md-accent" ng-if="item.type=='questionAck'">
                     <span class="md-caption">Your question received:</span><br/>
-                    <span ng-class="localizeLang(clientInfo.lang).rtl ? 'rtl_text' : ''"> {{item.questionText}}</span><br/>
+                    <span style="white-space: pre-line;" ng-class="localizeLang(clientInfo.lang).rtl ? 'rtl_text' : ''"> {{item.questionText}}</span><br/>
                 </div>
 
 

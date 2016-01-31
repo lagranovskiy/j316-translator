@@ -140,7 +140,9 @@ var consumerConnector = function (socketChannel) {
         function emitCache() {
             // Send cached messages if any
             var cachedMsgs = serviceDistributor.getCachedMessages(socket.handshake.session.clientLanguage);
+            console.info('client :: Lookup for saved messages for lang: ' + socket.handshake.session.clientLanguage);
             if (cachedMsgs && cachedMsgs.length > 0) {
+                console.info('client :: Retrieving cached messages for language ' + socket.handshake.session.clientLanguage);
                 socket.emit('cachedTranslations', cachedMsgs);
             }
         }

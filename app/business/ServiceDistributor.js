@@ -45,7 +45,7 @@ function extractVerses(text) {
  */
 var serviceDistributor = _.extend(new EventEmitter(), {
 
-        msgCache: new NodeCache({stdTTL: 60 * 30, checkperiod: 120}),
+        msgCache: new NodeCache({stdTTL: 60 * 180, checkperiod: 120}),
 
         languageList: {},
 

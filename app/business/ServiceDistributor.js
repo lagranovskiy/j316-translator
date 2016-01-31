@@ -85,7 +85,7 @@ var serviceDistributor = _.extend(new EventEmitter(), {
             }
             text = text.trim();
 
-            console.info('Service :: Translating: ' + text);
+            console.info('Service :: Translating: ' + sourceLanguage + ' : '+text);
             var timestamp = new Date().getTime();
 
             // Find out if there are any bible verses in the original text.

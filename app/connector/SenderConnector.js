@@ -1,11 +1,12 @@
 var config = require('../../config/config');
+var nr = require('newrelic');
 var serviceDistributor = require('../business/ServiceDistributor');
 var questionDistributor = require('../business/QuestionDistributor');
 
-var senderConnector = function (socketChannel) {
+var senderConnector = function(socketChannel) {
 
 
-    socketChannel.on('connection', function (socket) {
+    socketChannel.on('connection', function(socket) {
 
         console.info('sender :: New Sender is online. ' + socket.id);
 
@@ -15,7 +16,7 @@ var senderConnector = function (socketChannel) {
         });
 
 
-        socket.conn.on('heartbeat', function () {
+        socket.conn.on('heartbeat', function() {
             if (socket.handshake.session && socket.handshake.session.senderAuthenticated) {
                 // Allow idling for new clients
                 if (!socket.handshake.session.senderAuthenticatedOn ||
@@ -43,7 +44,8 @@ var senderConnector = function (socketChannel) {
                 senderLanguage: socket.handshake.session.senderLanguage
             });
             emitCache();
-        } else {
+        }
+        else {
             console.info('sender :: Send auth request to sender ' + socket.id);
             socket.emit('authenticate');
         }
@@ -71,7 +73,8 @@ var senderConnector = function (socketChannel) {
                 console.info('sender :: authentication success for ' + authRq.senderName);
                 socket.emit('authenticated');
                 singIn(authRq);
-            } else {
+            }
+            else {
                 socket.handshake.session.senderAuthenticated = false;
                 socket.emit('unauthorized', 'Access key wrong');
                 console.info('sender :: authentication failure for ' + authRq.senderName);
@@ -105,7 +108,9 @@ var senderConnector = function (socketChannel) {
 
             // Recipe connection
             console.info('sender :: Sender ' + authRq.senderName + ' added to room  lang_' + authRq.senderLanguage);
-            socket.emit('singinCompleted', {success: true});
+            socket.emit('singinCompleted', {
+                success: true
+            });
 
             // Send cached messages if any
             var cachedMsgs = serviceDistributor.getCachedMessages(sessionData.senderLanguage);
@@ -143,10 +148,16 @@ var senderConnector = function (socketChannel) {
         }
 
         // handling of messages
+        socket.on('newMessage', nr.createWebTransaction('/j316/newMessage', function(data) {
+            handleNewMessage(data);
+            nr.endTransaction();
+        }))
+        
+        socket.on('answeredQuestion', nr.createWebTransaction('/j316/questionAnswered', function(data) {
+            handleAnsweredQuestion(data);
+            nr.endTransaction();
+        }))
 
-        socket.on('newMessage', handleNewMessage);
-
-        socket.on('answeredQuestion', handleAnsweredQuestion);
 
         socket.on('requestListenersInfo', handleRequestListenersInfo);
 
@@ -181,9 +192,9 @@ var senderConnector = function (socketChannel) {
                 serviceDistributor.removeTranslationLanguage(socket.handshake.session.senderLanguage);
                 socket.leave('lang_' + socket.handshake.session.senderLanguage);
                 socket.handshake.session.senderAuthenticated = false;
-                delete  socket.handshake.session.senderName;
-                delete  socket.handshake.session.senderLanguage;
-                delete  socket.handshake.session.senderAuthenticatedOn;
+                delete socket.handshake.session.senderName;
+                delete socket.handshake.session.senderLanguage;
+                delete socket.handshake.session.senderAuthenticatedOn;
             }
 
             console.info('sender :: Sender (' + socket.id + ') disconnected');
@@ -237,9 +248,9 @@ var senderConnector = function (socketChannel) {
          * Handles new answer for a question to be translated and distributed
          *
          *  {
-             *  "questionUUID":"9e5a0359-f1a7-485b-aa9e-b6715d1e8273",
-             *  "answer":"answer text"
-             *  }
+         *  "questionUUID":"9e5a0359-f1a7-485b-aa9e-b6715d1e8273",
+         *  "answer":"answer text"
+         *  }
          *
          * @param answeredQuestion
          */
@@ -321,5 +332,3 @@ var senderConnector = function (socketChannel) {
 };
 
 module.exports = senderConnector;
-
-

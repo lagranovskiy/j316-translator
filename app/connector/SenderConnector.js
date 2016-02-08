@@ -145,18 +145,21 @@ var senderConnector = function(socketChannel) {
         }
 
         // handling of messages
-        socket.on('newMessage', nr.createWebTransaction('/j316/newMessage', function(data) {
+        socket.on('newMessage', nr.createWebTransaction('NewMessageReceived', function(data) {
             handleNewMessage(data);
             nr.endTransaction();
         }))
         
-        socket.on('answeredQuestion', nr.createWebTransaction('/j316/questionAnswered', function(data) {
+        socket.on('answeredQuestion', nr.createWebTransaction('QuestionAnswered', function(data) {
             handleAnsweredQuestion(data);
             nr.endTransaction();
         }))
 
 
-        socket.on('requestListenersInfo', handleRequestListenersInfo);
+        socket.on('requestListenersInfo', nr.createWebTransaction('ListenerRequest',function(data) {
+            handleRequestListenersInfo(data);
+            nr.endTransaction();
+        }));
 
 
         // when the user disconnects.. perform this

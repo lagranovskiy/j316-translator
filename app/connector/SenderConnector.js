@@ -1,5 +1,5 @@
-var config = require('../../config/config');
 var nr = require('newrelic');
+var config = require('../../config/config');
 var serviceDistributor = require('../business/ServiceDistributor');
 var questionDistributor = require('../business/QuestionDistributor');
 
@@ -202,6 +202,7 @@ var senderConnector = function(socketChannel) {
          * @param newMessage
          */
         function handleNewMessage(newMessage) {
+            
             if (!socket.handshake.session) {
                 socket.error('Authentication broken. Please login again.');
                 return console.error('sender :: Unauthenticated user tries to send translation text.');
@@ -217,6 +218,7 @@ var senderConnector = function(socketChannel) {
             if (!newMessage.language) {
                 newMessage.language = socket.handshake.session.senderLanguage;
             }
+            
             serviceDistributor.requestTranslation(newMessage.text, newMessage.language, socket.handshake.session.senderName);
         }
 

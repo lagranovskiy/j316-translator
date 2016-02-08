@@ -12,7 +12,7 @@ var config = {
 
     sessionSecret: process.env.SESSION_SECRET || 'mysecret',
     clusterMode: process.env.CLUSTER_MODE || 'false',
-    host: process.env.HOST || 'localhost',
+    host: process.env.IP  || process.env.HOST ||'localhost',
     port: process.env.PORT || 1080,
     accessKey: process.env.ACCESS_KEY || 'j316',
     redis: process.env.REDIS_URL || 'redis://192.168.99.100:32770',

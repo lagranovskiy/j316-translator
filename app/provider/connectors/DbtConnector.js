@@ -51,7 +51,7 @@ var dbtConnector = function () {
 
 
             var url = config.keys.dbt.dbt_url + 'text/verse?' + querystring.stringify(paramMap);
-
+            console.info('Requesting: ' + url);
             var body = '';
             http.get(url, function (res) {
                 res.on('data', function (chunk) {
@@ -59,6 +59,7 @@ var dbtConnector = function () {
                 });
                 res.on('end', function () {
                     try {
+                        console.info('Response from DBT: ' + body);
                         var fbResponse = JSON.parse(body);
                         _.each(fbResponse, function (vers) {
                             vers.verse_text = vers.verse_text.trim()
@@ -71,7 +72,7 @@ var dbtConnector = function () {
 
                 });
             }).on('error', function (e) {
-                console.log("Got error: " + e.message);
+                console.error("Got error: " + e.message);
                 callback("DBT :: Got error: " + e.message);
             });
         }

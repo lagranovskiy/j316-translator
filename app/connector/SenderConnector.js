@@ -28,9 +28,6 @@ var senderConnector = function(socketChannel) {
                         socket.handshake.session.save();
                         socket.emit('authenticate');
                     }
-                    else {
-                        console.info('client :: Client online without sender');
-                    }
                 }
             }
         });

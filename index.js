@@ -72,7 +72,7 @@ if (config.clusterMode == 'true') {
 }
 
 var consumerConnectorSetup = require('./app/connector/ConsumerConnector');
-consumerIO = ioServer.of('/consumer');
+var consumerIO = ioServer.of('/consumer');
 consumerIO.use(sharedSessionMiddleware);
 consumerConnectorSetup(consumerIO);
 

@@ -1,10 +1,11 @@
 var config = require('../config/config');
 var textService = require('./service/TextSearchService');
+var protokollService = require('./service/ProtokollService');
 
-module.exports = function (app) {
+module.exports = function(app) {
 
 
-    var errorHandler = function (err, req, res, next) {
+    var errorHandler = function(err, req, res, next) {
         console.error(err.stack);
 
         res.status(500).json({
@@ -15,7 +16,7 @@ module.exports = function (app) {
     app.use(errorHandler);
 
 
-    app.all('*', function (req, res, next) {
+    app.all('*', function(req, res, next) {
         res.header('Access-Control-Allow-Origin', req.headers.origin);
         res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
         res.header('Access-Control-Allow-Headers', 'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept');
@@ -26,7 +27,7 @@ module.exports = function (app) {
     /**
      * Important! This session modification provides the client with a persistene cookie id.
      */
-    app.get("/*", function (req, res, next) {
+    app.get("/*", function(req, res, next) {
         if (req.session && !req.session.identified) {
             req.session.identified = true;
         }
@@ -35,7 +36,7 @@ module.exports = function (app) {
 
 
     app.post('/search/text', authorize, textService.searchText);
-
+    app.get('/protokoll', protokollService.getProtokoll);
 
     /**
      * Test if the caller is authenticated as sender

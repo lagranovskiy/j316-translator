@@ -1,5 +1,5 @@
 angular.module('j316.translate.controller.translation', ['angular-underscore'])
-    .controller('TranslationPanelCtrl', function ($scope, $location, $timeout, $log, TranslationService, QuestionService, languages, $mdDialog, $mdMedia) {
+    .controller('TranslationPanelCtrl', function($scope, $location, $timeout, $log, TranslationService, QuestionService, languages, $mdDialog, $mdMedia, $mdToast) {
 
         $scope.showLastMsgCount = 20;
         $scope.messages = [];
@@ -24,7 +24,7 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
         $scope.interim_transcript = '';
 
 
-        $scope.$watch('isOnline()', function (newVal) {
+        $scope.$watch('isOnline()', function(newVal) {
             if (newVal === false) {
                 //release() is used to release the lock.
                 if (navigator.wakeLock) {
@@ -37,14 +37,14 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
         });
 
 
-        $scope.$on('authenticate', function (event, msg) {
+        $scope.$on('authenticate', function(event, msg) {
             TranslationService.disconnect();
         });
 
-        $scope.$on('listenersChanged', function (event, msg) {
+        $scope.$on('listenersChanged', function(event, msg) {
             $scope.listenerList = msg;
             var listenerCount = 0;
-            _.each(msg, function (val) {
+            _.each(msg, function(val) {
                 listenerCount = listenerCount + val;
             });
 
@@ -58,7 +58,7 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
         });
 
 
-        $scope.$on('newTranslation', function (event, msg) {
+        $scope.$on('newTranslation', function(event, msg) {
             var displayableMessage = {
                 translation: msg.translation,
                 sourceName: msg.sourceName,
@@ -90,7 +90,7 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
          *   }
          *
          */
-        $scope.$on('newQuestion', function (event, msg) {
+        $scope.$on('newQuestion', function(event, msg) {
             var displayableMessage = {
                 questionUUID: msg.questionUUID,
                 questionTranslation: msg.questionTranslation,
@@ -112,16 +112,18 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
             }
         });
 
-        $scope.$on('answerAck', function (event, msg) {
-            var questions = _.where($scope.messages, {questionUUID: msg.questionUUID});
-            _.each(questions, function (question) {
+        $scope.$on('answerAck', function(event, msg) {
+            var questions = _.where($scope.messages, {
+                questionUUID: msg.questionUUID
+            });
+            _.each(questions, function(question) {
                 question.answered = true;
                 question.answeredBy = msg.answerSenderName;
             });
         });
 
-        $scope.$on('cachedQuestions', function (event, msg) {
-            _.each(msg, function (singleMsg) {
+        $scope.$on('cachedQuestions', function(event, msg) {
+            _.each(msg, function(singleMsg) {
                 var displayableMessage = {
                     questionUUID: singleMsg.questionUUID,
                     questionTranslation: singleMsg.questionTranslation,
@@ -142,8 +144,8 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
         });
 
 
-        $scope.$on('cachedTranslations', function (event, msg) {
-            _.each(msg, function (singleMsg) {
+        $scope.$on('cachedTranslations', function(event, msg) {
+            _.each(msg, function(singleMsg) {
                 var displayableMessage = {
                     translation: singleMsg.translation,
                     sourceName: singleMsg.sourceName,
@@ -161,25 +163,31 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
             });
         });
 
-        $scope.$on('socket:error', function (ev, data) {
+        $scope.$on('socket:error', function(ev, data) {
             $log.warn(data);
             TranslationService.disconnect();
+
+            $mdToast.show(
+                $mdToast.simple()
+                .textContent('Ooops:' + data)
+                .position('top')
+                .hideDelay(3000)
+            );
         });
 
 
         /**
          * Opens a dialog for remote text search
          */
-        $scope.openTextSearch = function () {
-            $mdDialog.show(
-                {
+        $scope.openTextSearch = function() {
+            $mdDialog.show({
                     templateUrl: 'views/dialog/textsearch.tmpl.html',
                     clickOutsideToClose: true
                 })
-                .then(function (foundText) {
+                .then(function(foundText) {
                     $log.info('Sending of sekected text: ' + foundText.title);
 
-                    var lookupText = foundText.text + '\n\n <<'+foundText.title+'>>';
+                    var lookupText = foundText.text + '\n\n <<' + foundText.title + '>>';
 
                     TranslationService.sendMessage({
                         text: lookupText,
@@ -190,29 +198,30 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
                     if (window.navigator && window.navigator['vibrate']) {
                         navigator.vibrate(10);
                     }
-                }, function () {
+                }, function() {
                     $log.info('You cancelled the dialog.');
                 });
 
-            $scope.$watch(function () {
+            $scope.$watch(function() {
                 return $mdMedia('sm');
             });
         };
 
-        $scope.startVoiceRecognition = function () {
+        $scope.startVoiceRecognition = function() {
             if (!('webkitSpeechRecognition' in window)) {
                 $log.log("webkitSpeechRecognition is not available");
-            } else {
+            }
+            else {
                 if (!$scope.recognition) {
                     $scope.recognition = new webkitSpeechRecognition();
                     $scope.recognition.continuous = false;
                     $scope.recognition.interimResults = true;
 
-                    $scope.recognition.onstart = function () {
+                    $scope.recognition.onstart = function() {
                         $log.info('Started voice recording');
                     };
 
-                    $scope.recognition.onend = function () {
+                    $scope.recognition.onend = function() {
                         $log.info('Stopped voice recording');
                         if ($scope.recognizing) {
                             $scope.sendMessage();
@@ -220,36 +229,36 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
                         }
                     };
 
-                    $scope.recognition.onerror = function (err) {
+                    $scope.recognition.onerror = function(err) {
                         $log.error(err);
                     };
 
-                    $scope.recognition.onaudiostart = function () {
+                    $scope.recognition.onaudiostart = function() {
                         $log.info('audio start fired');
                     };
 
-                    $scope.recognition.onaudioend = function () {
+                    $scope.recognition.onaudioend = function() {
                         $log.info('audio end fired');
                     };
 
-                    $scope.recognition.onsoundstart = function () {
+                    $scope.recognition.onsoundstart = function() {
                         $log.info('sound start fired');
                     };
 
-                    $scope.recognition.onsoundend = function () {
+                    $scope.recognition.onsoundend = function() {
                         $log.info('sound end fired');
                     };
 
-                    $scope.recognition.onspeechstart = function () {
+                    $scope.recognition.onspeechstart = function() {
                         $log.info('speech start fired');
                     };
-                    $scope.recognition.onspeechend = function () {
+                    $scope.recognition.onspeechend = function() {
                         $log.info('speech end fired');
                         $scope.sendMessage();
                     };
 
 
-                    $scope.recognition.onresult = function (event) {
+                    $scope.recognition.onresult = function(event) {
                         for (var i = event.resultIndex; i < event.results.length; ++i) {
                             var capitalize = _.capitalize(event.results[i][0].transcript.trim());
 
@@ -258,7 +267,8 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
                                     $scope.message.text = '';
                                 }
                                 $scope.message.text += capitalize + '.\n';
-                            } else {
+                            }
+                            else {
                                 $scope.interim_transcript = capitalize;
                             }
                         }
@@ -273,7 +283,9 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
                 }
 
 
-                $scope.recognition.lang = _.findWhere(languages, {key: $scope.message.language}).voicelang;
+                $scope.recognition.lang = _.findWhere(languages, {
+                    key: $scope.message.language
+                }).voicelang;
                 $scope.recognition.start();
                 $scope.recognizing = true;
 
@@ -284,10 +296,10 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
         /**
          * Sends message for translation
          */
-        $scope.sendMessage = function () {
+        $scope.sendMessage = function() {
             $log.info('Sending of message: ' + $scope.message.text);
             $scope.statusMessage = 'Sending completed';
-            $timeout(function () {
+            $timeout(function() {
                 $scope.statusMessage = null
             }, 500);
             TranslationService.sendMessage($scope.message);
@@ -299,32 +311,31 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
             }
         };
 
-        $scope.answerQuestion = function (question) {
-            $mdDialog.show(
-                {
-                    controller: function ($scope, $mdDialog) {
+        $scope.answerQuestion = function(question) {
+            $mdDialog.show({
+                    controller: function($scope, $mdDialog) {
                         $scope.question = question;
 
-                        $scope.hide = function () {
+                        $scope.hide = function() {
                             $mdDialog.hide();
                         };
-                        $scope.cancel = function () {
+                        $scope.cancel = function() {
                             $mdDialog.cancel();
                         };
-                        $scope.send = function () {
+                        $scope.send = function() {
                             $mdDialog.hide($scope.question);
                         };
                     },
                     templateUrl: 'views/dialog/answer.tmpl.html',
                     clickOutsideToClose: true
                 })
-                .then(function (answer) {
+                .then(function(answer) {
                     QuestionService.sendAnsweredQuestion(answer, $scope.message.language);
-                }, function () {
+                }, function() {
                     $log.info('You cancelled the dialog.');
                 });
 
-            $scope.$watch(function () {
+            $scope.$watch(function() {
                 return $mdMedia('sm');
             });
 
@@ -333,7 +344,7 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
         /**
          * Get lang sent message again
          */
-        $scope.undo = function () {
+        $scope.undo = function() {
             var last = TranslationService.getLast();
             if (last) {
                 $scope.message.text = last;
@@ -343,7 +354,7 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
         /**
          * Get lang sent message again
          */
-        $scope.redo = function () {
+        $scope.redo = function() {
             var next = TranslationService.getNext();
             if (next) {
                 $scope.message.text = next;
@@ -354,7 +365,7 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
          * Evaluates keydown and fire if shift+enter / ctrl+enter pressed
          * @param event
          */
-        $scope.evaluateKeyPress = function (event) {
+        $scope.evaluateKeyPress = function(event) {
             if (event.keyCode == 13 && (event.ctrlKey == true || event.shiftKey == true)) {
                 $scope.sendMessage();
                 event.defaultPrevented = true;
@@ -377,7 +388,7 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
          * Updates currently configured language
          * @param lang
          */
-        $scope.updateCurrentLanguage = function (lang) {
+        $scope.updateCurrentLanguage = function(lang) {
             if (!lang) {
                 return;
             }
@@ -385,30 +396,32 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
             $scope.message.language = lang.key;
         };
 
-        $scope.isOnline = function () {
+        $scope.isOnline = function() {
             return TranslationService.isOnline()
         };
 
-        $scope.requestListenersInfo = function () {
+        $scope.requestListenersInfo = function() {
             TranslationService.requestListenersInfo();
         };
 
 
-        $scope.incShowedMsgs = function () {
+        $scope.incShowedMsgs = function() {
             $scope.showLastMsgCount = $scope.showLastMsgCount + 5;
         };
 
-        $scope.formatDate = function (timestamp) {
+        $scope.formatDate = function(timestamp) {
             return new Date(timestamp).getHours() + ':' + new Date(timestamp).getMinutes();
         };
 
 
-        $scope.localizeLang = function (key) {
-            return _.findWhere(languages, {key: key});
+        $scope.localizeLang = function(key) {
+            return _.findWhere(languages, {
+                key: key
+            });
         };
 
 
-// HTML5 Standby API
+        // HTML5 Standby API
         if (navigator['wakeLock'] !== undefined) {
             var wakeLock = navigator['wakeLock'];
             //navigator.wakeLock is the main standby API property.
@@ -431,5 +444,4 @@ angular.module('j316.translate.controller.translation', ['angular-underscore'])
             );
         }
 
-    })
-;
+    });

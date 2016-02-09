@@ -1,38 +1,45 @@
 angular.module('j316.translate.controller.sender', [])
-    .controller('SenderCtrl', function ($scope, $location, $window, $http, $log, TranslationService, languages, $mdDialog) {
+    .controller('SenderCtrl', function($scope, $location, $window, $http, $log, TranslationService, languages, $mdDialog, $mdToast) {
 
         $scope.registrationInfo = TranslationService.getRegistrationInfo();
         $scope.isConnecting = false;
-        $scope.accessKey='j316';
+        $scope.accessKey = 'j316';
 
-        $scope.$on('socket:error', function (ev, data) {
+        $scope.$on('socket:error', function(ev, data) {
             $log.warn(data);
             TranslationService.disconnect();
+
+            $mdToast.show(
+                $mdToast.simple()
+                .textContent('Ooops:' + data)
+                .position('top')
+                .hideDelay(3000)
+            );
         });
 
-        $scope.isOnline = function () {
+        $scope.isOnline = function() {
             return TranslationService.isOnline()
         };
 
-        $scope.$watch('isOnline()', function (newVal) {
+        $scope.$watch('isOnline()', function(newVal) {
             if (newVal) {
                 $location.path('/translationPanel');
             }
         });
 
 
-        $scope.connect = function () {
+        $scope.connect = function() {
             $scope.registrationInfo = TranslationService.register($scope.registrationInfo);
             $scope.isConnecting = true;
             TranslationService.connect($scope.accessKey).then(
-                function (result) {
+                function(result) {
                     $scope.isConnecting = false;
                     $location.path('/translationPanel');
                 },
-                function (failure) {
+                function(failure) {
                     $scope.isConnecting = false;
 
-                   var alert = $mdDialog.alert()
+                    var alert = $mdDialog.alert()
                         .parent(angular.element(document.body))
                         .clickOutsideToClose(true)
                         .title('Authentication Problem')

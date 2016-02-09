@@ -37,12 +37,17 @@ angular.module('senderApp', [
     .factory('translatorSocket', function (socketFactory, $rootScope, $log) {
         var translatorSocket = socketFactory({
             ioSocket: io.connect(window.location.origin + '/sender', {
-                reconnection: true, transports: ['websocket', 'polling', 'xhr-polling'],
+                reconnection: true, 
+                transports: ['websocket', 'polling', 'xhr-polling'],
                 reconnectionAttempts: 100
             })
         });
 
         translatorSocket.forward('error');
+        $rootScope.$on('socket:error', function (ev, data) {
+            $log.error('Error: ' + JSON.stringify(data));
+            $rootScope.$broadcast('error', data);
+        });
 
         translatorSocket.forward('info', $rootScope);
         $rootScope.$on('socket:info', function (ev, data) {

@@ -12,6 +12,16 @@ var consumerConnector = function (socketChannel) {
 
         console.info('client :: New Client is online. ' + socket.id);
 
+
+        socket.on('error', function(err) {
+            if (err === 'handshake error') {
+                console.log('handshake error', err);
+            }
+            else {
+                console.log('io error', err);
+            }
+        });
+        
         socket.conn.on('heartbeat', function () {
             if (socket.handshake.session && socket.handshake.session.clientAuthenticated) {
                 // Allow idling for new clients

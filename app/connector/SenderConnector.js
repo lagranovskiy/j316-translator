@@ -16,6 +16,15 @@ var senderConnector = function(socketChannel) {
         });
 
 
+        socket.on('error', function(err) {
+            if (err === 'handshake error') {
+                console.log('handshake error', err);
+            }
+            else {
+                console.log('io error', err);
+            }
+        });
+
         socket.conn.on('heartbeat', function() {
             if (socket.handshake.session && socket.handshake.session.senderAuthenticated) {
                 // Allow idling for new clients
@@ -149,14 +158,14 @@ var senderConnector = function(socketChannel) {
             handleNewMessage(data);
             nr.endTransaction();
         }))
-        
+
         socket.on('answeredQuestion', nr.createWebTransaction('QuestionAnswered', function(data) {
             handleAnsweredQuestion(data);
             nr.endTransaction();
         }))
 
 
-        socket.on('requestListenersInfo', nr.createWebTransaction('ListenerRequest',function(data) {
+        socket.on('requestListenersInfo', nr.createWebTransaction('ListenerRequest', function(data) {
             handleRequestListenersInfo(data);
             nr.endTransaction();
         }));
@@ -205,7 +214,7 @@ var senderConnector = function(socketChannel) {
          * @param newMessage
          */
         function handleNewMessage(newMessage) {
-            
+
             if (!socket.handshake.session) {
                 socket.error('Authentication broken. Please login again.');
                 return console.error('sender :: Unauthenticated user tries to send translation text.');
@@ -221,7 +230,7 @@ var senderConnector = function(socketChannel) {
             if (!newMessage.language) {
                 newMessage.language = socket.handshake.session.senderLanguage;
             }
-            
+
             serviceDistributor.requestTranslation(newMessage.text, newMessage.language, socket.handshake.session.senderName);
         }
 

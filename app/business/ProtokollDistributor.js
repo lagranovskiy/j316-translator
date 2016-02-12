@@ -102,7 +102,7 @@ var protocolService = function() {
                     var entryTime = moment(protokollEntry.timestamp)
                     var timePeriod = '';
                     if (lastMsgTime) {
-                        timePeriod = ' \\n (' + moment(lastMsgTime).from(entryTime) + ') '
+                        timePeriod = ' \n (' + moment(lastMsgTime).from(entryTime) + ') '
                     }
                     lastMsgTime = protokollEntry.timestamp;
 

@@ -87,7 +87,7 @@ var serviceDistributor = _.extend(new EventEmitter(), {
 
         // Notify protocol
         serviceDistributor.emit('newText', {
-            timestamp: new Date().getTime,
+            timestamp: new Date().getTime(),
             text: text,
             sourceLanguage: sourceLanguage,
             translationSource: translationSource

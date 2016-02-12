@@ -35,8 +35,9 @@ module.exports = function(app) {
     });
 
 
-    app.post('/search/text', authorize, textService.searchText);
+    app.post('/search/text', authenticate, textService.searchText);
     app.get('/protokoll', protokollService.getProtokoll);
+    app.get('/protokoll/send', protokollService.distributeProtokoll);
 
     /**
      * Test if the caller is authenticated as sender
@@ -45,7 +46,7 @@ module.exports = function(app) {
      * @param res
      * @param next
      */
-    function authorize(req, res, next) {
+    function authenticate(req, res, next) {
 
         if (!req.session || !req.session.senderAuthenticated) {
             res.sendStatus(403);

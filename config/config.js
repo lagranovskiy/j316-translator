@@ -1,9 +1,9 @@
 var config = {
     appName: process.env.APPLICATION_NAME || 'J316-Translator',
+    hostname: process.env.HOSTNAME || 'https://j316-translator-lagranovskiy1.c9users.io',
     info: {
         // Will be communicated to the client after connection
-        appBrand: process.env.APPLICATION_BRAND || 'Gemeinde Teststadt',
-        brandContact: process.env.BRAND_CONTACT || 'Max Mustermann (0176 123 45 56)'
+        appBrand: process.env.APPLICATION_BRAND || 'Gemeinde Teststadt'
     },
     // Max time in Minutes as a client may wait for a sender (min)
     maxWaitingTime: process.env.MAX_IDLE_TIME || '30',
@@ -26,9 +26,18 @@ var config = {
             dbt_key: process.env.DBT_KEY || 'dummy'
         },
         algolia:{
-            applicationId: process.env.ALGOLIA_ID || 'JEBNFA62OI',
-            apiKey: process.env.ALGOLIA_API_KEY || 'b246a1c52bfcb9f14932cc4322c62eed',
+            applicationId: process.env.ALGOLIA_ID || 'test',
+            apiKey: process.env.ALGOLIA_API_KEY || 'test',
             indexName: process.env.ALGOLIA_INDEX || 'songs'
+        },
+        postmark:{
+            apiToken: process.env.POSTMARK_API_TOKEN || 'test',
+            senderEmail: process.env.POSTMARK_SENDER || 'test@test.de',
+            serviceProtokoll: {
+                templateId: process.env.POSTMARK_SERVICE_PROTOKOLL_TEMPLATE_ID || '410862',
+                recipients: process.env.POSTMARK_SERVICE_PROTOKOLL_RECIPIENTS || 'web@agranovskiy.de'
+            }
+            
         }
     },
     init: function () {

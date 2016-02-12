@@ -10,7 +10,7 @@ requestify.get(config.hostname + '/protokoll/send', {
         email : config.keys.postmark.serviceProtokoll.recipients,
         date: new moment().format('YYYY-MM-DD')
     }
-}).then(function (response) {
-    console.info('Report result', response.body);
+}).then(function(response) {
+    console.info('Report result', response.getBody());
     console.log('Scheduled driven Protokoll report call processed');
-});
+});;

@@ -32,7 +32,7 @@ var config = {
         },
         postmark:{
             apiToken: process.env.POSTMARK_API_TOKEN || 'test',
-            senderEmail: process.env.POSTMARK_SENDER || 'test@test.de',
+            senderEmail: process.env.POSTMARK_SENDER || 'test@test1.de',
             serviceProtokoll: {
                 templateId: process.env.POSTMARK_SERVICE_PROTOKOLL_TEMPLATE_ID || '410862',
                 recipients: process.env.POSTMARK_SERVICE_PROTOKOLL_RECIPIENTS || 'web@agranovskiy.de'

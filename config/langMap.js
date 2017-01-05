@@ -44,7 +44,7 @@ var langMap = {
     af: {
         langName: 'Afrikaans',
         dam: {
-            nt: null,
+            nt: 'TIRUBSN2ET',
             ot: null
         }
     },
@@ -177,8 +177,8 @@ var langMap = {
     fa: {
         langName: 'Persian',
         dam: {
-            nt: 'PESTPVN2ET',
-            ot: null
+            nt: 'PESEMVO2ET',
+            ot: 'PESEMVO2ET'
         }
     },
     kk: {
@@ -233,7 +233,7 @@ var langMap = {
     sk: {
         langName: 'Slovakian',
         dam: {
-            nt: null,
+            nt: 'SLOSBSN2DA',
             ot: null
         }
     },
@@ -247,7 +247,7 @@ var langMap = {
     sw: {
         langName: 'Swahili',
         dam: {
-            nt: null,
+            nt: 'SWAUNBN1DA',
             ot: null
         }
     },
@@ -347,6 +347,20 @@ var langMap = {
         dam: {
             nt: 'UKRO30N2ET',
             ot: 'UKRO30O2ET'
+        }
+    },
+    ur:{
+        langName: 'Urdu',
+        dam: {
+            nt: 'URDPAKN2DA',
+            ot: null
+        }
+    },
+    ku:{
+        langName: 'Kurdisch',
+        dam: {
+            nt: 'KMRUBSN2DA',
+            ot: null
         }
     }
 };

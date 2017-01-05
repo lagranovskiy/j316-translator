@@ -177,7 +177,7 @@ var langMap = {
     fa: {
         langName: 'Persian',
         dam: {
-            nt: 'PESEMVO2ET',
+            nt: 'PESEMVN2ET',
             ot: 'PESEMVO2ET'
         }
     },

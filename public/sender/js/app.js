@@ -269,6 +269,9 @@ angular.module('senderApp', [
 }, {
     key: 'uk',
     lang: 'Ukrainian'
+}, {
+    key: 'ur',
+    lang: 'Urdu'
 }])
 
 

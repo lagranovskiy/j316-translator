@@ -352,7 +352,7 @@ var langMap = {
     ur:{
         langName: 'Urdu',
         dam: {
-            nt: 'URDPAKN2DA',
+            nt: 'URDWTCN2ET',
             ot: null
         }
     },

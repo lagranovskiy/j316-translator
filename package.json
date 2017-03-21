@@ -18,7 +18,7 @@
   "author": "Leonid Agranovskiy",
   "license": "ISC",
   "dependencies": {
-    "algoliasearch": "^3.10.2",
+    "algoliasearch": "^3.22.1",
     "bible-passage-reference-parser": "^1.0.0",
     "body-parser": "^1.14.2",
     "bower": "^1.7.7",

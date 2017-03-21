@@ -35,7 +35,7 @@ module.exports = function(app) {
     });
 
 
-    app.post('/search/text', authenticate, textService.searchText);
+    app.post('/search/text', textService.searchText);
     app.get('/protokoll', protokollService.getProtokoll);
     app.get('/protokoll/send', protokollService.distributeProtokoll);
 

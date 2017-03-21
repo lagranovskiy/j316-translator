@@ -10,7 +10,7 @@ var algoliasearch = require('algoliasearch');
  * Webservice to search and provide text search service
  */
 var textSearchService = function () {
-    controle.log('search: '+config.keys.algolia.applicationId + ' ' +  config.keys.algolia.apiKey);
+    console.log('search: '+config.keys.algolia.applicationId + ' ' +  config.keys.algolia.apiKey);
     var client = algoliasearch(config.keys.algolia.applicationId, config.keys.algolia.apiKey);
     var index = client.initIndex(config.keys.algolia.indexName);
     index.setSettings({

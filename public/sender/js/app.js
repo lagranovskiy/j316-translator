@@ -38,7 +38,7 @@ angular.module('senderApp', [
 
         var connection = io.connect(window.location.origin + '/sender', {
             reconnection: true,
-            transports: ['websocket', 'polling', 'xhr-polling'],
+            transports: [ 'polling','websocket', 'xhr-polling'],
             reconnectionAttempts: 100
         });
 

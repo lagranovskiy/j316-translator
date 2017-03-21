@@ -8,7 +8,7 @@ var cookieSession = require("express-session");
 var RedisStore = require('connect-redis')(cookieSession);
 var socketIOredis = require('socket.io-redis');
 var sharedsession = require("express-socket.io-session");
-var bodyParser = require('body-parser')
+var bodyParser = require('body-parser');
 var redis = require("redis");
 
 var j316app = express();

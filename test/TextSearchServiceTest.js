@@ -6,7 +6,7 @@ describe("Text search service functionality", function () {
 
         it("Test prepareVerseLookup Joh. 3,16-18", function (done) {
 
-            var request = {body: "715"};
+            var request = {body: {query: "800"}};
             var response = {
                 send: function (data) {
                     should(data != null).be.ok();

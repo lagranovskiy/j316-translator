@@ -10,7 +10,7 @@ var algoliasearch = require('algoliasearch');
  * Webservice to search and provide text search service
  */
 var textSearchService = function () {
-
+    controle.log('search: '+config.keys.algolia.applicationId + ' ' +  config.keys.algolia.apiKey);
     var client = algoliasearch(config.keys.algolia.applicationId, config.keys.algolia.apiKey);
     var index = client.initIndex(config.keys.algolia.indexName);
     index.setSettings({
@@ -33,6 +33,7 @@ var textSearchService = function () {
                 return res.send("Cannot search for empty string");
             }
 
+            console.log('Searching for ' + rqBody.query);
             index.search(rqBody.query, function searchDone(err, content) {
                 console.log(err, content);
                 res.send(content);
